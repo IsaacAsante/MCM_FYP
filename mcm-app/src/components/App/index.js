@@ -1,6 +1,10 @@
 import React from "react";
 import { BrowserRouter as Router } from "react-router-dom";
 
+// Scripts
+import "bootstrap/dist/js/bootstrap.bundle";
+import "../../template/lib/common-scripts.js";
+
 import Navigation from "../Navigation";
 import Sidebar from "../Sidebar";
 
@@ -11,10 +15,12 @@ import "../../template/css/style.css";
 import "../../template/css/style-responsive.css";
 
 const App = () => (
-  <Router>
-    <Navigation />
-    <Sidebar />
-  </Router>
+  <div id="container">
+    <Router>
+      <Navigation />
+      <Sidebar />
+    </Router>
+  </div>
 );
 
 export default App;
