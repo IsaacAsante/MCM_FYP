@@ -1,15 +1,18 @@
-import React from 'react';
-import { BrowserRouter as Router } from 'react-router-dom';
+import React from "react";
+import { BrowserRouter as Router } from "react-router-dom";
 
-import Navigation from '../Navigation';
- 
+import Navigation from "../Navigation";
+
+// CSS
+import "../../template/lib/bootstrap/css/bootstrap.min.css";
+import "../../template/lib/font-awesome/css/font-awesome.css";
+import "../../template/css/style.css";
+import "../../template/css/style-responsive.css";
+
 const App = () => (
   <Router>
     <Navigation />
-    <div>
-      <h1>App</h1>
-    </div>
   </Router>
 );
- 
+
 export default App;
