@@ -1,0 +1,11 @@
+{
+  "name": "mcm-swinburne",
+  "version": "1.0.0",
+  "description": "A modular consultation management (MCM) system for portf ICT portfolio units in Swinburne Sarawak.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Isaac Asante",
+  "license": "ISC"
+}
