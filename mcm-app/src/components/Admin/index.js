@@ -1,9 +1,13 @@
 import React from 'react';
 
-const Admin = () => (
+const AdminPage = () => (
     <div>
-        <h1>Admin page</h1>
+        <section id="main-content">
+            <section className="wrapper">
+                <h1>Admin component</h1>
+            </section>
+        </section>
     </div>
 );
 
-export default Admin;
+export default AdminPage;

@@ -1,13 +1,13 @@
 import React from 'react';
 
-const PasswordChangePage = () => (
+const DashboardPage = () => (
     <div>
         <section id="main-content">
             <section className="wrapper">
-                <h1>PasswordChange component</h1>
+                <h1>Dashboard component</h1>
             </section>
         </section>
     </div>
 );
 
-export default PasswordChangePage;
+export default DashboardPage;

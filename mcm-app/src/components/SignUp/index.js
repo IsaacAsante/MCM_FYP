@@ -1,9 +1,13 @@
 import React from 'react';
 
-const SignUp = () => (
+const SignUpPage = () => (
     <div>
-        <h1>SignUp component</h1>
+        <section id="main-content">
+            <section className="wrapper">
+                <h1>SignUp component</h1>
+            </section>
+        </section>
     </div>
 );
 
-export default SignUp;
+export default SignUpPage;

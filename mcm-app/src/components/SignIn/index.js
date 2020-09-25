@@ -1,9 +1,13 @@
 import React from 'react';
 
-const SignIn = () => (
+const SignInPage = () => (
     <div>
-        <h1>Sign In Component</h1>
+        <section id="main-content">
+            <section className="wrapper">
+                <h1>SignIn component</h1>
+            </section>
+        </section>
     </div>
 );
 
-export default SignIn;
+export default SignInPage;

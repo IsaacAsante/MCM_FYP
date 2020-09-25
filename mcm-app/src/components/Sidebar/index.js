@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
+import * as ROUTES from "../../constants/routes.js";
+
 var $ = require("jquery");
 
 export default class Sidebar extends Component {
@@ -42,13 +44,38 @@ export default class Sidebar extends Component {
         <aside>
           <div id="sidebar" className="nav-collapse ">
             {/* <!-- sidebar menu start--> */}
-            <ul className="sidebar-menu" id="nav-accordion"></ul>
+            <ul className="sidebar-menu" id="nav-accordion">
+              <h5 className="centered">Isaac Asante</h5>
+              <li className="mt">
+                <Link to={ROUTES.DASHBOARD} className="active">
+                  <i className="fa fa-dashboard"></i>
+                  <span>Dashboard</span>
+                </Link>
+              </li>
+              <li>
+                <Link to={ROUTES.SIGN_IN}>
+                  <i className="fa fa-envelope"></i>
+                  <span>Login </span>
+                  {/* <span className="label label-theme pull-right mail-info">2</span> */}
+                </Link>
+              </li>
+              <li>
+                <Link to={ROUTES.SIGN_UP}>
+                  <i className="fa fa-envelope"></i>
+                  <span>Sign Up </span>
+                  {/* <span className="label label-theme pull-right mail-info">2</span> */}
+                </Link>
+              </li>
+              <li>
+                <Link to={ROUTES.PASSWORD_FORGET}>
+                  <i className="fa fa-envelope"></i>
+                  <span>Reset Password </span>
+                  {/* <span className="label label-theme pull-right mail-info">2</span> */}
+                </Link>
+              </li>
+            </ul>
           </div>
         </aside>
-
-        <section id="main-content">
-          <section className="wrapper"></section>
-        </section>
       </div>
     );
   }
