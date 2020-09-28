@@ -8,6 +8,8 @@ import app from "firebase/app";
 import "firebase/auth";
 import "firebase/firestore";
 
+// Role-based access: https://firebase.google.com/docs/firestore/solutions/role-based-access
+
 // Dev project config (NOT PRODUCTION!)
 const devFirebaseConfig = {
   apiKey: "AIzaSyA2TS4JwnDmVdz0VCNW32eN56FkZG_ijHY",
@@ -22,7 +24,26 @@ const devFirebaseConfig = {
 
 class Firebase {
   constructor() {
-    app.initializeApp(devFirebaseConfig);
+    app.initializeApp(devFirebaseConfig); // Initialize app
+    this.auth = app.auth(); // For Firebase Auth
+
+    // Signups
+    this.createUser = (email, password) =>
+      this.auth.createUserWithEmailAndPassword(email, password);
+
+    // Logins
+    this.signInUser = (email, password) =>
+      this.auth.signInWithEmailAndPassword(email, password);
+
+    // Logouts
+    this.signOutUser = () => this.auth.signOut();
+
+    // Password Resets
+    this.resetUserPassword = (email) => this.auth.sendPasswordResetEmail(email);
+
+    // Update passwords
+    this.updateUserPassword = (password) =>
+      this.auth.currentUser.updatePassword(password);
   }
 }
 export default Firebase;
