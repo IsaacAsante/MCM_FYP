@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Component } from "react";
 import { Link } from "react-router-dom";
 
 import * as ROUTES from "../../constants/routes";
@@ -13,9 +13,19 @@ const SignUpPage = () => (
   </div>
 );
 
+const INITIAL_STATE = {
+  username: "",
+  email: "",
+  passwordOne: "",
+  passwordTwo: "",
+  error: null,
+};
+
 class SignUpForm extends Component {
   constructor(props) {
     super(props);
+
+    this.state = { ...INITIAL_STATE }; // Cloning object
   }
 
   onSubmit = (event) => {};
@@ -27,11 +37,12 @@ class SignUpForm extends Component {
   }
 }
 
-const SignUpLink = () => {
+const SignUpLink = () => (
+  // Returning sign up link.
   <p>
     <Link to={ROUTES.SIGN_UP}>Register new user</Link>
-  </p>;
-};
+  </p>
+);
 
 export default SignUpPage;
 
