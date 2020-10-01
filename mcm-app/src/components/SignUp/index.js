@@ -55,6 +55,13 @@ class SignUpForm extends Component {
       error,
     } = this.state;
 
+    const isInvalid =
+      passwordOne !== passwordTwo ||
+      passwordOne === "" ||
+      email === "" ||
+      studentName === "" ||
+      studentId === "";
+
     return (
       <form onSubmit={this.onSubmit} className="form-horizontal style-form">
         <div className="form-group">
@@ -132,7 +139,7 @@ class SignUpForm extends Component {
             />
           </div>
         </div>
-        <button type="submit" className="btn btn-theme">
+        <button disabled={isInvalid} type="submit" className="btn btn-theme">
           Create User
         </button>
         {error && <p>{error.message}</p>}
