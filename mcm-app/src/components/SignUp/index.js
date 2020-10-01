@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 
+import { FirebaseContext } from "../Firebase";
 import * as ROUTES from "../../constants/routes";
 
 const SignUpPage = () => (
@@ -8,12 +9,15 @@ const SignUpPage = () => (
     <section id="main-content">
       <section className="wrapper">
         <h3>
-          <i class="fa fa-angle-right"></i> Create User
+          <i className="fa fa-angle-right"></i> Create User
         </h3>
         <div className="row mt">
           <div className="col-lg-12">
             <div className="form-panel">
-              <SignUpForm />
+              {/* Pass props */}
+              <FirebaseContext.Consumer>
+                {(firebase) => <SignUpForm firebase={firebase} />}
+              </FirebaseContext.Consumer>
             </div>
           </div>
         </div>
@@ -24,7 +28,7 @@ const SignUpPage = () => (
 
 const INITIAL_STATE = {
   studentName: "",
-  studentId: "",
+  username: "",
   email: "",
   passwordOne: "",
   passwordTwo: "",
@@ -38,7 +42,22 @@ class SignUpForm extends Component {
     this.state = { ...INITIAL_STATE }; // Cloning object
   }
 
-  onSubmit = (event) => {};
+  onSubmit = (event) => {
+    // Grab form field values
+    const { username, email, passwordOne } = this.state;
+    console.log(this.state);
+    // Pass to Firebase class
+    this.props.firebase
+      .createUser(email, passwordOne)
+      .then((authUser) => {
+        console.log(authUser);
+        this.setState({ ...INITIAL_STATE });
+      })
+      .catch((error) => {
+        this.setState({ error });
+      });
+    event.preventDefault();
+  };
 
   onChange = (event) => {
     this.setState({ [event.target.name]: event.target.value });
@@ -48,7 +67,7 @@ class SignUpForm extends Component {
   render() {
     const {
       studentName,
-      studentId,
+      username,
       email,
       passwordOne,
       passwordTwo,
@@ -60,7 +79,7 @@ class SignUpForm extends Component {
       passwordOne === "" ||
       email === "" ||
       studentName === "" ||
-      studentId === "";
+      username === "";
 
     return (
       <form onSubmit={this.onSubmit} className="form-horizontal style-form">
@@ -84,8 +103,8 @@ class SignUpForm extends Component {
           <label className="col-sm-2 col-sm-2 control-label">Student ID</label>
           <div className="col-sm-10">
             <input
-              name="studentId"
-              value={studentId}
+              name="username"
+              value={username}
               onChange={this.onChange}
               type="text"
               placeholder="Student ID will serve as username"
@@ -103,7 +122,7 @@ class SignUpForm extends Component {
               name="email"
               value={email}
               onChange={this.onChange}
-              type="text"
+              type="email"
               placeholder="Email Address"
               className="form-control"
             />
