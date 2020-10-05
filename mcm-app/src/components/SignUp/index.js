@@ -28,10 +28,10 @@ const SignUpPage = () => (
 
 const INITIAL_STATE = {
   fullName: "",
-  username: "",
   email: "",
   passwordOne: "",
   passwordTwo: "",
+  type: "none",
   error: null,
 };
 
@@ -44,8 +44,8 @@ class SignUpForm extends Component {
 
   onSubmit = (event) => {
     // Grab form field values
-    const { username, email, passwordOne } = this.state;
-    console.log(this.state);
+    const { email, passwordOne } = this.state;
+    // console.log(this.state);
     // Pass to Firebase class
     this.props.firebase
       .createUser(email, passwordOne)
@@ -63,14 +63,19 @@ class SignUpForm extends Component {
     this.setState({ [event.target.name]: event.target.value });
   };
 
+  updateType = (event) => {
+    this.setState({ type: event.target.value });
+    // console.log(event.target.value);
+  }
+
   // Update form fields onChange.
   render() {
     const {
       fullName,
-      username,
       email,
       passwordOne,
       passwordTwo,
+      type,
       error,
     } = this.state;
 
@@ -79,7 +84,7 @@ class SignUpForm extends Component {
       passwordOne === "" ||
       email === "" ||
       fullName === "" ||
-      username === "";
+      type === "none"
 
     return (
       <form onSubmit={this.onSubmit} className="form-horizontal style-form">
@@ -100,20 +105,6 @@ class SignUpForm extends Component {
         </div>
 
         <div className="form-group">
-          <label className="col-sm-2 col-sm-2 control-label">User ID</label>
-          <div className="col-sm-10">
-            <input
-              name="username"
-              value={username}
-              onChange={this.onChange}
-              type="text"
-              placeholder="User ID will serve as username"
-              className="form-control"
-            />
-          </div>
-        </div>
-
-        <div className="form-group">
           <label className="col-sm-2 col-sm-2 control-label">
             User Email
           </label>
@@ -123,7 +114,7 @@ class SignUpForm extends Component {
               value={email}
               onChange={this.onChange}
               type="email"
-              placeholder="Email Address"
+              placeholder="Email address"
               className="form-control"
             />
           </div>
@@ -153,9 +144,22 @@ class SignUpForm extends Component {
               value={passwordTwo}
               onChange={this.onChange}
               type="password"
-              placeholder="Confirm Password"
+              placeholder="Password must match"
               className="form-control"
             />
+          </div>
+        </div>
+
+        <div className="form-group">
+          <label className="col-sm-2 col-sm-2 control-label">
+            Account Type
+          </label>
+          <div className="col-sm-10">
+            <select className="form-control" name="type" onChange={this.updateType} value={this.state.type}>
+              <option value="None">Select a type</option>
+              <option value="Tutor">Tutor</option>
+              <option value="Student">Student</option>
+            </select>
           </div>
         </div>
         <button disabled={isInvalid} type="submit" className="btn btn-theme">
