@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 
 import { withFirebase } from "../Firebase";
 import * as ROUTES from "../../constants/routes";
@@ -49,7 +49,8 @@ class SignUpFormBase extends Component {
       .createUser(email, passwordOne)
       .then((authUser) => {
         console.log(authUser);
-        this.setState({ ...INITIAL_STATE });
+        this.setState({ ...INITIAL_STATE }); // Clear forms
+        this.props.history.push(ROUTES.DASHBOARD);
       })
       .catch((error) => {
         this.setState({ error });
@@ -176,7 +177,7 @@ const SignUpLink = () => (
   </p>
 );
 
-const SignUpForm = withFirebase(SignUpFormBase);
+const SignUpForm = withRouter(withFirebase(SignUpFormBase));
 
 export default SignUpPage;
 
