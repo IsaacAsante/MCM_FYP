@@ -27,7 +27,7 @@ const SignUpPage = () => (
 );
 
 const INITIAL_STATE = {
-  studentName: "",
+  fullName: "",
   username: "",
   email: "",
   passwordOne: "",
@@ -66,7 +66,7 @@ class SignUpForm extends Component {
   // Update form fields onChange.
   render() {
     const {
-      studentName,
+      fullName,
       username,
       email,
       passwordOne,
@@ -78,19 +78,19 @@ class SignUpForm extends Component {
       passwordOne !== passwordTwo ||
       passwordOne === "" ||
       email === "" ||
-      studentName === "" ||
+      fullName === "" ||
       username === "";
 
     return (
       <form onSubmit={this.onSubmit} className="form-horizontal style-form">
         <div className="form-group">
           <label className="col-sm-2 col-sm-2 control-label">
-            Student Name
+            User's Name
           </label>
           <div className="col-sm-10">
             <input
-              name="studentName"
-              value={studentName}
+              name="fullName"
+              value={fullName}
               onChange={this.onChange}
               type="text"
               placeholder="Full name"
@@ -100,14 +100,14 @@ class SignUpForm extends Component {
         </div>
 
         <div className="form-group">
-          <label className="col-sm-2 col-sm-2 control-label">Student ID</label>
+          <label className="col-sm-2 col-sm-2 control-label">User ID</label>
           <div className="col-sm-10">
             <input
               name="username"
               value={username}
               onChange={this.onChange}
               type="text"
-              placeholder="Student ID will serve as username"
+              placeholder="User ID will serve as username"
               className="form-control"
             />
           </div>
@@ -115,7 +115,7 @@ class SignUpForm extends Component {
 
         <div className="form-group">
           <label className="col-sm-2 col-sm-2 control-label">
-            Student Email
+            User Email
           </label>
           <div className="col-sm-10">
             <input
