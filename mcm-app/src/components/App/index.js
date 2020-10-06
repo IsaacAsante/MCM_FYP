@@ -39,11 +39,16 @@ class App extends Component {
 
   // Control authUser state based on validity
   componentDidMount() {
-    this.props.firebase.auth.onAuthStateChanged((authUser) => {
+    this.listener = this.props.firebase.auth.onAuthStateChanged((authUser) => {
       authUser
         ? this.setState({ authUser })
         : this.setState({ authUser: null });
     });
+  }
+
+  // Remove the listener to avoid memory leaks
+  componentWillUnmount() {
+    this.listener();
   }
 
   render() {
