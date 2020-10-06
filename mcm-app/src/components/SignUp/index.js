@@ -166,7 +166,11 @@ class SignUpFormBase extends Component {
         <button disabled={isInvalid} type="submit" className="btn btn-theme">
           Create User
         </button>
-        {error && <p>{error.message}</p>}
+        <div className="form-group has-error">
+          <div className="col-lg-10">
+            <p className="help-block">{error && error.message}</p>
+          </div>
+        </div>
       </form>
     );
   }
@@ -179,7 +183,7 @@ const SignUpLink = () => (
   </p>
 );
 
-const SignUpForm = withRouter(withFirebase(SignUpFormBase));
+const SignUpForm = compose(withRouter, withFirebase)(SignUpFormBase);
 
 export default SignUpPage;
 
