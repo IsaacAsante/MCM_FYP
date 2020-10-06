@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Component } from "react";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 
 // Scripts
@@ -24,18 +24,31 @@ import "../../template/lib/font-awesome/css/font-awesome.css";
 import "../../template/css/style.css";
 import "../../template/css/style-responsive.css";
 
-const App = () => (
-  <div id="container">
-    <Router>
-      <Navigation />
-      <Sidebar />
-      <Route path={ROUTES.DASHBOARD} component={DashboardPage} />
-      <Route path={ROUTES.SIGN_IN} component={SignInPage} />
-      <Route path={ROUTES.SIGN_UP} component={SignUpPage} />
-      <Route path={ROUTES.PASSWORD_FORGET} component={PasswordForgetPage} />
+// Manages local state of an authUser object
+class App extends Component {
+  constructor(props) {
+    super(props);
 
-    </Router>
-  </div>
-);
+    // Handles session
+    this.state = {
+      authUser: null,
+    };
+  }
+
+  render() {
+    return (
+      <div id="container">
+        <Router>
+          <Navigation />
+          <Sidebar />
+          <Route path={ROUTES.DASHBOARD} component={DashboardPage} />
+          <Route path={ROUTES.SIGN_IN} component={SignInPage} />
+          <Route path={ROUTES.SIGN_UP} component={SignUpPage} />
+          <Route path={ROUTES.PASSWORD_FORGET} component={PasswordForgetPage} />
+        </Router>
+      </div>
+    );
+  }
+}
 
 export default App;
