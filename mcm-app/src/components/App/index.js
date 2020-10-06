@@ -10,7 +10,7 @@ import AdminPage from "../Admin";
 import DashboardPage from "../Dashboard";
 import LandingPage from "../Landing";
 import Navigation from "../Navigation";
-import PasswordForgetPage from "../PasswordForget";
+import PasswordResetPage from "../PasswordReset";
 import PasswordUpdatePage from "../PasswordUpdate";
 import SignInPage from "../SignIn";
 import SignUpPage from "../SignUp";
@@ -36,7 +36,7 @@ const App = () => (
       <Route path={ROUTES.SIGN_IN} component={SignInPage} />
       <Route path={ROUTES.SIGN_UP} component={SignUpPage} />
       <Route path={ROUTES.PASSWORD_UPDATE} component={PasswordUpdatePage} />
-      <Route path={ROUTES.PASSWORD_RESET} component={PasswordForgetPage} />
+      <Route path={ROUTES.PASSWORD_RESET} component={PasswordResetPage} />
     </div>
   </Router>
 );
