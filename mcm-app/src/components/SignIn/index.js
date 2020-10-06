@@ -4,6 +4,7 @@ import { compose } from "recompose";
 
 import { SignUpLink } from "../SignUp";
 import { withFirebase } from "../Firebase";
+import { PasswordResetLink } from "../PasswordReset";
 import * as ROUTES from "../../constants/routes";
 
 const SignInPage = () => (
@@ -17,6 +18,7 @@ const SignInPage = () => (
           <div className="col-lg-12">
             <div className="form-panel">
               <SignInForm />
+              <PasswordResetLink />
               <SignUpLink />
             </div>
           </div>

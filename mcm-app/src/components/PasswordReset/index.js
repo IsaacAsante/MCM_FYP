@@ -91,8 +91,11 @@ class PasswordResetFormBase extends Component {
 }
 
 const PasswordResetLink = () => (
+  // Returning sign up link.
   <p>
-    <Link to={ROUTES.PASSWORD_RESET}>Forgot Password?</Link>
+    <strong>
+      <Link to={ROUTES.PASSWORD_RESET}>Forgot Password?</Link>
+    </strong>
   </p>
 );
 
