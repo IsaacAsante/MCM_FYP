@@ -5,14 +5,15 @@ import { BrowserRouter as Router, Route } from "react-router-dom";
 import "bootstrap/dist/js/bootstrap.bundle";
 
 // Import Components
-import Navigation from "../Navigation";
-import LandingPage from "../Landing";
-import SignUpPage from "../SignUp";
-import SignInPage from "../SignIn";
-import PasswordForgetPage from "../PasswordForget";
-import DashboardPage from "../Dashboard";
 import AccountPage from "../Account";
 import AdminPage from "../Admin";
+import DashboardPage from "../Dashboard";
+import LandingPage from "../Landing";
+import Navigation from "../Navigation";
+import PasswordForgetPage from "../PasswordForget";
+import PasswordUpdatePage from "../PasswordUpdate";
+import SignInPage from "../SignIn";
+import SignUpPage from "../SignUp";
 import Sidebar from "../Sidebar";
 
 // Routing
@@ -34,7 +35,8 @@ const App = () => (
       <Route path={ROUTES.DASHBOARD} component={DashboardPage} />
       <Route path={ROUTES.SIGN_IN} component={SignInPage} />
       <Route path={ROUTES.SIGN_UP} component={SignUpPage} />
-      <Route path={ROUTES.PASSWORD_FORGET} component={PasswordForgetPage} />
+      <Route path={ROUTES.PASSWORD_UPDATE} component={PasswordUpdatePage} />
+      <Route path={ROUTES.PASSWORD_RESET} component={PasswordForgetPage} />
     </div>
   </Router>
 );
