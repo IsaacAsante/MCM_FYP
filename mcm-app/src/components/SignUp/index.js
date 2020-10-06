@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Link, withRouter } from "react-router-dom";
+import { compose } from "recompose";
 
 import { withFirebase } from "../Firebase";
 import * as ROUTES from "../../constants/routes";
@@ -65,7 +66,7 @@ class SignUpFormBase extends Component {
   updateType = (event) => {
     this.setState({ type: event.target.value });
     // console.log(event.target.value);
-  }
+  };
 
   // Update form fields onChange.
   render() {
@@ -83,14 +84,12 @@ class SignUpFormBase extends Component {
       passwordOne === "" ||
       email === "" ||
       fullName === "" ||
-      type === "none"
+      type === "none";
 
     return (
       <form onSubmit={this.onSubmit} className="form-horizontal style-form">
         <div className="form-group">
-          <label className="col-sm-2 col-sm-2 control-label">
-            User's Name
-          </label>
+          <label className="col-sm-2 col-sm-2 control-label">User's Name</label>
           <div className="col-sm-10">
             <input
               name="fullName"
@@ -104,9 +103,7 @@ class SignUpFormBase extends Component {
         </div>
 
         <div className="form-group">
-          <label className="col-sm-2 col-sm-2 control-label">
-            User Email
-          </label>
+          <label className="col-sm-2 col-sm-2 control-label">User Email</label>
           <div className="col-sm-10">
             <input
               name="email"
@@ -154,7 +151,12 @@ class SignUpFormBase extends Component {
             Account Type
           </label>
           <div className="col-sm-10">
-            <select className="form-control" name="type" onChange={this.updateType} value={this.state.type}>
+            <select
+              className="form-control"
+              name="type"
+              onChange={this.updateType}
+              value={this.state.type}
+            >
               <option value="None">Select a type</option>
               <option value="Tutor">Tutor</option>
               <option value="Student">Student</option>
