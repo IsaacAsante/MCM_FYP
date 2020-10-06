@@ -179,7 +179,9 @@ class SignUpFormBase extends Component {
 const SignUpLink = () => (
   // Returning sign up link.
   <p>
-    <Link to={ROUTES.SIGN_UP}>Register new user</Link>
+    <strong>
+      <Link to={ROUTES.SIGN_UP}>Register new user</Link>
+    </strong>
   </p>
 );
 
