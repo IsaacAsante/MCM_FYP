@@ -1,13 +1,17 @@
-import React from 'react';
+import React from "react";
 
-const SignOutPage = () => (
-    <div>
-        <section id="main-content">
-            <section className="wrapper">
-                <h1>SignOut component</h1>
-            </section>
-        </section>
-    </div>
+import { withFirebase } from "../Firebase";
+
+const SignOutButton = () => (
+  <div className="top-menu">
+    <ul className="nav pull-right top-menu">
+      <li>
+        <a className="logout" href="#">
+          Logout
+        </a>
+      </li>
+    </ul>
+  </div>
 );
 
-export default SignOutPage;
+export default SignOutButton;

@@ -1,5 +1,5 @@
 import React from "react";
-
+import SignOutButton from "../SignOut";
 
 const Navigation = () => (
   <div>
@@ -19,15 +19,7 @@ const Navigation = () => (
         </b>
       </a>
       {/* <!--logo end--> */}
-      <div className="top-menu">
-        <ul className="nav pull-right top-menu">
-          <li>
-            <a className="logout" href="#">
-              Logout
-            </a>
-          </li>
-        </ul>
-      </div>
+      <SignOutButton />
     </header>
     {/* <!--header end--> */}
   </div>
