@@ -13,6 +13,7 @@ code {
 }
 
 /* Navigation */
-.top-menu .nav.top-menu .logout {
+.top-menu .nav.top-menu .logout,
+.top-menu .nav.top-menu .login-button {
   cursor: pointer;
 }

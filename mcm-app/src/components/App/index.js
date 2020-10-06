@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 
+import { withFirebase } from "../Firebase";
+
 // Scripts
 import "bootstrap/dist/js/bootstrap.bundle";
 
@@ -35,6 +37,15 @@ class App extends Component {
     };
   }
 
+  // Control authUser state based on validity
+  componentDidMount() {
+    this.props.firebase.auth.onAuthStateChanged((authUser) => {
+      authUser
+        ? this.setState({ authUser })
+        : this.setState({ authUser: null });
+    });
+  }
+
   render() {
     return (
       <div id="container">
@@ -51,4 +62,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default withFirebase(App);
