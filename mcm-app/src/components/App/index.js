@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 
 import { withFirebase } from "../Firebase";
+import { AuthUserContext } from "../Session";
 
 // Scripts
 import "bootstrap/dist/js/bootstrap.bundle";
@@ -53,16 +54,21 @@ class App extends Component {
 
   render() {
     return (
-      <div id="container">
+      <AuthUserContext.Provider value={this.state.authUser}>
         <Router>
-          <Navigation authUser={this.state.authUser} />
-          <Sidebar />
-          <Route path={ROUTES.DASHBOARD} component={DashboardPage} />
-          <Route path={ROUTES.SIGN_IN} component={SignInPage} />
-          <Route path={ROUTES.SIGN_UP} component={SignUpPage} />
-          <Route path={ROUTES.PASSWORD_FORGET} component={PasswordForgetPage} />
+          <div id="container">
+            <Navigation authUser={this.state.authUser} />
+            <Sidebar />
+            <Route path={ROUTES.DASHBOARD} component={DashboardPage} />
+            <Route path={ROUTES.SIGN_IN} component={SignInPage} />
+            <Route path={ROUTES.SIGN_UP} component={SignUpPage} />
+            <Route
+              path={ROUTES.PASSWORD_FORGET}
+              component={PasswordForgetPage}
+            />
+          </div>
         </Router>
-      </div>
+      </AuthUserContext.Provider>
     );
   }
 }
