@@ -39,7 +39,7 @@ class App extends Component {
     return (
       <div id="container">
         <Router>
-          <Navigation />
+          <Navigation authUser={this.state.authUser} />
           <Sidebar />
           <Route path={ROUTES.DASHBOARD} component={DashboardPage} />
           <Route path={ROUTES.SIGN_IN} component={SignInPage} />
