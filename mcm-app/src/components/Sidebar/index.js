@@ -67,16 +67,9 @@ export default class Sidebar extends Component {
                 </Link>
               </li>
               <li>
-                <Link to={ROUTES.PASSWORD_UPDATE}>
+                <Link to={ROUTES.ACCOUNT}>
                   <i className="fa fa-envelope"></i>
-                  <span>Update Password </span>
-                  {/* <span className="label label-theme pull-right mail-info">2</span> */}
-                </Link>
-              </li>
-              <li>
-                <Link to={ROUTES.PASSWORD_RESET}>
-                  <i className="fa fa-envelope"></i>
-                  <span>Reset Password </span>
+                  <span>Your Account</span>
                   {/* <span className="label label-theme pull-right mail-info">2</span> */}
                 </Link>
               </li>
