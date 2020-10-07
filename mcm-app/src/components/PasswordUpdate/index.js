@@ -1,6 +1,10 @@
 import React, { Component } from "react";
+import { withRouter } from "react-router-dom";
 
 import { withFirebase } from "../Firebase";
+import { compose } from "recompose";
+
+import * as ROUTES from "../../constants/routes";
 
 const PasswordUpdatePage = () => (
   <div>
@@ -41,6 +45,8 @@ class PasswordUpdateFormBase extends Component {
       .updateUserPassword(passwordOne)
       .then(() => {
         this.setState({ ...INITIAL_STATE });
+        this.props.firebase.signOutUser();
+        this.props.history.push(ROUTES.SIGN_IN);
       })
       .catch((error) => {
         this.setState({ error });
@@ -106,6 +112,9 @@ class PasswordUpdateFormBase extends Component {
 
 export default PasswordUpdatePage;
 
-const PasswordUpdateForm = withFirebase(PasswordUpdateFormBase);
+const PasswordUpdateForm = compose(
+  withRouter,
+  withFirebase
+)(PasswordUpdateFormBase);
 
 export { PasswordUpdateForm };
