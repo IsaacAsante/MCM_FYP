@@ -32,6 +32,7 @@ const App = () => (
     <div id="container">
       <Navigation />
       <Sidebar />
+      <Route path={ROUTES.ACCOUNT} component={AccountPage} />
       <Route path={ROUTES.DASHBOARD} component={DashboardPage} />
       <Route path={ROUTES.SIGN_IN} component={SignInPage} />
       <Route path={ROUTES.SIGN_UP} component={SignUpPage} />
