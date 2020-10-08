@@ -1,13 +1,17 @@
-import React from 'react';
+import React from "react";
+
+import { withAuthorization } from "../Session";
 
 const DashboardPage = () => (
-    <div>
-        <section id="main-content">
-            <section className="wrapper">
-                <h1>Dashboard component</h1>
-            </section>
-        </section>
-    </div>
+  <div>
+    <section id="main-content">
+      <section className="wrapper">
+        <h1>Dashboard component</h1>
+      </section>
+    </section>
+  </div>
 );
 
-export default DashboardPage;
+const condition = (authUser) => !!authUser;
+
+export default withAuthorization(condition)(DashboardPage);
