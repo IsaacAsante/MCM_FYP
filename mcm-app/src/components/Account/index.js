@@ -2,6 +2,7 @@ import React from "react";
 
 import { PasswordResetForm } from "../PasswordReset";
 import { PasswordUpdateForm } from "../PasswordUpdate";
+import { withAuthorization } from "../Session";
 
 const AccountPage = () => (
   <div>
@@ -27,4 +28,6 @@ const AccountPage = () => (
   </div>
 );
 
-export default AccountPage;
+const condition = (authUser) => !!authUser;
+
+export default withAuthorization(condition)(AccountPage);
