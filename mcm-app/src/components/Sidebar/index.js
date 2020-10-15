@@ -10,6 +10,34 @@ export default class Sidebar extends Component {
   }
 
   componentDidMount() {
+    // Mobile viewport changes
+    let sidebar_margin = $("#sidebar").css("margin-left");
+    if (
+      (sidebar_margin == "0" ||
+        sidebar_margin == "0px" ||
+        sidebar_margin == "0px !important") &&
+      $(window).width() < 768
+    ) {
+      console.log($(window).width());
+      // Hide nav by default
+      $("#sidebar > ul").hide();
+    }
+
+    $(window).on("resize", function () {
+      if ($(window).width() >= 768) {
+        $("#sidebar > ul").show();
+      } else {
+        $("#sidebar > ul").hide();
+      }
+    });
+
+    // Hide nav when a link is clicked
+    $("#sidebar > ul > li > a").on("click", function () {
+      if ($(window).width() < 768) $("#sidebar > ul").hide();
+    });
+
+    // if ($("#container").hasClass("sidebar-closed"))
+
     $(".fa-bars").on("click", function () {
       window.console && console.log("foo");
       if ($("#sidebar > ul").is(":visible") === true) {
@@ -20,10 +48,8 @@ export default class Sidebar extends Component {
           "margin-left": "-210px",
         });
         $("#sidebar > ul").hide();
-        console.log("Hiding");
         $("#container").addClass("sidebar-closed");
       } else {
-        console.log("Showing 1");
         $("#main-content").css({
           "margin-left": "210px",
         });
@@ -32,7 +58,6 @@ export default class Sidebar extends Component {
           "margin-left": "0",
         });
         $("#container").removeClass("sidebar-closed");
-        console.log("Showing 2");
       }
     });
   }
