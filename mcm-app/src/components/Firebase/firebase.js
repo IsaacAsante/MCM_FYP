@@ -74,6 +74,12 @@ class Firebase {
         console.log(doc.data());
       });
     };
+
+    // Use the generic addData() function variations below on primary Firestore collections (and not subcollections)
+    this.addData = async (collectionID, dataObj) => {
+      const res = await this.db.collection(collectionID).add(dataObj);
+      console.log("Document added!");
+    };
   }
 }
 export default Firebase;

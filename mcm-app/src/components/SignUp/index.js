@@ -84,6 +84,13 @@ class SignUpFormBase extends Component {
     this.props.firebase.getTutor("zE0xsib8ydctbIcMC9SX").then((res) => {
       console.log("Tutor from Firebase: ", res);
     });
+
+    // Add data to Students collection
+    const studentData = {
+      name: "Isaac Asante",
+      id: 101208203,
+    };
+    this.props.firebase.addData("students", studentData);
   }
 
   // Update form fields onChange.
