@@ -61,6 +61,15 @@ class Firebase {
       // if (!doc.exists) console.log("Student: ", this.student.data);
       // else console.log("Document data: ", doc.data());
     };
+
+    this.getAllDocsInCollection = async (collectionID) => {
+      const docsRef = this.db.collection(collectionID);
+      const snapshot = await docsRef.get();
+      let docData = [];
+      snapshot.forEach((doc) => {
+        console.log(doc.data());
+      });
+    };
   }
 }
 export default Firebase;

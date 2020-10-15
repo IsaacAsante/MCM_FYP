@@ -75,6 +75,8 @@ class SignUpFormBase extends Component {
       student = res;
       console.log("Student: ", student);
     });
+
+    let studentsArray = this.props.firebase.getAllDocsInCollection("students");
   }
 
   // Update form fields onChange.
