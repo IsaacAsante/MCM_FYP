@@ -26,6 +26,10 @@ class Firebase {
   constructor() {
     app.initializeApp(devFirebaseConfig); // Initialize app
     this.auth = app.auth(); // For Firebase Auth
+    this.db = app.firestore(); // For Cloud Firestore
+
+    /***** FIREBASE AUTH API  *****
+     * ===========================*/
 
     // Signups
     this.createUser = (email, password) =>
@@ -47,6 +51,16 @@ class Firebase {
     // Update passwords
     this.updateUserPassword = (password) =>
       this.auth.currentUser.updatePassword(password);
+
+    /***** CLOUD FIRESTORE API  *****
+     * ===========================*/
+    this.getStudent = async (uid) => {
+      const studentRef = this.db.collection("students").doc(uid);
+      let doc = await studentRef.get();
+      return doc.data();
+      // if (!doc.exists) console.log("Student: ", this.student.data);
+      // else console.log("Document data: ", doc.data());
+    };
   }
 }
 export default Firebase;

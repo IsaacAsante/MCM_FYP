@@ -68,6 +68,15 @@ class SignUpFormBase extends Component {
     // console.log(event.target.value);
   };
 
+  componentDidMount() {
+    let student = null;
+    this.props.firebase.getStudent("ExcnZxwdWIYxSaInrH5G").then((res) => {
+      console.log("Retrieved from Firestore: ", res);
+      student = res;
+      console.log("Student: ", student);
+    });
+  }
+
   // Update form fields onChange.
   render() {
     const {
