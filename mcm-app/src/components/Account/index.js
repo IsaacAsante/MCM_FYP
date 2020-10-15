@@ -12,6 +12,7 @@ const AccountPage = () => (
           <section className="wrapper">
             <h1>
               <i className="fa fa-angle-right"></i> Your Account
+              {/* {authUser.email} */}
             </h1>
             <div className="row mt">
               <div className="col-lg-12">
