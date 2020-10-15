@@ -69,6 +69,7 @@ class SignUpFormBase extends Component {
   };
 
   componentDidMount() {
+    // Retrieve single student
     let student = null;
     this.props.firebase.getStudent("ExcnZxwdWIYxSaInrH5G").then((res) => {
       console.log("Retrieved from Firestore: ", res);
@@ -76,7 +77,13 @@ class SignUpFormBase extends Component {
       console.log("Student: ", student);
     });
 
+    // Retrieve a collection of students
     let studentsArray = this.props.firebase.getAllDocsInCollection("students");
+
+    // Retrieve a single tutor
+    this.props.firebase.getTutor("zE0xsib8ydctbIcMC9SX").then((res) => {
+      console.log("Tutor from Firebase: ", res);
+    });
   }
 
   // Update form fields onChange.

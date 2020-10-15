@@ -58,8 +58,12 @@ class Firebase {
       const studentRef = this.db.collection("students").doc(uid);
       let doc = await studentRef.get();
       return doc.data();
-      // if (!doc.exists) console.log("Student: ", this.student.data);
-      // else console.log("Document data: ", doc.data());
+    };
+
+    this.getTutor = async (uid) => {
+      const tutorRef = this.db.collection("tutors").doc(uid);
+      let doc = await tutorRef.get();
+      return doc.data();
     };
 
     this.getAllDocsInCollection = async (collectionID) => {
