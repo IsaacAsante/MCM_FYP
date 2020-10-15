@@ -86,11 +86,22 @@ class SignUpFormBase extends Component {
     });
 
     // Add data to Students collection
-    const studentData = {
-      name: "Isaac Asante",
+    // const studentData = {
+    //   name: "Isaac Asante",
+    //   id: 101208203,
+    // };
+    // this.props.firebase.addData("students", studentData);
+
+    // Update existing field on existing document
+    const updatedData = {
+      name: "Ike Asante",
       id: 101208203,
     };
-    this.props.firebase.addData("students", studentData);
+    this.props.firebase.updateData(
+      "students",
+      "O2rsLccEv0g5pbcKFlNW",
+      updatedData
+    );
   }
 
   // Update form fields onChange.
