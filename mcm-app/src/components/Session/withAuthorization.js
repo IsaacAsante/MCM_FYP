@@ -45,6 +45,8 @@ const withAuthorization = (condition) => (Component) => {
                 }
               })
               .catch((error) => console.error(error));
+          } else {
+            this.props.history.push(ROUTES.SIGN_IN);
           }
         }
       );
