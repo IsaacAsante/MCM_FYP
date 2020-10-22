@@ -14,19 +14,37 @@ const withAuthorization = (condition) => (Component) => {
         (authUser) => {
           if (authUser) {
             console.log("Auth User:", authUser);
-            this.props.firebase.getStudent(authUser.uid).then((res) => {
-              if (res != undefined || res != "undefined") {
-                console.log("Current user:", res);
-                const dbUser = res;
-                authUser = {
-                  uid: authUser.uid,
-                  email: authUser.email,
-                  ...dbUser,
-                };
-              } else {
-                console.log("User not retrieve");
-              }
-            });
+            this.props.firebase
+              .getStudent(authUser.uid)
+              .then((res) => {
+                if (res) {
+                  const student = res;
+                  authUser = {
+                    uid: authUser.uid,
+                    email: authUser.email,
+                    ...student,
+                  };
+                  console.log("Current Student:", authUser);
+                } else {
+                  this.props.firebase
+                    .getTutor(authUser.uid)
+                    .then((ans) => {
+                      if (ans) {
+                        const tutor = ans;
+                        authUser = {
+                          uid: authUser.uid,
+                          email: authUser.email,
+                          ...tutor,
+                        };
+                        console.log("Current Tutor:", authUser);
+                      }
+                    })
+                    .catch((error) => {
+                      console.error(error);
+                    });
+                }
+              })
+              .catch((error) => console.error(error));
           }
         }
       );
