@@ -27,7 +27,8 @@ const SignUpPage = () => (
 );
 
 const INITIAL_STATE = {
-  fullName: "",
+  firstname: "",
+  lastname: "",
   email: "",
   passwordOne: "",
   passwordTwo: "",
@@ -45,11 +46,18 @@ class SignUpFormBase extends Component {
   onSubmit = (event) => {
     // Grab form field values
     const { email, passwordOne, type } = this.state;
+    const userData = {
+      firstname: this.state.firstname,
+      lastname: this.state.lastname,
+      email: this.state.email,
+    };
     const roles = {};
 
     if (type == "Tutor") {
+      userData["tutorID"] = this.state.email.split("@")[0];
       roles[ROLES.TUTOR] = ROLES.TUTOR;
     } else {
+      userData["studentID"] = this.state.email.split("@")[0];
       roles[ROLES.STUDENT] = ROLES.STUDENT;
     }
     // Pass to Firebase class
@@ -57,16 +65,31 @@ class SignUpFormBase extends Component {
       .createUser(email, passwordOne)
       .then((authUser) => {
         console.log(authUser);
-        console.log("User type is: ", type);
+        console.log("User: ", userData);
         // Add data to Students collection
         if (type == ROLES.TUTOR) {
-          this.props.firebase.addData("tutors", this.state);
+          this.props.firebase
+            .addData("tutors", userData)
+            .then((res) => {
+              this.setState({ ...INITIAL_STATE }); // Clear forms
+              this.props.history.push(ROUTES.DASHBOARD);
+            })
+            .catch((error) => this.setState({ error }));
+        }
+
+        if (type == ROLES.STUDENT) {
+          this.props.firebase
+            .addData("students", userData)
+            .then((res) => {
+              this.setState({ ...INITIAL_STATE }); // Clear forms
+              this.props.history.push(ROUTES.DASHBOARD);
+            })
+            .catch((error) => this.setState({ error }));
         }
 
         // if (type == ROLES.TUTOR)
         //   this.props.firebase.addData("tutors", this.state).then(() => {
-        //     this.setState({ ...INITIAL_STATE }); // Clear forms
-        //     this.props.history.push(ROUTES.DASHBOARD);
+        //
         //   });
         // else if (type == ROLES.TUTOR) {
         //   this.props.firebase
@@ -134,7 +157,8 @@ class SignUpFormBase extends Component {
   // Update form fields onChange.
   render() {
     const {
-      fullName,
+      firstname,
+      lastname,
       email,
       passwordOne,
       passwordTwo,
@@ -146,20 +170,39 @@ class SignUpFormBase extends Component {
       passwordOne !== passwordTwo ||
       passwordOne === "" ||
       email === "" ||
-      fullName === "" ||
+      firstname === "" ||
+      lastname === "" ||
       type === "none";
 
     return (
       <form onSubmit={this.onSubmit} className="form-horizontal style-form">
         <div className="form-group">
-          <label className="col-sm-2 col-sm-2 control-label">User's Name</label>
+          <label className="col-sm-2 col-sm-2 control-label">
+            User's First Name
+          </label>
           <div className="col-sm-10">
             <input
-              name="fullName"
-              value={fullName}
+              name="firstname"
+              value={firstname}
               onChange={this.onChange}
               type="text"
-              placeholder="Full name"
+              placeholder="First name"
+              className="form-control"
+            />
+          </div>
+        </div>
+
+        <div className="form-group">
+          <label className="col-sm-2 col-sm-2 control-label">
+            User's Last Name
+          </label>
+          <div className="col-sm-10">
+            <input
+              name="lastname"
+              value={lastname}
+              onChange={this.onChange}
+              type="text"
+              placeholder="Last name"
               className="form-control"
             />
           </div>

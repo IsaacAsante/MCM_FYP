@@ -79,6 +79,7 @@ class Firebase {
     this.addData = async (collectionID, dataObj) => {
       const res = await this.db.collection(collectionID).add(dataObj);
       console.log("Document added!");
+      return res;
     };
 
     // Function to avoid overwriting documents (merge data instead)
