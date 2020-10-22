@@ -75,6 +75,12 @@ class Firebase {
       });
     };
 
+    this.addUserToDB = async (collectionID, uid, dataObj) => {
+      const res = await this.db.collection(collectionID).doc(uid).set(dataObj);
+      console.log("Document added!");
+      return res;
+    };
+
     // Use the generic addData() function variations below on primary Firestore collections (and not subcollections)
     this.addData = async (collectionID, dataObj) => {
       const res = await this.db.collection(collectionID).add(dataObj);

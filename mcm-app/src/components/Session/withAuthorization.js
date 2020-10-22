@@ -12,8 +12,21 @@ const withAuthorization = (condition) => (Component) => {
     componentDidMount() {
       this.listener = this.props.firebase.auth.onAuthStateChanged(
         (authUser) => {
-          if (!condition(authUser)) {
-            this.props.history.push(ROUTES.SIGN_IN);
+          if (authUser) {
+            console.log("Auth User:", authUser);
+            this.props.firebase.getStudent(authUser.uid).then((res) => {
+              if (res != undefined || res != "undefined") {
+                console.log("Current user:", res);
+                const dbUser = res;
+                authUser = {
+                  uid: authUser.uid,
+                  email: authUser.email,
+                  ...dbUser,
+                };
+              } else {
+                console.log("User not retrieve");
+              }
+            });
           }
         }
       );

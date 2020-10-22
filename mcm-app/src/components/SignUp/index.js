@@ -68,7 +68,7 @@ class SignUpFormBase extends Component {
         // Add data to Students collection
         if (role == ROLES.TUTOR) {
           this.props.firebase
-            .addData("tutors", userData)
+            .addUserToDB("tutors", authUser.user.uid, userData)
             .then((res) => {
               this.setState({ ...INITIAL_STATE }); // Clear forms
               this.props.history.push(ROUTES.DASHBOARD);
@@ -78,7 +78,7 @@ class SignUpFormBase extends Component {
 
         if (role == ROLES.STUDENT) {
           this.props.firebase
-            .addData("students", userData)
+            .addUserToDB("students", authUser.user.uid, userData)
             .then((res) => {
               this.setState({ ...INITIAL_STATE }); // Clear forms
               this.props.history.push(ROUTES.DASHBOARD);
@@ -114,9 +114,9 @@ class SignUpFormBase extends Component {
     // let studentsArray = this.props.firebase.getAllDocsInCollection("students");
 
     // Retrieve a single tutor
-    // this.props.firebase.getTutor("zE0xsib8ydctbIcMC9SX").then((res) => {
-    //   console.log("Tutor from Firebase: ", res);
-    // });
+    this.props.firebase.getTutor("zE0xsib8ydcgbIcMC9SX").then((res) => {
+      console.log("Tutor from Firebase: ", typeof res);
+    });
 
     // Add data to Students collection
     // const studentData = {
