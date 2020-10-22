@@ -32,7 +32,7 @@ const INITIAL_STATE = {
   email: "",
   passwordOne: "",
   passwordTwo: "",
-  type: "none",
+  role: "none",
   error: null,
 };
 
@@ -45,20 +45,19 @@ class SignUpFormBase extends Component {
 
   onSubmit = (event) => {
     // Grab form field values
-    const { email, passwordOne, type } = this.state;
+    const { email, passwordOne, role } = this.state;
     const userData = {
       firstname: this.state.firstname,
       lastname: this.state.lastname,
       email: this.state.email,
     };
-    const roles = {};
 
-    if (type == "Tutor") {
+    if (role == "Tutor") {
       userData["tutorID"] = this.state.email.split("@")[0];
-      roles[ROLES.TUTOR] = ROLES.TUTOR;
+      userData["role"] = ROLES.TUTOR;
     } else {
       userData["studentID"] = this.state.email.split("@")[0];
-      roles[ROLES.STUDENT] = ROLES.STUDENT;
+      userData["role"] = ROLES.STUDENT;
     }
     // Pass to Firebase class
     this.props.firebase
@@ -67,7 +66,7 @@ class SignUpFormBase extends Component {
         console.log(authUser);
         console.log("User: ", userData);
         // Add data to Students collection
-        if (type == ROLES.TUTOR) {
+        if (role == ROLES.TUTOR) {
           this.props.firebase
             .addData("tutors", userData)
             .then((res) => {
@@ -77,7 +76,7 @@ class SignUpFormBase extends Component {
             .catch((error) => this.setState({ error }));
         }
 
-        if (type == ROLES.STUDENT) {
+        if (role == ROLES.STUDENT) {
           this.props.firebase
             .addData("students", userData)
             .then((res) => {
@@ -86,22 +85,6 @@ class SignUpFormBase extends Component {
             })
             .catch((error) => this.setState({ error }));
         }
-
-        // if (type == ROLES.TUTOR)
-        //   this.props.firebase.addData("tutors", this.state).then(() => {
-        //
-        //   });
-        // else if (type == ROLES.TUTOR) {
-        //   this.props.firebase
-        //     .addData("students", this.state)
-        //     .then(() => {
-        //       this.setState({ ...INITIAL_STATE }); // Clear forms
-        //       this.props.history.push(ROUTES.DASHBOARD);
-        //     })
-        //     .catch((err) =>
-        //       console.error("Error adding user to Firestore: ", err)
-        //     );
-        //   }
       })
       .catch((error) => {
         this.setState({ error });
@@ -114,7 +97,7 @@ class SignUpFormBase extends Component {
   };
 
   updateType = (event) => {
-    this.setState({ type: event.target.value });
+    this.setState({ role: event.target.value });
     // console.log(event.target.value);
   };
 
@@ -162,7 +145,7 @@ class SignUpFormBase extends Component {
       email,
       passwordOne,
       passwordTwo,
-      type,
+      role,
       error,
     } = this.state;
 
@@ -172,7 +155,7 @@ class SignUpFormBase extends Component {
       email === "" ||
       firstname === "" ||
       lastname === "" ||
-      type === "none";
+      role === "none";
 
     return (
       <form onSubmit={this.onSubmit} className="form-horizontal style-form">
@@ -259,11 +242,11 @@ class SignUpFormBase extends Component {
           <div className="col-sm-10">
             <select
               className="form-control"
-              name="type"
+              name="role"
               onChange={this.updateType}
-              value={this.state.type}
+              value={this.state.role}
             >
-              <option value="None">Select a type</option>
+              <option value="None">Select a role</option>
               <option value="Tutor">Tutor</option>
               <option value="Student">Student</option>
             </select>
