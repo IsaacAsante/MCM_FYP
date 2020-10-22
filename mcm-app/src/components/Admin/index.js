@@ -14,6 +14,6 @@ const AdminPage = () => (
   </div>
 );
 
-const condition = (authUser) => authUser && !!authUser.roles[ROLES.ADMIN];
+const condition = (authUser) => authUser && !!authUser.roles[ROLES.TUTOR];
 
 export default withAuthorization(condition)(AdminPage);

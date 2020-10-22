@@ -4,6 +4,7 @@ import { compose } from "recompose";
 
 import { withFirebase } from "../Firebase";
 import * as ROUTES from "../../constants/routes";
+import * as ROLES from "../../constants/roles";
 
 const SignUpPage = () => (
   <div>
@@ -43,15 +44,41 @@ class SignUpFormBase extends Component {
 
   onSubmit = (event) => {
     // Grab form field values
-    const { email, passwordOne } = this.state;
-    // console.log(this.state);
+    const { email, passwordOne, type } = this.state;
+    const roles = {};
+
+    if (type == "Tutor") {
+      roles[ROLES.TUTOR] = ROLES.TUTOR;
+    } else {
+      roles[ROLES.STUDENT] = ROLES.STUDENT;
+    }
     // Pass to Firebase class
     this.props.firebase
       .createUser(email, passwordOne)
       .then((authUser) => {
         console.log(authUser);
-        this.setState({ ...INITIAL_STATE }); // Clear forms
-        this.props.history.push(ROUTES.DASHBOARD);
+        console.log("User type is: ", type);
+        // Add data to Students collection
+        if (type == ROLES.TUTOR) {
+          this.props.firebase.addData("tutors", this.state);
+        }
+
+        // if (type == ROLES.TUTOR)
+        //   this.props.firebase.addData("tutors", this.state).then(() => {
+        //     this.setState({ ...INITIAL_STATE }); // Clear forms
+        //     this.props.history.push(ROUTES.DASHBOARD);
+        //   });
+        // else if (type == ROLES.TUTOR) {
+        //   this.props.firebase
+        //     .addData("students", this.state)
+        //     .then(() => {
+        //       this.setState({ ...INITIAL_STATE }); // Clear forms
+        //       this.props.history.push(ROUTES.DASHBOARD);
+        //     })
+        //     .catch((err) =>
+        //       console.error("Error adding user to Firestore: ", err)
+        //     );
+        //   }
       })
       .catch((error) => {
         this.setState({ error });
@@ -78,12 +105,12 @@ class SignUpFormBase extends Component {
     });
 
     // Retrieve a collection of students
-    let studentsArray = this.props.firebase.getAllDocsInCollection("students");
+    // let studentsArray = this.props.firebase.getAllDocsInCollection("students");
 
     // Retrieve a single tutor
-    this.props.firebase.getTutor("zE0xsib8ydctbIcMC9SX").then((res) => {
-      console.log("Tutor from Firebase: ", res);
-    });
+    // this.props.firebase.getTutor("zE0xsib8ydctbIcMC9SX").then((res) => {
+    //   console.log("Tutor from Firebase: ", res);
+    // });
 
     // Add data to Students collection
     // const studentData = {
@@ -93,15 +120,15 @@ class SignUpFormBase extends Component {
     // this.props.firebase.addData("students", studentData);
 
     // Update existing field on existing document
-    const updatedData = {
-      name: "Ike Asante",
-      id: 101208203,
-    };
-    this.props.firebase.updateData(
-      "students",
-      "O2rsLccEv0g5pbcKFlNW",
-      updatedData
-    );
+    // const updatedData = {
+    //   name: "Ike Asante",
+    //   id: 101208203,
+    // };
+    // this.props.firebase.updateData(
+    //   "students",
+    //   "O2rsLccEv0g5pbcKFlNW",
+    //   updatedData
+    // );
   }
 
   // Update form fields onChange.
