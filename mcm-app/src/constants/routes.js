@@ -7,3 +7,4 @@ export const ADMIN = "/admin";
 export const PASSWORD_UPDATE = "/password-update";
 export const PASSWORD_RESET = "/password-reset";
 export const ADD_UNIT = "/add-unit";
+export const ADD_SEMESTER = "/add-semester";

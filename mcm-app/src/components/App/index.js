@@ -16,8 +16,9 @@ import SignInPage from "../SignIn";
 import SignUpPage from "../SignUp";
 import Sidebar from "../Sidebar";
 
-// Import Unit components
+// Import Features components
 import AddUnitPage from "../AddUnit";
+import AddSemesterPage from "../Semester";
 
 // Routing
 import * as ROUTES from "../../constants/routes";
@@ -42,6 +43,7 @@ const App = () => (
       <Route path={ROUTES.PASSWORD_UPDATE} component={PasswordUpdatePage} />
       <Route path={ROUTES.PASSWORD_RESET} component={PasswordResetPage} />
       <Route path={ROUTES.ADD_UNIT} component={AddUnitPage} />
+      <Route path={ROUTES.ADD_SEMESTER} component={AddSemesterPage} />
     </div>
   </Router>
 );

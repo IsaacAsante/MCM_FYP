@@ -52,6 +52,7 @@ class SignUpFormBase extends Component {
       email: this.state.email,
     };
 
+    // Extract IDs from email addresses for both Students and Tutors
     if (role == "Tutor") {
       userData["tutorID"] = this.state.email.split("@")[0];
       userData["role"] = ROLES.TUTOR;
