@@ -16,6 +16,9 @@ import SignInPage from "../SignIn";
 import SignUpPage from "../SignUp";
 import Sidebar from "../Sidebar";
 
+// Import Unit components
+import AddUnitPage from "../AddUnit";
+
 // Routing
 import * as ROUTES from "../../constants/routes";
 import { withAuthentication } from "../Session";
@@ -38,6 +41,7 @@ const App = () => (
       <Route path={ROUTES.SIGN_UP} component={SignUpPage} />
       <Route path={ROUTES.PASSWORD_UPDATE} component={PasswordUpdatePage} />
       <Route path={ROUTES.PASSWORD_RESET} component={PasswordResetPage} />
+      <Route path={ROUTES.ADD_UNIT} component={AddUnitPage} />
     </div>
   </Router>
 );

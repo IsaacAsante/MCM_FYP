@@ -6,3 +6,4 @@ export const ACCOUNT = "/account";
 export const ADMIN = "/admin";
 export const PASSWORD_UPDATE = "/password-update";
 export const PASSWORD_RESET = "/password-reset";
+export const ADD_UNIT = "/add-unit";
