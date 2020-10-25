@@ -1,8 +1,8 @@
 import React, { Component } from "react";
-import { withRouter } from "react-router-dom";
-
 import { withFirebase } from "../Firebase";
+import { withAuthorization } from "../Session";
 import { compose } from "recompose";
+import * as ROLES from "../../constants/roles";
 
 const AddSemesterPage = () => (
   <div>
@@ -137,8 +137,12 @@ class AddSemesterFormBase extends Component {
   }
 }
 
-export default AddSemesterPage;
+// console.log("Semester component: ", authUser.role);
 
-const AddSemesterForm = compose(withRouter, withFirebase)(AddSemesterFormBase);
+const condition = (authUser) => authUser && authUser.role == "Tutor";
+
+export default compose(withAuthorization(condition))(AddSemesterPage);
+
+const AddSemesterForm = compose(withFirebase)(AddSemesterFormBase);
 
 export { AddSemesterForm };
