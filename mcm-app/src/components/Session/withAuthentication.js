@@ -48,11 +48,15 @@ const withAuthentication = (Component) => {
                       }
                     })
                     .catch((error) => {
+                      this.setState({ authUser: null });
                       console.error(error);
                     });
                 }
               })
-              .catch((error) => console.error(error));
+              .catch((error) => {
+                this.setState({ authUser: null });
+                console.error(error);
+              });
           } else {
             this.setState({ authUser: null });
           }

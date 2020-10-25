@@ -4,8 +4,6 @@ import { withRouter } from "react-router-dom";
 import { withFirebase } from "../Firebase";
 import { compose } from "recompose";
 
-import * as ROUTES from "../../constants/routes";
-
 const AddSemesterPage = () => (
   <div>
     <section id="main-content">
