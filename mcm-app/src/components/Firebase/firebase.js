@@ -55,6 +55,7 @@ class Firebase {
 
   /***** CLOUD FIRESTORE API  *****
    * ===========================*/
+
   getStudent = async (uid) => {
     const studentRef = this.db.collection("students").doc(uid);
     let doc = await studentRef.get();
@@ -97,5 +98,52 @@ class Firebase {
       .update(dataObj);
     console.log("Document updated!");
   };
+
+  /***** LOGIC FOR AUTHENTICATION IMPLEMENTATION *****
+   ***** ======================================= *****/
+
+  onAuthUserListener = (next, fallback) =>
+    this.auth.onAuthStateChanged((authUser) => {
+      if (authUser) {
+        this.getStudent(authUser.uid)
+          .then((res) => {
+            if (res) {
+              const student = res;
+              // console.log("Auth User:", authUser);
+              authUser = {
+                uid: authUser.uid,
+                email: authUser.email,
+                ...student,
+              };
+              next(authUser);
+              console.log("Current Student:", authUser);
+            } else {
+              this.getTutor(authUser.uid)
+                .then((ans) => {
+                  if (ans) {
+                    const tutor = ans;
+                    authUser = {
+                      uid: authUser.uid,
+                      email: authUser.email,
+                      ...tutor,
+                    };
+                    next(authUser);
+                    console.log("Current Tutor:", authUser);
+                  }
+                })
+                .catch((error) => {
+                  fallback();
+                  console.error(error);
+                });
+            }
+          })
+          .catch((error) => {
+            fallback();
+            console.error(error);
+          });
+      } else {
+        fallback();
+      }
+    });
 }
 export default Firebase;
