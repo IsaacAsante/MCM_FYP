@@ -27,75 +27,75 @@ class Firebase {
     app.initializeApp(devFirebaseConfig); // Initialize app
     this.auth = app.auth(); // For Firebase Auth
     this.db = app.firestore(); // For Cloud Firestore
-
-    /***** FIREBASE AUTH API  *****
-     * ===========================*/
-
-    // Signups
-    this.createUser = (email, password) =>
-      this.auth.createUserWithEmailAndPassword(email, password);
-
-    // Logins
-    this.signInUser = (email, password) =>
-      this.auth.signInWithEmailAndPassword(email, password);
-
-    // Logouts
-    this.signOutUser = () => {
-      this.auth.signOut();
-      console.log("Signed Out");
-    };
-
-    // Password Resets
-    this.resetUserPassword = (email) => this.auth.sendPasswordResetEmail(email);
-
-    // Update passwords
-    this.updateUserPassword = (password) =>
-      this.auth.currentUser.updatePassword(password);
-
-    /***** CLOUD FIRESTORE API  *****
-     * ===========================*/
-    this.getStudent = async (uid) => {
-      const studentRef = this.db.collection("students").doc(uid);
-      let doc = await studentRef.get();
-      return doc.data();
-    };
-
-    this.getTutor = async (uid) => {
-      const tutorRef = this.db.collection("tutors").doc(uid);
-      let doc = await tutorRef.get();
-      return doc.data();
-    };
-
-    this.getAllDocsInCollection = async (collectionID) => {
-      const docsRef = this.db.collection(collectionID);
-      const snapshot = await docsRef.get();
-      let docData = [];
-      snapshot.forEach((doc) => {
-        console.log(doc.data());
-      });
-    };
-
-    this.addUserToDB = async (collectionID, uid, dataObj) => {
-      const res = await this.db.collection(collectionID).doc(uid).set(dataObj);
-      console.log("Document added!");
-      return res;
-    };
-
-    // Use the generic addData() function variations below on primary Firestore collections (and not subcollections)
-    this.addData = async (collectionID, dataObj) => {
-      const res = await this.db.collection(collectionID).add(dataObj);
-      console.log("Document added!");
-      return res;
-    };
-
-    // Function to avoid overwriting documents (merge data instead)
-    this.updateData = async (collectionID, docID, dataObj) => {
-      const res = await this.db
-        .collection(collectionID)
-        .doc(docID)
-        .update(dataObj);
-      console.log("Document updated!");
-    };
   }
+
+  /***** FIREBASE AUTH API  *****
+   * ===========================*/
+
+  // Signups
+  createUser = (email, password) =>
+    this.auth.createUserWithEmailAndPassword(email, password);
+
+  // Logins
+  signInUser = (email, password) =>
+    this.auth.signInWithEmailAndPassword(email, password);
+
+  // Logouts
+  signOutUser = () => {
+    this.auth.signOut();
+    console.log("Signed Out");
+  };
+
+  // Password Resets
+  resetUserPassword = (email) => this.auth.sendPasswordResetEmail(email);
+
+  // Update passwords
+  updateUserPassword = (password) =>
+    this.auth.currentUser.updatePassword(password);
+
+  /***** CLOUD FIRESTORE API  *****
+   * ===========================*/
+  getStudent = async (uid) => {
+    const studentRef = this.db.collection("students").doc(uid);
+    let doc = await studentRef.get();
+    return doc.data();
+  };
+
+  getTutor = async (uid) => {
+    const tutorRef = this.db.collection("tutors").doc(uid);
+    let doc = await tutorRef.get();
+    return doc.data();
+  };
+
+  getAllDocsInCollection = async (collectionID) => {
+    const docsRef = this.db.collection(collectionID);
+    const snapshot = await docsRef.get();
+    let docData = [];
+    snapshot.forEach((doc) => {
+      console.log(doc.data());
+    });
+  };
+
+  addUserToDB = async (collectionID, uid, dataObj) => {
+    const res = await this.db.collection(collectionID).doc(uid).set(dataObj);
+    console.log("Document added!");
+    return res;
+  };
+
+  // Use the generic addData() function variations below on primary Firestore collections (and not subcollections)
+  addData = async (collectionID, dataObj) => {
+    const res = await this.db.collection(collectionID).add(dataObj);
+    console.log("Document added!");
+    return res;
+  };
+
+  // Function to avoid overwriting documents (merge data instead)
+  updateData = async (collectionID, docID, dataObj) => {
+    const res = await this.db
+      .collection(collectionID)
+      .doc(docID)
+      .update(dataObj);
+    console.log("Document updated!");
+  };
 }
 export default Firebase;
