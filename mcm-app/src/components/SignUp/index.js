@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Link, withRouter } from "react-router-dom";
 import { compose } from "recompose";
+import axios from "axios";
 
 import { withFirebase } from "../Firebase";
 import * as ROUTES from "../../constants/routes";
@@ -45,7 +46,7 @@ class SignUpFormBase extends Component {
 
   onSubmit = (event) => {
     // Grab form field values
-    const { email, passwordOne, role } = this.state;
+    const { email, passwordOne, firstname, lastname, role } = this.state;
     const userData = {
       firstname: this.state.firstname,
       lastname: this.state.lastname,
@@ -65,14 +66,13 @@ class SignUpFormBase extends Component {
       .createUser(email, passwordOne)
       .then((authUser) => {
         console.log(authUser);
-        console.log("User: ", userData);
+        console.log("User: ", JSON.stringify(userData));
         // Add data to Students collection
         if (role == ROLES.TUTOR) {
           this.props.firebase
             .addUserToDB("tutors", authUser.user.uid, userData)
             .then((res) => {
               this.setState({ ...INITIAL_STATE }); // Clear forms
-              this.props.history.push(ROUTES.DASHBOARD);
             })
             .catch((error) => this.setState({ error }));
         }
@@ -82,6 +82,30 @@ class SignUpFormBase extends Component {
             .addUserToDB("students", authUser.user.uid, userData)
             .then((res) => {
               this.setState({ ...INITIAL_STATE }); // Clear forms
+              // Send email
+              axios
+                .post(
+                  "/email/send",
+                  {
+                    firstname,
+                    lastname,
+                    email,
+                    passwordOne,
+                  },
+                  {
+                    method: "POST",
+                    headers: {
+                      "Content-type": "application/json",
+                    },
+                  }
+                )
+                .then((res) => {
+                  console.log("Backend res: ", res);
+                  this.props.history.push(ROUTES.DASHBOARD);
+                })
+                .catch((err) => {
+                  console.error("Error from backend: ", err);
+                });
               this.props.history.push(ROUTES.DASHBOARD);
             })
             .catch((error) => this.setState({ error }));
