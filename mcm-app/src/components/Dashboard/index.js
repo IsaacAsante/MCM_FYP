@@ -15,7 +15,7 @@ class DashboardPage extends React.Component {
     };
 
     axios
-      .post("/", {
+      .post("/email/send", {
         method: "POST",
         headers: {
           "Content-type": "application/json",
