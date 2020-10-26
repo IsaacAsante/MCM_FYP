@@ -1,10 +1,13 @@
+import { getRoles } from "@testing-library/react";
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import * as ROUTES from "../../constants/routes.js";
+import * as ROUTES from "../../constants/routes";
+import * as ROLES from "../../constants/roles";
+import { AuthUserContext } from "../Session";
 
 var $ = require("jquery");
 
-export default class Sidebar extends Component {
+class Sidebar extends Component {
   constructor(props) {
     super(props);
   }
@@ -68,61 +71,137 @@ export default class Sidebar extends Component {
         {/* <!--sidebar start--> */}
         <aside>
           <div id="sidebar" className="nav-collapse ">
+            <AuthUserContext.Consumer>
+              {(authUser) => {
+                if (!authUser) return <StudentNavbar />;
+                else {
+                  if (authUser.role == ROLES.STUDENT) return <StudentNavbar />;
+                  else if (authUser.role == ROLES.TUTOR) return <TutorNavbar />;
+                }
+              }}
+            </AuthUserContext.Consumer>
             {/* <!-- sidebar menu start--> */}
-            <ul className="sidebar-menu" id="nav-accordion">
-              <h5 className="centered">Isaac Asante</h5>
-              <li className="mt">
-                <Link to={ROUTES.DASHBOARD} className="active">
-                  <i className="fa fa-dashboard"></i>
-                  <span>Dashboard</span>
-                </Link>
-              </li>
-              <li>
-                <Link to={ROUTES.SIGN_IN}>
-                  <i className="fa fa-envelope"></i>
-                  <span>Units</span>
-                  {/* <span className="label label-theme pull-right mail-info">2</span> */}
-                </Link>
-              </li>
-              <li>
-                <Link to={ROUTES.SIGN_IN}>
-                  <i className="fa fa-envelope"></i>
-                  <span>Tasks </span>
-                  {/* <span className="label label-theme pull-right mail-info">2</span> */}
-                </Link>
-              </li>
-              <li>
-                <Link to={ROUTES.SIGN_IN}>
-                  <i className="fa fa-envelope"></i>
-                  <span>Bookings </span>
-                  {/* <span className="label label-theme pull-right mail-info">2</span> */}
-                </Link>
-              </li>
-              <li>
-                <Link to={ROUTES.SIGN_IN}>
-                  <i className="fa fa-envelope"></i>
-                  <span>Login </span>
-                  {/* <span className="label label-theme pull-right mail-info">2</span> */}
-                </Link>
-              </li>
-              <li>
-                <Link to={ROUTES.SIGN_UP}>
-                  <i className="fa fa-envelope"></i>
-                  <span>Sign Up </span>
-                  {/* <span className="label label-theme pull-right mail-info">2</span> */}
-                </Link>
-              </li>
-              <li>
-                <Link to={ROUTES.ACCOUNT}>
-                  <i className="fa fa-envelope"></i>
-                  <span>Your Account</span>
-                  {/* <span className="label label-theme pull-right mail-info">2</span> */}
-                </Link>
-              </li>
-            </ul>
           </div>
         </aside>
       </div>
     );
   }
 }
+
+const StudentNavbar = () => {
+  return (
+    <div>
+      <ul className="sidebar-menu" id="nav-accordion">
+        <h5 className="centered">Student Account</h5>
+        <li className="mt">
+          <Link to={ROUTES.DASHBOARD} className="active">
+            <i className="fa fa-dashboard"></i>
+            <span>Dashboard</span>
+          </Link>
+        </li>
+        <li>
+          <Link to={ROUTES.SIGN_IN}>
+            <i className="fa fa-envelope"></i>
+            <span>Units</span>
+            {/* <span className="label label-theme pull-right mail-info">2</span> */}
+          </Link>
+        </li>
+        <li>
+          <Link to={ROUTES.SIGN_IN}>
+            <i className="fa fa-envelope"></i>
+            <span>Tasks </span>
+            {/* <span className="label label-theme pull-right mail-info">2</span> */}
+          </Link>
+        </li>
+        <li>
+          <Link to={ROUTES.SIGN_IN}>
+            <i className="fa fa-envelope"></i>
+            <span>Bookings </span>
+            {/* <span className="label label-theme pull-right mail-info">2</span> */}
+          </Link>
+        </li>
+        <li>
+          <Link to={ROUTES.SIGN_IN}>
+            <i className="fa fa-envelope"></i>
+            <span>Login </span>
+            {/* <span className="label label-theme pull-right mail-info">2</span> */}
+          </Link>
+        </li>
+        <li>
+          <Link to={ROUTES.SIGN_UP}>
+            <i className="fa fa-envelope"></i>
+            <span>Sign Up </span>
+            {/* <span className="label label-theme pull-right mail-info">2</span> */}
+          </Link>
+        </li>
+        <li>
+          <Link to={ROUTES.ACCOUNT}>
+            <i className="fa fa-envelope"></i>
+            <span>Your Account</span>
+            {/* <span className="label label-theme pull-right mail-info">2</span> */}
+          </Link>
+        </li>
+      </ul>
+    </div>
+  );
+};
+
+const TutorNavbar = () => {
+  return (
+    <div>
+      <ul className="sidebar-menu" id="nav-accordion">
+        <h5 className="centered">Tutor Account</h5>
+        <li className="mt">
+          <Link to={ROUTES.DASHBOARD} className="active">
+            <i className="fa fa-dashboard"></i>
+            <span>Dashboard</span>
+          </Link>
+        </li>
+        <li>
+          <Link to={ROUTES.SIGN_IN}>
+            <i className="fa fa-envelope"></i>
+            <span>Units</span>
+            {/* <span className="label label-theme pull-right mail-info">2</span> */}
+          </Link>
+        </li>
+        <li>
+          <Link to={ROUTES.SIGN_IN}>
+            <i className="fa fa-envelope"></i>
+            <span>Tasks </span>
+            {/* <span className="label label-theme pull-right mail-info">2</span> */}
+          </Link>
+        </li>
+        <li>
+          <Link to={ROUTES.SIGN_IN}>
+            <i className="fa fa-envelope"></i>
+            <span>Bookings </span>
+            {/* <span className="label label-theme pull-right mail-info">2</span> */}
+          </Link>
+        </li>
+        <li>
+          <Link to={ROUTES.SIGN_IN}>
+            <i className="fa fa-envelope"></i>
+            <span>Login </span>
+            {/* <span className="label label-theme pull-right mail-info">2</span> */}
+          </Link>
+        </li>
+        <li>
+          <Link to={ROUTES.SIGN_UP}>
+            <i className="fa fa-envelope"></i>
+            <span>Sign Up </span>
+            {/* <span className="label label-theme pull-right mail-info">2</span> */}
+          </Link>
+        </li>
+        <li>
+          <Link to={ROUTES.ACCOUNT}>
+            <i className="fa fa-envelope"></i>
+            <span>Your Account</span>
+            {/* <span className="label label-theme pull-right mail-info">2</span> */}
+          </Link>
+        </li>
+      </ul>
+    </div>
+  );
+};
+
+export default Sidebar;
