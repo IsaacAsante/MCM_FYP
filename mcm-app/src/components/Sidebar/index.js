@@ -73,7 +73,7 @@ class Sidebar extends Component {
           <div id="sidebar" className="nav-collapse ">
             <AuthUserContext.Consumer>
               {(authUser) => {
-                if (!authUser) return <StudentNavbar />;
+                if (!authUser) return <GenericNavbar />;
                 else {
                   if (authUser.role == ROLES.STUDENT) return <StudentNavbar />;
                   else if (authUser.role == ROLES.TUTOR) return <TutorNavbar />;
@@ -117,20 +117,6 @@ const StudentNavbar = () => {
           <Link to={ROUTES.SIGN_IN}>
             <i className="fa fa-envelope"></i>
             <span>Bookings </span>
-            {/* <span className="label label-theme pull-right mail-info">2</span> */}
-          </Link>
-        </li>
-        <li>
-          <Link to={ROUTES.SIGN_IN}>
-            <i className="fa fa-envelope"></i>
-            <span>Login </span>
-            {/* <span className="label label-theme pull-right mail-info">2</span> */}
-          </Link>
-        </li>
-        <li>
-          <Link to={ROUTES.SIGN_UP}>
-            <i className="fa fa-envelope"></i>
-            <span>Sign Up </span>
             {/* <span className="label label-theme pull-right mail-info">2</span> */}
           </Link>
         </li>
@@ -179,6 +165,23 @@ const TutorNavbar = () => {
           </Link>
         </li>
         <li>
+          <Link to={ROUTES.ACCOUNT}>
+            <i className="fa fa-envelope"></i>
+            <span>Your Account</span>
+            {/* <span className="label label-theme pull-right mail-info">2</span> */}
+          </Link>
+        </li>
+      </ul>
+    </div>
+  );
+};
+
+const GenericNavbar = () => {
+  return (
+    <div>
+      <ul className="sidebar-menu" id="nav-accordion">
+        <h5 className="centered">Welcome!</h5>
+        <li className="mt">
           <Link to={ROUTES.SIGN_IN}>
             <i className="fa fa-envelope"></i>
             <span>Login </span>
@@ -189,13 +192,6 @@ const TutorNavbar = () => {
           <Link to={ROUTES.SIGN_UP}>
             <i className="fa fa-envelope"></i>
             <span>Sign Up </span>
-            {/* <span className="label label-theme pull-right mail-info">2</span> */}
-          </Link>
-        </li>
-        <li>
-          <Link to={ROUTES.ACCOUNT}>
-            <i className="fa fa-envelope"></i>
-            <span>Your Account</span>
             {/* <span className="label label-theme pull-right mail-info">2</span> */}
           </Link>
         </li>
