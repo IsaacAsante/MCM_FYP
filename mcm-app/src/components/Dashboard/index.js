@@ -1,5 +1,5 @@
 import React from "react";
-import axios from "axios";
+import { withFirebase } from "../Firebase";
 
 import { withAuthorization } from "../Session";
 
@@ -11,6 +11,13 @@ class DashboardPage extends React.Component {
   componentDidMount() {
     const { unitCode } = this.props.match.params;
     console.log(unitCode);
+
+    this.props.firebase
+      .getUnit(unitCode)
+      .then((result) => {
+        console.log("Result:", result);
+      })
+      .catch((err) => console.error(err));
   }
 
   render() {

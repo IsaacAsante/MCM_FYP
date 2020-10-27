@@ -68,6 +68,22 @@ class Firebase {
     return doc.data();
   };
 
+  getUnit = async (uCode) => {
+    const unitRef = this.db.collection("units");
+    // To avoid conflict, query for both upper- and lower-case representations of the unit code.
+    const snapshotLowercase = await unitRef
+      .where("unitCode", "==", uCode.toUpperCase())
+      .get();
+    const snapshotUppercase = await unitRef
+      .where("unitCode", "==", uCode.toLowerCase())
+      .get();
+    const unit = [];
+    // Consolidation
+    snapshotLowercase.forEach((doc) => unit.push(doc.data()));
+    snapshotUppercase.forEach((doc) => unit.push(doc.data()));
+    return unit;
+  };
+
   getAllDocsInCollection = async (collectionID) => {
     const docsRef = this.db.collection(collectionID);
     const snapshot = await docsRef.get();
