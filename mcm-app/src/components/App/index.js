@@ -44,6 +44,7 @@ const App = () => (
       <Route path={ROUTES.PASSWORD_RESET} component={PasswordResetPage} />
       <Route path={ROUTES.ADD_UNIT} component={AddUnitPage} />
       <Route path={ROUTES.ADD_SEMESTER} component={AddSemesterPage} />
+      <Route path={ROUTES.SINGLE_UNIT} component={DashboardPage} />
     </div>
   </Router>
 );

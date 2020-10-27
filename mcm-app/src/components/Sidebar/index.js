@@ -71,16 +71,20 @@ class Sidebar extends Component {
         {/* <!--sidebar start--> */}
         <aside>
           <div id="sidebar" className="nav-collapse ">
-            <AuthUserContext.Consumer>
-              {(authUser) => {
-                if (!authUser) return <GenericNavbar />;
-                else {
-                  if (authUser.role == ROLES.STUDENT) return <StudentNavbar />;
-                  else if (authUser.role == ROLES.TUTOR) return <TutorNavbar />;
-                }
-              }}
-            </AuthUserContext.Consumer>
-            {/* <!-- sidebar menu start--> */}
+            <ul className="sidebar-menu" id="nav-accordion">
+              <AuthUserContext.Consumer>
+                {(authUser) => {
+                  if (!authUser) return <GenericNavbar />;
+                  else {
+                    if (authUser.role == ROLES.STUDENT)
+                      return <StudentNavbar />;
+                    else if (authUser.role == ROLES.TUTOR)
+                      return <TutorNavbar />;
+                  }
+                }}
+              </AuthUserContext.Consumer>
+              {/* <!-- sidebar menu start--> */}
+            </ul>
           </div>
         </aside>
       </div>
@@ -91,43 +95,41 @@ class Sidebar extends Component {
 const StudentNavbar = () => {
   return (
     <div>
-      <ul className="sidebar-menu" id="nav-accordion">
-        <h5 className="centered">Student Account</h5>
-        <li className="mt">
-          <Link to={ROUTES.DASHBOARD} className="active">
-            <i className="fa fa-dashboard"></i>
-            <span>Dashboard</span>
-          </Link>
-        </li>
-        <li>
-          <Link to={ROUTES.SIGN_IN}>
-            <i className="fa fa-envelope"></i>
-            <span>Units</span>
-            {/* <span className="label label-theme pull-right mail-info">2</span> */}
-          </Link>
-        </li>
-        <li>
-          <Link to={ROUTES.SIGN_IN}>
-            <i className="fa fa-envelope"></i>
-            <span>Tasks </span>
-            {/* <span className="label label-theme pull-right mail-info">2</span> */}
-          </Link>
-        </li>
-        <li>
-          <Link to={ROUTES.SIGN_IN}>
-            <i className="fa fa-envelope"></i>
-            <span>Bookings </span>
-            {/* <span className="label label-theme pull-right mail-info">2</span> */}
-          </Link>
-        </li>
-        <li>
-          <Link to={ROUTES.ACCOUNT}>
-            <i className="fa fa-envelope"></i>
-            <span>Your Account</span>
-            {/* <span className="label label-theme pull-right mail-info">2</span> */}
-          </Link>
-        </li>
-      </ul>
+      <h5 className="centered">Student Account</h5>
+      <li className="mt">
+        <Link to={ROUTES.DASHBOARD} className="active">
+          <i className="fa fa-dashboard"></i>
+          <span>Dashboard</span>
+        </Link>
+      </li>
+      <li>
+        <Link to={ROUTES.SIGN_IN}>
+          <i className="fa fa-envelope"></i>
+          <span>Units</span>
+          {/* <span className="label label-theme pull-right mail-info">2</span> */}
+        </Link>
+      </li>
+      <li>
+        <Link to={ROUTES.SIGN_IN}>
+          <i className="fa fa-envelope"></i>
+          <span>Tasks </span>
+          {/* <span className="label label-theme pull-right mail-info">2</span> */}
+        </Link>
+      </li>
+      <li>
+        <Link to={ROUTES.SIGN_IN}>
+          <i className="fa fa-envelope"></i>
+          <span>Bookings </span>
+          {/* <span className="label label-theme pull-right mail-info">2</span> */}
+        </Link>
+      </li>
+      <li>
+        <Link to={ROUTES.ACCOUNT}>
+          <i className="fa fa-envelope"></i>
+          <span>Your Account</span>
+          {/* <span className="label label-theme pull-right mail-info">2</span> */}
+        </Link>
+      </li>
     </div>
   );
 };
@@ -135,43 +137,41 @@ const StudentNavbar = () => {
 const TutorNavbar = () => {
   return (
     <div>
-      <ul className="sidebar-menu" id="nav-accordion">
-        <h5 className="centered">Tutor Account</h5>
-        <li className="mt">
-          <Link to={ROUTES.DASHBOARD} className="active">
-            <i className="fa fa-dashboard"></i>
-            <span>Dashboard</span>
-          </Link>
-        </li>
-        <li>
-          <Link to={ROUTES.SIGN_IN}>
-            <i className="fa fa-envelope"></i>
-            <span>Units</span>
-            {/* <span className="label label-theme pull-right mail-info">2</span> */}
-          </Link>
-        </li>
-        <li>
-          <Link to={ROUTES.SIGN_IN}>
-            <i className="fa fa-envelope"></i>
-            <span>Tasks </span>
-            {/* <span className="label label-theme pull-right mail-info">2</span> */}
-          </Link>
-        </li>
-        <li>
-          <Link to={ROUTES.SIGN_IN}>
-            <i className="fa fa-envelope"></i>
-            <span>Bookings </span>
-            {/* <span className="label label-theme pull-right mail-info">2</span> */}
-          </Link>
-        </li>
-        <li>
-          <Link to={ROUTES.ACCOUNT}>
-            <i className="fa fa-envelope"></i>
-            <span>Your Account</span>
-            {/* <span className="label label-theme pull-right mail-info">2</span> */}
-          </Link>
-        </li>
-      </ul>
+      <h5 className="centered">Tutor Account</h5>
+      <li className="mt">
+        <Link to={ROUTES.DASHBOARD} className="active">
+          <i className="fa fa-dashboard"></i>
+          <span>Dashboard</span>
+        </Link>
+      </li>
+      <li>
+        <Link to={ROUTES.SIGN_IN}>
+          <i className="fa fa-envelope"></i>
+          <span>Units</span>
+          {/* <span className="label label-theme pull-right mail-info">2</span> */}
+        </Link>
+      </li>
+      <li>
+        <Link to={ROUTES.SIGN_IN}>
+          <i className="fa fa-envelope"></i>
+          <span>Tasks </span>
+          {/* <span className="label label-theme pull-right mail-info">2</span> */}
+        </Link>
+      </li>
+      <li>
+        <Link to={ROUTES.SIGN_IN}>
+          <i className="fa fa-envelope"></i>
+          <span>Bookings </span>
+          {/* <span className="label label-theme pull-right mail-info">2</span> */}
+        </Link>
+      </li>
+      <li>
+        <Link to={ROUTES.ACCOUNT}>
+          <i className="fa fa-envelope"></i>
+          <span>Your Account</span>
+          {/* <span className="label label-theme pull-right mail-info">2</span> */}
+        </Link>
+      </li>
     </div>
   );
 };
@@ -179,23 +179,21 @@ const TutorNavbar = () => {
 const GenericNavbar = () => {
   return (
     <div>
-      <ul className="sidebar-menu" id="nav-accordion">
-        <h5 className="centered">Welcome!</h5>
-        <li className="mt">
-          <Link to={ROUTES.SIGN_IN}>
-            <i className="fa fa-envelope"></i>
-            <span>Login </span>
-            {/* <span className="label label-theme pull-right mail-info">2</span> */}
-          </Link>
-        </li>
-        <li>
-          <Link to={ROUTES.SIGN_UP}>
-            <i className="fa fa-envelope"></i>
-            <span>Sign Up </span>
-            {/* <span className="label label-theme pull-right mail-info">2</span> */}
-          </Link>
-        </li>
-      </ul>
+      <h5 className="centered">Welcome!</h5>
+      <li className="mt">
+        <Link to={ROUTES.SIGN_IN}>
+          <i className="fa fa-envelope"></i>
+          <span>Login </span>
+          {/* <span className="label label-theme pull-right mail-info">2</span> */}
+        </Link>
+      </li>
+      <li>
+        <Link to={ROUTES.SIGN_UP}>
+          <i className="fa fa-envelope"></i>
+          <span>Sign Up </span>
+          {/* <span className="label label-theme pull-right mail-info">2</span> */}
+        </Link>
+      </li>
     </div>
   );
 };
