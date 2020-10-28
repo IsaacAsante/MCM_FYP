@@ -46,11 +46,19 @@ class AddUnitFormBase extends Component {
     };
 
     this.props.firebase
-      .addData("units", unitData)
-      .then((res) => {
-        console.log("Response from Units:", res);
-        this.setState({ ...INITIAL_STATE });
-        // this.props.history.push(ROUTES.DASHBOARD);
+      // Query if the unit already exists first.
+      .getUnit(unitData.unitCode)
+      .then((resArray) => {
+        if (resArray.length != 0) {
+          this.setState({ error: "This unit already exists in the database." });
+          console.log("Unit exists.", this.state.error);
+        } else {
+          this.props.firebase.addData("units", unitData).then((res) => {
+            console.log("Response from Units:", res);
+            this.setState({ ...INITIAL_STATE });
+            // this.props.history.push(ROUTES.DASHBOARD);
+          });
+        }
       })
       .catch((error) => {
         this.setState({ error });
@@ -100,7 +108,7 @@ class AddUnitFormBase extends Component {
         </button>
         <div className="form-group has-error">
           <div className="col-lg-10">
-            <p className="help-block">{error && error.message}</p>
+            <p className="help-block">{error}</p>
           </div>
         </div>
       </form>
