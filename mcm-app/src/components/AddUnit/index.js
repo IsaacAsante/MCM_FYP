@@ -41,8 +41,8 @@ class AddUnitFormBase extends Component {
   onSubmit = (event) => {
     event.preventDefault();
     const unitData = {
-      unitCode: this.state.unitCode,
-      name: this.state.unitName,
+      unitCode: this.state.unitCode.toUpperCase(),
+      name: this.state.unitName.toUpperCase(),
     };
 
     this.props.firebase
