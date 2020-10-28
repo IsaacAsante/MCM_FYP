@@ -51,12 +51,11 @@ class AddUnitFormBase extends Component {
       .then((resArray) => {
         if (resArray.length != 0) {
           this.setState({ error: "This unit already exists in the database." });
-          console.log("Unit exists.", this.state.error);
         } else {
           this.props.firebase.addData("units", unitData).then((res) => {
-            console.log("Response from Units:", res);
             this.setState({ ...INITIAL_STATE });
-            // this.props.history.push(ROUTES.DASHBOARD);
+            // console.log("Unit: ", `${ROUTES.UNITS}/${unitData.unitCode}`);
+            // this.props.history.push(`${ROUTES.UNITS}/${unitData.unitCode}`);
           });
         }
       })
@@ -70,7 +69,7 @@ class AddUnitFormBase extends Component {
   };
 
   render() {
-    const { unitCode, unitName, error } = this.state;
+    const { unitCode, unitName, error, success } = this.state;
 
     // Both unit code and unit name fields must be filled
     const isInvalid = unitCode === "" || unitName === "";

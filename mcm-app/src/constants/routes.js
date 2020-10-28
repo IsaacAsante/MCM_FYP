@@ -1,6 +1,7 @@
 export const ACCOUNT = "/account";
 export const ADD_SEMESTER = "/add-semester";
 export const ADD_UNIT = "/add-unit";
+export const Add_UNIT_OFFERING = "/add-unit-offering";
 export const ADMIN = "/admin";
 export const DASHBOARD = "/dashboard";
 export const LANDING = "/";
@@ -9,3 +10,4 @@ export const PASSWORD_UPDATE = "/password-update";
 export const SIGN_IN = "/login";
 export const SIGN_UP = "/register";
 export const SINGLE_UNIT = "/units/:unitCode";
+export const UNITS = "/units";
