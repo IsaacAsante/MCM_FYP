@@ -124,6 +124,14 @@ class Firebase {
     return offerings.get();
   };
 
+  verifySemester = async (semNo, semYear, semType) => {
+    let semesters = await this.db.collection("semesters");
+    semesters = await semesters.where("year", "==", semYear);
+    semesters = await semesters.where("type", "==", semType);
+    semesters = await semesters.where("number", "==", semNo);
+    return semesters.get();
+  };
+
   /***** LOGIC FOR AUTHENTICATION IMPLEMENTATION *****
    ***** ======================================= *****/
 

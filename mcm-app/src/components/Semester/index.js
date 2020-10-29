@@ -40,26 +40,43 @@ class AddSemesterFormBase extends Component {
 
   onSubmit = (event) => {
     event.preventDefault();
-    const unitData = {
+    const semesterData = {
       number: this.state.number,
       year: this.state.year,
-      type: this.state.type,
+      type: this.state.type.toUpperCase(),
     };
 
-    console.log("Unit data:", unitData);
+    console.log("Semester data:", semesterData);
 
+    // Verify for potential duplicate before adding the entry to the database
     this.props.firebase
-      .addData("semesters", unitData)
+      .verifySemester(semesterData.number, semesterData.year, semesterData.type)
       .then((res) => {
-        console.log("Response from Semester:", res);
-        this.setState({
-          number: "",
-          year: "",
-          type: "",
-          error: null,
-          success: "Semester successfully created.",
-        });
-        // this.props.history.push(ROUTES.DASHBOARD);
+        if (!res.empty) {
+          console.log("This semester already exists.", res);
+          this.setState({
+            error: `Semester ${semesterData.number}, ${semesterData.year} (${semesterData.type}) already exists in the database.`,
+            success: null,
+          });
+        } else {
+          console.log("No duplicate:", res);
+          this.props.firebase
+            .addData("semesters", semesterData)
+            .then((res) => {
+              console.log("Response from Semester:", res);
+              this.setState({
+                number: "",
+                year: "",
+                type: "",
+                error: null,
+                success: "Semester successfully created.",
+              });
+              // this.props.history.push(ROUTES.DASHBOARD);
+            })
+            .catch((err) => {
+              this.setState({ error: "Something went wrong. Please retry." });
+            });
+        }
       })
       .catch((error) => {
         this.setState({ error });
@@ -78,7 +95,7 @@ class AddSemesterFormBase extends Component {
   render() {
     const { number, year, type, error, success } = this.state;
 
-    // Both unit code and unit name fields must be filled
+    // All the form's fields must be valid
     const isInvalid = number === "" || year === "" || type === "";
 
     return (
@@ -125,7 +142,7 @@ class AddSemesterFormBase extends Component {
               onChange={this.updateType}
               value={this.state.type}
             >
-              <option value="None">Select a type</option>
+              <option value="">Select a type</option>
               <option value="Regular">Regular</option>
               <option value="Winter">Summer Term</option>
               <option value="Summer">Winter Term</option>
