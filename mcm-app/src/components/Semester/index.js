@@ -27,6 +27,8 @@ const INITIAL_STATE = {
   number: "",
   year: "",
   type: "",
+  error: null,
+  success: null,
 };
 
 class AddSemesterFormBase extends Component {
@@ -50,7 +52,13 @@ class AddSemesterFormBase extends Component {
       .addData("semesters", unitData)
       .then((res) => {
         console.log("Response from Semester:", res);
-        this.setState({ ...INITIAL_STATE });
+        this.setState({
+          number: "",
+          year: "",
+          type: "",
+          error: null,
+          success: "Semester successfully created.",
+        });
         // this.props.history.push(ROUTES.DASHBOARD);
       })
       .catch((error) => {
@@ -68,7 +76,7 @@ class AddSemesterFormBase extends Component {
   };
 
   render() {
-    const { number, year, type, error } = this.state;
+    const { number, year, type, error, success } = this.state;
 
     // Both unit code and unit name fields must be filled
     const isInvalid = number === "" || year === "" || type === "";
@@ -129,7 +137,8 @@ class AddSemesterFormBase extends Component {
         </button>
         <div className="form-group has-error">
           <div className="col-lg-10">
-            <p className="help-block">{error && error.message}</p>
+            <p className="help-block">{error}</p>
+            <p className="text-success">{success}</p>
           </div>
         </div>
       </form>
