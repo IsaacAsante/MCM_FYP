@@ -60,8 +60,19 @@ class AddUnitOfferingFormBase extends Component {
 
   onSubmit = (event) => {
     event.preventDefault();
-    const unitOfferingData = {};
-    console.log(this.state);
+    const unitOfferingData = {
+      unitID: this.state.selectedUnit,
+      semesterID: this.state.selectedSemester,
+    };
+    console.log(unitOfferingData);
+
+    this.props.firebase
+      .addData("unitofferings", unitOfferingData)
+      .then((res) => console.log(res))
+      .catch((error) => {
+        console.log(error);
+        this.setState({ error });
+      });
   };
 
   onChange = (event) => {
