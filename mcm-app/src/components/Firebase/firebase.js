@@ -117,6 +117,13 @@ class Firebase {
     console.log("Document updated!");
   };
 
+  verifyUnitOffering = async (unitID, semesterID) => {
+    let offerings = await this.db.collection("unitofferings");
+    offerings = await offerings.where("unitID", "==", unitID);
+    offerings = await offerings.where("semesterID", "==", semesterID);
+    return offerings.get();
+  };
+
   /***** LOGIC FOR AUTHENTICATION IMPLEMENTATION *****
    ***** ======================================= *****/
 

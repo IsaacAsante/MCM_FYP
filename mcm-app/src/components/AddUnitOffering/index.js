@@ -27,10 +27,11 @@ const AddUnitOfferingPage = () => (
 
 const INITIAL_STATE = {
   units: [],
-  selectedUnit: "none",
+  selectedUnit: "None",
   semesters: [],
-  selectedSemester: "none",
+  selectedSemester: "None",
   error: null,
+  success: null,
 };
 
 class AddUnitOfferingFormBase extends Component {
@@ -67,11 +68,33 @@ class AddUnitOfferingFormBase extends Component {
     console.log(unitOfferingData);
 
     this.props.firebase
-      .addData("unitofferings", unitOfferingData)
-      .then((res) => console.log(res))
-      .catch((error) => {
-        console.log(error);
-        this.setState({ error });
+      .verifyUnitOffering(unitOfferingData.unitID, unitOfferingData.semesterID)
+      .then((res) => {
+        if (!res.empty) {
+          console.log("This unit already exists.", res);
+          this.setState({
+            error: "This unit offering already exists in the database.",
+            success: null,
+          });
+        } else {
+          this.props.firebase
+            .addData("unitofferings", unitOfferingData)
+            .then((res) => {
+              this.setState({
+                selectedSemester: "None",
+                selectedUnit: "None",
+                error: null,
+                success: "United Offering created successfully",
+              });
+            })
+            .catch((error) => {
+              console.log(error);
+              this.setState({ error, success: null });
+            });
+        }
+      })
+      .catch((err) => {
+        this.setState({ error: "Something went wrong. Please retry." });
       });
   };
 
@@ -81,10 +104,17 @@ class AddUnitOfferingFormBase extends Component {
   };
 
   render() {
-    const { units, semesters, error } = this.state;
+    const {
+      units,
+      semesters,
+      selectedUnit,
+      selectedSemester,
+      error,
+      success,
+    } = this.state;
 
     // Both unit code and unit name fields must be filled
-    const isInvalid = units === "None" || semesters === "";
+    const isInvalid = selectedUnit === "None" || selectedSemester === "None";
 
     return (
       <form onSubmit={this.onSubmit} className="form-horizontal style-form">
@@ -95,7 +125,11 @@ class AddUnitOfferingFormBase extends Component {
               className="form-control"
               name="selectedUnit"
               onChange={this.onChange}
+              value={selectedUnit}
             >
+              <option key="1" value="None">
+                --
+              </option>
               {units.map((doc) => (
                 <option key={doc.id} value={doc.id}>
                   {doc.unitCode + " " + doc.name}
@@ -112,7 +146,11 @@ class AddUnitOfferingFormBase extends Component {
               className="form-control"
               name="selectedSemester"
               onChange={this.onChange}
+              value={selectedSemester}
             >
+              <option key="1" value="None">
+                --
+              </option>
               {semesters.map((doc) => (
                 <option key={doc.id} value={doc.id}>
                   {"Semester " +
@@ -134,6 +172,7 @@ class AddUnitOfferingFormBase extends Component {
         <div className="form-group has-error">
           <div className="col-lg-10">
             <p className="help-block">{error}</p>
+            <p className="text-success">{success}</p>
           </div>
         </div>
       </form>
