@@ -84,8 +84,9 @@ class Firebase {
     const snapshot = await docsRef.get();
     let docData = [];
     snapshot.forEach((doc) => {
-      console.log(doc.data());
+      docData.push(doc.data());
     });
+    return docData;
   };
 
   addUserToDB = async (collectionID, uid, dataObj) => {
@@ -97,6 +98,12 @@ class Firebase {
   // Use the generic addData() function variations below on primary Firestore collections (and not subcollections)
   addData = async (collectionID, dataObj) => {
     const res = await this.db.collection(collectionID).add(dataObj);
+    if (res) {
+      const doc = await this.db
+        .collection(collectionID)
+        .doc(res.id)
+        .set({ id: res.id }, { merge: true });
+    }
     console.log("Document added!");
     return res;
   };

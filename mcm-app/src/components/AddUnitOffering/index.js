@@ -26,8 +26,10 @@ const AddUnitOfferingPage = () => (
 );
 
 const INITIAL_STATE = {
-  unit: "None",
-  semester: "None",
+  units: [],
+  selectedUnit: "none",
+  semesters: [],
+  selectedSemester: "none",
   error: null,
 };
 
@@ -38,19 +40,40 @@ class AddUnitOfferingFormBase extends Component {
     this.state = { ...INITIAL_STATE };
   }
 
+  componentDidMount() {
+    this.props.firebase
+      .getAllDocsInCollection("units")
+      .then((units) => {
+        console.log("Units:", units);
+        this.setState({ units });
+      })
+      .catch((err) => console.error(err));
+
+    this.props.firebase
+      .getAllDocsInCollection("semesters")
+      .then((semesters) => {
+        console.log("Semesters:", semesters);
+        this.setState({ semesters });
+      })
+      .catch((err) => console.error(err));
+  }
+
   onSubmit = (event) => {
     event.preventDefault();
+    const unitOfferingData = {};
+    console.log(this.state);
   };
 
   onChange = (event) => {
     this.setState({ [event.target.name]: event.target.value });
+    console.log(this.state.selectedUnit);
   };
 
   render() {
-    const { unit, semester, error } = this.state;
+    const { units, semesters, error } = this.state;
 
     // Both unit code and unit name fields must be filled
-    const isInvalid = unit === "None" || semester === "";
+    const isInvalid = units === "None" || semesters === "";
 
     return (
       <form onSubmit={this.onSubmit} className="form-horizontal style-form">
@@ -59,11 +82,14 @@ class AddUnitOfferingFormBase extends Component {
           <div className="col-sm-10 col-md-4">
             <select
               className="form-control"
-              name="unit"
-              onChange={this.updateValue}
-              value={this.state.role}
+              name="selectedUnit"
+              onChange={this.onChange}
             >
-              <option value="None">Select Unit</option>
+              {units.map((doc) => (
+                <option key={doc.id} value={doc.id}>
+                  {doc.unitCode + " " + doc.name}
+                </option>
+              ))}
             </select>
           </div>
         </div>
@@ -73,14 +99,24 @@ class AddUnitOfferingFormBase extends Component {
           <div className="col-sm-10 col-md-4">
             <select
               className="form-control"
-              name="semester"
-              onChange={this.updateValue}
-              value={this.state.role}
+              name="selectedSemester"
+              onChange={this.onChange}
             >
-              <option value="None">Select Semester</option>
+              {semesters.map((doc) => (
+                <option key={doc.id} value={doc.id}>
+                  {"Semester " +
+                    doc.number +
+                    ", " +
+                    doc.year +
+                    " (" +
+                    doc.type +
+                    ")"}
+                </option>
+              ))}
             </select>
           </div>
         </div>
+
         <button disabled={isInvalid} type="submit" className="btn btn-theme">
           Add Unit Offering
         </button>
