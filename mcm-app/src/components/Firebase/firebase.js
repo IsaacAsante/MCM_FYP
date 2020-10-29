@@ -79,6 +79,12 @@ class Firebase {
     return unit;
   };
 
+  getUnitOffering = async (docID) => {
+    const unitOfferingRef = this.db.collection("unitofferings").doc(docID);
+    let doc = await unitOfferingRef.get();
+    return doc.data();
+  };
+
   getAllDocsInCollection = async (collectionID) => {
     const docsRef = this.db.collection(collectionID);
     const snapshot = await docsRef.get();

@@ -10,4 +10,5 @@ export const PASSWORD_UPDATE = "/password-update";
 export const SIGN_IN = "/login";
 export const SIGN_UP = "/register";
 export const SINGLE_UNIT = "/units/:unitCode";
+export const SINGLE_UNIT_OFFERING = "/unit-offerings/:offeringID";
 export const UNITS = "/units";

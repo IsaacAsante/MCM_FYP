@@ -80,6 +80,7 @@ class AddUnitOfferingFormBase extends Component {
           this.props.firebase
             .addData("unitofferings", unitOfferingData)
             .then((res) => {
+              // Successful operation
               this.setState({
                 selectedSemester: "None",
                 selectedUnit: "None",

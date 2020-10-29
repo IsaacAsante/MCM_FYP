@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Route } from "react-router-dom";
 // Scripts
 import "bootstrap/dist/js/bootstrap.bundle";
 
-// Import Components
+// Import Basic components
 import AccountPage from "../Account";
 import AddUnitOfferingPage from "../AddUnitOffering";
 import AdminPage from "../Admin";
@@ -20,6 +20,7 @@ import Sidebar from "../Sidebar";
 // Import Features components
 import AddUnitPage from "../AddUnit";
 import AddSemesterPage from "../Semester";
+import UnitOfferingPage from "../ViewUnitOffering";
 
 // Routing
 import * as ROUTES from "../../constants/routes";
@@ -47,6 +48,7 @@ const App = () => (
       <Route path={ROUTES.ADD_UNIT} component={AddUnitPage} />
       <Route path={ROUTES.ADD_SEMESTER} component={AddSemesterPage} />
       <Route path={ROUTES.SINGLE_UNIT} component={DashboardPage} />
+      <Route path={ROUTES.SINGLE_UNIT_OFFERING} component={UnitOfferingPage} />
     </div>
   </Router>
 );
