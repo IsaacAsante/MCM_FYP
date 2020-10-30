@@ -32,6 +32,7 @@ class UnitOfferingPage extends React.Component {
             .then((unit) => {
               console.log("Unit loaded:", unit);
               this.setState({ unit });
+              this.setState({ unitError: "" });
             })
             .catch((err) =>
               this.setState({
@@ -45,6 +46,7 @@ class UnitOfferingPage extends React.Component {
             .then((semester) => {
               console.log("Semester loaded:", semester);
               this.setState({ semester });
+              this.setState({ semesterError: "" });
             })
             .catch((err) => {
               this.setState({
@@ -52,6 +54,12 @@ class UnitOfferingPage extends React.Component {
                   "There was an error fetching the semester data for this unit offering.",
               });
             });
+          console.log(this.state);
+        } else {
+          this.setState({
+            semesterError: "Invalid semester.",
+            unitError: "Invalid unit.",
+          });
         }
       })
       .catch((err) => console.error(err));
@@ -68,11 +76,50 @@ class UnitOfferingPage extends React.Component {
   }
 
   render() {
+    const { unit, semester, semesterError, unitError } = this.state;
+    const invalid =
+      semesterError ==
+        "There was an error fetching the unit data for this unit offering." ||
+      semesterError == "Invalid semester." ||
+      unitError ==
+        "There was an error fetching the unit data for this unit offering." ||
+      unitError == "Invalid unit.";
     return (
       <div>
         <section id="main-content">
           <section className="wrapper">
-            <h1>Unit Offering component</h1>
+            <div className="row mt">
+              <div className="col-sm-12">
+                <h2>
+                  {invalid ? " " : <i className="fa fa-angle-right"></i>}
+                  {unit && ` ${unit.unitCode} ${unit.name}`}
+                </h2>
+                <h3>
+                  {invalid ? " " : <i className="fa fa-angle-right"></i>}
+                  {semester &&
+                    ` Semester ${semester.number}, ${semester.year} (${semester.type})`}
+                </h3>
+                {invalid ? <h2>{invalid && "Invalid Unit Offering"}</h2> : " "}
+                {invalid ? <hr /> : " "}
+                <p className="text-danger">
+                  <h3>{semesterError}</h3>
+                </p>
+                <p className="text-danger">
+                  <h3>{unitError}</h3>
+                </p>
+                {invalid ? <hr /> : " "}
+                {invalid ? (
+                  <p>
+                    <strong>
+                      Please ensure this unit offering is available in the
+                      database.
+                    </strong>
+                  </p>
+                ) : (
+                  " "
+                )}
+              </div>
+            </div>
           </section>
         </section>
       </div>
