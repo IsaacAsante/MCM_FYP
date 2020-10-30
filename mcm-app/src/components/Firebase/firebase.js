@@ -56,6 +56,22 @@ class Firebase {
   /***** CLOUD FIRESTORE API  *****
    * ===========================*/
 
+  findSemester = async (semesterID) => {
+    const semesterRef = this.db.collection("semesters");
+    const snapshot = await semesterRef.where("id", "==", semesterID).get();
+    const semesters = [];
+    snapshot.forEach((doc) => semesters.push(doc.data()));
+    return semesters[0]; // Return a single semester (by ID, so there's only one valid entry).
+  };
+
+  findUnit = async (unitID) => {
+    const unitRef = this.db.collection("units");
+    const snapshot = await unitRef.where("id", "==", unitID).get();
+    const units = [];
+    snapshot.forEach((doc) => units.push(doc.data()));
+    return units[0]; // Return a single semester (by ID, so there's only one valid entry).
+  };
+
   getStudent = async (uid) => {
     const studentRef = this.db.collection("students").doc(uid);
     let doc = await studentRef.get();
