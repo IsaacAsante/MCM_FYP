@@ -1,12 +1,15 @@
+import { auth } from "firebase";
 import React from "react";
 import { withFirebase } from "../Firebase";
 
 import { withAuthorization } from "../Session";
 
 const INITIAL_STATE = {
-  unit: null,
+  allocateMessage: "Allocate Yourself",
+  authUser: null,
   semester: null,
   semesterError: null,
+  unit: null,
   unitError: null,
 };
 
@@ -18,7 +21,12 @@ class UnitOfferingPage extends React.Component {
 
   componentDidMount() {
     const { offeringID } = this.props.match.params;
-    console.log(offeringID);
+
+    // Recognize current user
+    this.props.firebase.onAuthUserListener((authUser) => {
+      console.log("User now: ", authUser);
+      this.setState({ authUser });
+    });
 
     // Get a single unit
     this.props.firebase
@@ -75,8 +83,22 @@ class UnitOfferingPage extends React.Component {
     //     .catch((err) => console.error(err));
   }
 
+  onAllocate = (event) => {
+    this.props.firebase.findAllocation(this.state.authUser.uid).then((res) => {
+      console.log("Allocation:", res);
+    });
+    this.setState({ allocateMessage: "Allocated" });
+  };
+
   render() {
-    const { unit, semester, semesterError, unitError } = this.state;
+    const {
+      allocateMessage,
+      authUser,
+      semester,
+      semesterError,
+      unit,
+      unitError,
+    } = this.state;
     const invalid =
       semesterError ==
         "There was an error fetching the unit data for this unit offering." ||
@@ -108,8 +130,12 @@ class UnitOfferingPage extends React.Component {
                   <div className="row mt">
                     <div className="col-sm-12">
                       <button className="btn btn-theme">Add New Task</button>
-                      <button type="button" className="btn btn-danger ml-1">
-                        Allocate Yourself
+                      <button
+                        type="button"
+                        className="btn btn-danger ml-1"
+                        onClick={this.onAllocate}
+                      >
+                        {allocateMessage}
                       </button>
                     </div>
                   </div>
@@ -118,12 +144,8 @@ class UnitOfferingPage extends React.Component {
                 {/* If invalid - Show the error messages*/}
                 {invalid ? <h2>{invalid && "Invalid Unit Offering"}</h2> : " "}
                 {invalid ? <hr /> : " "}
-                <p className="text-danger">
-                  <h3>{semesterError}</h3>
-                </p>
-                <p className="text-danger">
-                  <h3>{unitError}</h3>
-                </p>
+                <h3 className="text-danger">{semesterError}</h3>
+                <h3 className="text-danger">{unitError}</h3>
                 {invalid ? <hr /> : " "}
                 {invalid ? (
                   <p>
