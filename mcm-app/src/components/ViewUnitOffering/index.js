@@ -7,6 +7,7 @@ import { withAuthorization } from "../Session";
 const INITIAL_STATE = {
   allocateMessage: "Allocate Yourself",
   authUser: null,
+  offeringID: null,
   semester: null,
   semesterError: null,
   unit: null,
@@ -20,7 +21,9 @@ class UnitOfferingPage extends React.Component {
   }
 
   componentDidMount() {
-    const { offeringID } = this.props.match.params;
+    const offeringID = this.props.match.params.offeringID;
+    this.setState({ offeringID });
+    console.log(offeringID);
 
     // Recognize current user
     this.props.firebase.onAuthUserListener((authUser) => {
@@ -28,7 +31,7 @@ class UnitOfferingPage extends React.Component {
       this.setState({ authUser });
     });
 
-    // Get a single unit
+    // Get the offering's unit
     this.props.firebase
       .getUnitOffering(offeringID)
       .then((result) => {
@@ -49,6 +52,7 @@ class UnitOfferingPage extends React.Component {
               })
             );
 
+          // Get the offering's semester
           this.props.firebase
             .findSemester(result.semesterID)
             .then((semester) => {
@@ -71,23 +75,27 @@ class UnitOfferingPage extends React.Component {
         }
       })
       .catch((err) => console.error(err));
-
-    // Get a semester
-    //   const { semester } = this.props.match.params;
-    //   console.log(semester);
-    //   this.props.firebase
-    //     .getSemester(semester)
-    //     .then((result) => {
-    //       console.log("Result:", result);
-    //     })
-    //     .catch((err) => console.error(err));
   }
 
   onAllocate = (event) => {
     this.props.firebase.findAllocation(this.state.authUser.uid).then((res) => {
       console.log("Allocation:", res);
+      if (res === undefined) {
+        const allocationData = {
+          tutorID: this.state.authUser.uid,
+          unitOfferings: [this.state.offeringID],
+        };
+        console.log("Allocation data: ", allocationData);
+        this.props.firebase
+          .addData("allocations", allocationData)
+          .then((res) => {
+            console.log(res);
+            this.setState({ allocateMessage: "Allocated" });
+          });
+      } else {
+        console.log("Allocation found:", res);
+      }
     });
-    this.setState({ allocateMessage: "Allocated" });
   };
 
   render() {
