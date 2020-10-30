@@ -5,6 +5,7 @@ import { withFirebase } from "../Firebase";
 import { withAuthorization } from "../Session";
 
 const INITIAL_STATE = {
+  allocated: false,
   allocateMessage: "Allocate Yourself",
   authUser: null,
   offeringID: null,
@@ -27,8 +28,16 @@ class UnitOfferingPage extends React.Component {
 
     // Recognize current user
     this.props.firebase.onAuthUserListener((authUser) => {
-      console.log("User now: ", authUser);
       this.setState({ authUser });
+      // Determine if a Tutor is already allocated to the unit offering currently being viewed, or not.
+      this.props.firebase.findAllocation(authUser.uid).then((res) => {
+        if (res) {
+          console.log("Response to debug:", res);
+          if (res.unitOfferings.includes(offeringID)) {
+            this.setState({ allocated: true, allocateMessage: "Allocated" });
+          }
+        }
+      });
     });
 
     // Get the offering's unit
@@ -79,13 +88,12 @@ class UnitOfferingPage extends React.Component {
 
   onAllocate = (event) => {
     this.props.firebase.findAllocation(this.state.authUser.uid).then((res) => {
-      console.log("Allocation:", res);
       if (res === undefined) {
         const allocationData = {
           tutorID: this.state.authUser.uid,
           unitOfferings: [this.state.offeringID],
         };
-        console.log("Allocation data: ", allocationData);
+        // Create an allocation entry for the logged in Tutor
         this.props.firebase
           .addData("allocations", allocationData)
           .then((res) => {
@@ -93,13 +101,24 @@ class UnitOfferingPage extends React.Component {
             this.setState({ allocateMessage: "Allocated" });
           });
       } else {
-        console.log("Allocation found:", res);
+        if (!res.unitOfferings.includes(this.state.offeringID)) {
+          res.unitOfferings.push(this.state.offeringID);
+          // console.log("Allocation array:", res);
+          this.props.firebase
+            .updateData("allocations", res.id, {
+              unitOfferings: res.unitOfferings,
+            })
+            .then(() => {
+              this.setState({ allocated: true, allocateMessage: "Allocated" });
+            });
+        }
       }
     });
   };
 
   render() {
     const {
+      allocated,
       allocateMessage,
       authUser,
       semester,
@@ -139,6 +158,7 @@ class UnitOfferingPage extends React.Component {
                     <div className="col-sm-12">
                       <button className="btn btn-theme">Add New Task</button>
                       <button
+                        disabled={allocated}
                         type="button"
                         className="btn btn-danger ml-1"
                         onClick={this.onAllocate}

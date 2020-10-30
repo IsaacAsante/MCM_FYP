@@ -139,11 +139,11 @@ class Firebase {
   };
 
   // Function to avoid overwriting documents (merge data instead)
-  updateData = async (collectionID, docID, dataObj) => {
+  updateData = async (collectionID, docID, fieldObj) => {
     const res = await this.db
       .collection(collectionID)
       .doc(docID)
-      .update(dataObj);
+      .update(fieldObj);
     console.log("Document updated!");
   };
 
