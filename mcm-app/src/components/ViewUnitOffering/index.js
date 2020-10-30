@@ -88,8 +88,9 @@ class UnitOfferingPage extends React.Component {
       <div>
         <section id="main-content">
           <section className="wrapper">
-            <div className="row mt">
+            <div className="row">
               <div className="col-sm-12">
+                {/* If valid - Show headings */}
                 <h2>
                   {invalid ? " " : <i className="fa fa-angle-right"></i>}
                   {unit && ` ${unit.unitCode} ${unit.name}`}
@@ -97,8 +98,24 @@ class UnitOfferingPage extends React.Component {
                 <h3>
                   {invalid ? " " : <i className="fa fa-angle-right"></i>}
                   {semester &&
-                    ` Semester ${semester.number}, ${semester.year} (${semester.type})`}
+                    ` Semester ${semester.number} - ${semester.year} (${semester.type})`}
                 </h3>
+
+                {/* If invalid - Show the buttons */}
+                {invalid ? (
+                  " "
+                ) : (
+                  <div className="row mt">
+                    <div className="col-sm-12">
+                      <button className="btn btn-theme">Add New Task</button>
+                      <button type="button" className="btn btn-danger ml-1">
+                        Allocate Yourself
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {/* If invalid - Show the error messages*/}
                 {invalid ? <h2>{invalid && "Invalid Unit Offering"}</h2> : " "}
                 {invalid ? <hr /> : " "}
                 <p className="text-danger">
