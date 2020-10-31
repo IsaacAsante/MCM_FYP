@@ -1,7 +1,7 @@
 export const ACCOUNT = "/account";
 export const ADD_SEMESTER = "/add-semester";
 export const ADD_UNIT = "/add-unit";
-export const Add_UNIT_OFFERING = "/add-unit-offering";
+export const ADD_UNIT_OFFERING = "/add-unit-offering";
 export const ADMIN = "/admin";
 export const DASHBOARD = "/dashboard";
 export const LANDING = "/";

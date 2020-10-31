@@ -39,6 +39,11 @@
 
 /* Dashboard - Cards */
 
+.grey-panel,
+.weather {
+  cursor: pointer;
+}
+
 .grey-panel .grey-header {
   margin-bottom: 0px;
 }

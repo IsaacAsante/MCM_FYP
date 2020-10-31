@@ -1,7 +1,8 @@
 import React from "react";
 import { withFirebase } from "../Firebase";
-
 import { withAuthorization } from "../Session";
+
+import * as ROUTES from "../../constants/routes";
 
 const INITIAL_STATE = {
   authUser: null,
@@ -66,9 +67,10 @@ class DashboardPage extends React.Component {
     });
   }
 
-  componentDidUpdate() {
-    console.log("Component update:", this.state);
-  }
+  onClick = (offeringID) => {
+    console.log(offeringID);
+    this.props.history.push(`/unit-offerings/${offeringID}`);
+  };
 
   render() {
     return (
@@ -82,7 +84,7 @@ class DashboardPage extends React.Component {
             <div className="row mt">
               {this.state.unitOfferings
                 ? this.state.unitOfferings.map((doc) => (
-                    <Card key={doc.id} offering={doc} />
+                    <Card key={doc.id} offering={doc} redirect={this.onClick} />
                   ))
                 : " "}
             </div>
@@ -98,9 +100,13 @@ class Card extends React.Component {
     super(props);
   }
 
+  click = () => {
+    this.props.redirect(this.props.offering.id);
+  };
+
   render() {
     return (
-      <div className="col-md-4 col-sm-4 mb">
+      <div className="col-md-4 col-sm-4 mb" onClick={this.click}>
         <div className="grey-panel">
           <div className="grey-header mb-0">
             <h5>{`Semester ${this.props.offering.semester.number} - ${this.props.offering.semester.year}`}</h5>
