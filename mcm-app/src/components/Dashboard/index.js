@@ -5,7 +5,7 @@ import { withAuthorization } from "../Session";
 
 const INITIAL_STATE = {
   authUser: null,
-  unitOfferings: null,
+  unitOfferings: [],
 };
 class DashboardPage extends React.Component {
   constructor(props) {
@@ -28,67 +28,89 @@ class DashboardPage extends React.Component {
                 .then((offeringDoc) => {
                   let offeringDataObj = {
                     id: offeringDoc.id,
-                    semester: null,
-                    unit: null,
+                    semester: {},
+                    unit: {},
                   };
                   // Get the semester data for every allocation instance
                   this.props.firebase
                     .findSemester(offeringDoc.semesterID)
                     .then((semesterData) => {
                       offeringDataObj.semester = semesterData;
+                      return offeringDataObj;
+                    })
+                    .then((offeringDataObj) => {
+                      // Get the semester data for every allocation instance
+                      this.props.firebase
+                        .findUnit(offeringDoc.unitID)
+                        .then((unitData) => {
+                          offeringDataObj.unit = unitData;
+                          return offeringDataObj;
+                        })
+                        .then((offeringDataObj) => {
+                          offerings = offerings.concat(offeringDataObj);
+                          // console.log(offerings);
+                          this.setState({ unitOfferings: offerings });
+                        });
                     })
                     .catch((err) => {
                       console.error(err);
                     });
-
-                  // Get the semester data for every allocation instance
-                  this.props.firebase
-                    .findUnit(offeringDoc.unitID)
-                    .then((unitData) => {
-                      offeringDataObj.unit = unitData;
-                    })
-                    .catch((err) => {
-                      console.error(err);
-                    });
-                  offerings.push(offeringDataObj);
                 })
                 .catch((err) => {
                   console.error(err);
                 });
             });
-            this.setState({ unitOfferings: offerings });
-            console.log(this.state);
           }
         }
       });
     });
   }
 
+  componentDidUpdate() {
+    console.log("Component update:", this.state);
+  }
+
   render() {
     return (
       <div>
         <section id="main-content">
-          <section class="wrapper site-min-height">
+          <section className="wrapper site-min-height">
             <h3>
-              <i class="fa fa-angle-right"></i> Dashboard - Allocated Unit
+              <i className="fa fa-angle-right"></i> Dashboard - Allocated Unit
               Offerings
             </h3>
-            <div class="row mt">
-              <div class="col-md-4 col-sm-4 mb">
-                <div class="grey-panel">
-                  <div class="grey-header mb-0">
-                    <h5>SERVER LOAD</h5>
-                  </div>
-                </div>
-                <div class="weather pn">
-                  <i class="fa fa-graduation-cap fa-4x"></i>
-                  <h3>COS10009 Introduction to Programming </h3>
-                  {/* <h4>Optional</h4> */}
-                </div>
-              </div>
+            <div className="row mt">
+              {this.state.unitOfferings
+                ? this.state.unitOfferings.map((doc) => (
+                    <Card key={doc.id} offering={doc} />
+                  ))
+                : " "}
             </div>
           </section>
         </section>
+      </div>
+    );
+  }
+}
+
+class Card extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    return (
+      <div className="col-md-4 col-sm-4 mb">
+        <div className="grey-panel">
+          <div className="grey-header mb-0">
+            <h5>Year: {this.props.offering.semester.year}</h5>
+          </div>
+        </div>
+        <div className="weather pn">
+          <i className="fa fa-graduation-cap fa-4x"></i>
+          <h3>COS10009 Introduction to Programming </h3>
+          {/* <h4>Optional</h4> */}
+        </div>
       </div>
     );
   }
