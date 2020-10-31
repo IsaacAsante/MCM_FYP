@@ -68,8 +68,25 @@ class DashboardPage extends React.Component {
     return (
       <div>
         <section id="main-content">
-          <section className="wrapper">
-            <h1>Dashboard component</h1>
+          <section class="wrapper site-min-height">
+            <h3>
+              <i class="fa fa-angle-right"></i> Dashboard - Allocated Unit
+              Offerings
+            </h3>
+            <div class="row mt">
+              <div class="col-md-4 col-sm-4 mb">
+                <div class="grey-panel">
+                  <div class="grey-header mb-0">
+                    <h5>SERVER LOAD</h5>
+                  </div>
+                </div>
+                <div class="weather pn">
+                  <i class="fa fa-graduation-cap fa-4x"></i>
+                  <h3>COS10009 Introduction to Programming </h3>
+                  {/* <h4>Optional</h4> */}
+                </div>
+              </div>
+            </div>
           </section>
         </section>
       </div>
