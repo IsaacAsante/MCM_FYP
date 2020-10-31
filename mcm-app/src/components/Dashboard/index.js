@@ -103,12 +103,14 @@ class Card extends React.Component {
       <div className="col-md-4 col-sm-4 mb">
         <div className="grey-panel">
           <div className="grey-header mb-0">
-            <h5>Year: {this.props.offering.semester.year}</h5>
+            <h5>{`Semester ${this.props.offering.semester.number} - ${this.props.offering.semester.year}`}</h5>
           </div>
         </div>
         <div className="weather pn">
           <i className="fa fa-graduation-cap fa-4x"></i>
-          <h3>COS10009 Introduction to Programming </h3>
+          <h3>
+            {`${this.props.offering.unit.unitCode} ${this.props.offering.unit.name}`}{" "}
+          </h3>
           {/* <h4>Optional</h4> */}
         </div>
       </div>
