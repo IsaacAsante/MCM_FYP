@@ -51,7 +51,7 @@ class AddUnitOfferingFormBase extends Component {
       .catch((err) => console.error(err));
 
     this.props.firebase
-      .getAllDocsInCollection("semesters")
+      .getValidSemesters()
       .then((semesters) => {
         console.log("Semesters:", semesters);
         this.setState({ semesters });

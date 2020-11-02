@@ -40,9 +40,19 @@ class AddSemesterFormBase extends Component {
 
   onSubmit = (event) => {
     event.preventDefault();
+    // Test for valid semester number and year.
+    if (this.state.number > 2 || this.state.number <= 0) {
+      this.setState({ error: "Your semester number must be either 1 or 2." });
+      return;
+    } else if (this.state.year < new Date().getFullYear()) {
+      this.setState({
+        error: `You may only create semesters for ${new Date().getFullYear()} and beyond.`,
+      });
+      return;
+    }
     const semesterData = {
-      number: this.state.number,
-      year: this.state.year,
+      number: parseInt(this.state.number),
+      year: parseInt(this.state.year),
       type: this.state.type.toUpperCase(),
     };
 
@@ -110,6 +120,7 @@ class AddSemesterFormBase extends Component {
               value={number}
               onChange={this.onChange}
               type="number"
+              max="2"
               placeholder="E.g. 1 or 2"
               className="form-control"
             />
@@ -124,7 +135,8 @@ class AddSemesterFormBase extends Component {
               name="year"
               value={year}
               onChange={this.onChange}
-              type="text"
+              type="number"
+              min="2019"
               placeholder="E.g. 2021"
               className="form-control"
             />
@@ -144,8 +156,8 @@ class AddSemesterFormBase extends Component {
             >
               <option value="">Select a type</option>
               <option value="Regular">Regular</option>
-              <option value="Winter">Summer Term</option>
-              <option value="Summer">Winter Term</option>
+              <option value="Summer">Summer Term</option>
+              <option value="Winter">Winter Term</option>
             </select>
           </div>
         </div>

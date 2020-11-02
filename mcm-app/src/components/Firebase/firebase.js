@@ -109,6 +109,15 @@ class Firebase {
     return doc.data();
   };
 
+  getValidSemesters = async () => {
+    const semestersRef = this.db.collection("semesters");
+    const currentYear = new Date().getFullYear();
+    const snapshot = await semestersRef.where("year", ">=", currentYear).get();
+    const semesters = [];
+    snapshot.forEach((doc) => semesters.push(doc.data()));
+    return semesters;
+  };
+
   getAllDocsInCollection = async (collectionID) => {
     const docsRef = this.db.collection(collectionID);
     const snapshot = await docsRef.get();
