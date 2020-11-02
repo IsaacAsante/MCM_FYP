@@ -54,6 +54,10 @@ class AddUnitOfferingFormBase extends Component {
       .getValidSemesters()
       .then((semesters) => {
         console.log("Semesters:", semesters);
+        // Sort the semesters first
+        semesters.sort(function (a, b) {
+          return a.year - b.year || a.number - b.number;
+        });
         this.setState({ semesters });
       })
       .catch((err) => console.error(err));
