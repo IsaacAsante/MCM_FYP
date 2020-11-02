@@ -45,7 +45,19 @@ class AddUnitOfferingFormBase extends Component {
     this.props.firebase
       .getAllDocsInCollection("units")
       .then((units) => {
-        console.log("Units:", units);
+        // console.log("Units:", units);
+        // Sort the units by unit code.
+        function compare(a, b) {
+          if (a.unitCode < b.unitCode) {
+            return -1;
+          }
+          if (a.unitCode > b.unitCode) {
+            return 1;
+          }
+          return 0;
+        }
+
+        units.sort(compare);
         this.setState({ units });
       })
       .catch((err) => console.error(err));
@@ -53,8 +65,8 @@ class AddUnitOfferingFormBase extends Component {
     this.props.firebase
       .getValidSemesters()
       .then((semesters) => {
-        console.log("Semesters:", semesters);
-        // Sort the semesters first
+        // console.log("Semesters:", semesters);
+        // Sort the semesters by year, then by number.
         semesters.sort((a, b) => {
           return a.year - b.year || a.number - b.number;
         });
