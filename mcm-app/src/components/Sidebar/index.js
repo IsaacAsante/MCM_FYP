@@ -112,7 +112,7 @@ const StudentNavbar = () => {
       <li>
         <Link to={ROUTES.SIGN_IN}>
           <i className="fa fa-envelope"></i>
-          <span>Tasks </span>
+          <span>Tasks</span>
           {/* <span className="label label-theme pull-right mail-info">2</span> */}
         </Link>
       </li>
@@ -145,16 +145,23 @@ const TutorNavbar = () => {
         </Link>
       </li>
       <li>
-        <Link to={ROUTES.SIGN_IN}>
+        <Link to={ROUTES.ADD_UNIT}>
           <i className="fa fa-envelope"></i>
           <span>Units</span>
           {/* <span className="label label-theme pull-right mail-info">2</span> */}
         </Link>
       </li>
       <li>
-        <Link to={ROUTES.SIGN_IN}>
+        <Link to={ROUTES.ADD_UNIT_OFFERING}>
           <i className="fa fa-envelope"></i>
-          <span>Tasks </span>
+          <span>Unit Offerings</span>
+          {/* <span className="label label-theme pull-right mail-info">2</span> */}
+        </Link>
+      </li>
+      <li>
+        <Link to={ROUTES.ADD_SEMESTER}>
+          <i className="fa fa-envelope"></i>
+          <span>Semester</span>
           {/* <span className="label label-theme pull-right mail-info">2</span> */}
         </Link>
       </li>
