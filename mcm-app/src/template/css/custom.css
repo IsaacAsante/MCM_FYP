@@ -91,3 +91,8 @@
 .tasks-widget .task-list > li {
   padding: 20px 5px;
 }
+
+.tasks-widget .task-title:hover {
+  cursor: pointer;
+  text-decoration: underline;
+}

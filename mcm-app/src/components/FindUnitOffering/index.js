@@ -36,6 +36,7 @@ class FindOfferingPage extends React.Component {
           offerings.forEach((doc) => {
             console.log("Unit Offering doc:", doc);
             let unitObj = {
+              id: doc.id,
               unit: null,
               semester: null,
             };
@@ -70,61 +71,84 @@ class FindOfferingPage extends React.Component {
       });
   }
 
+  onClick = (event) => {
+    const offeringID = event.target.getAttribute("uid");
+    this.props.history.push(`/unit-offerings/${offeringID}`);
+  };
+
   render() {
     return (
       <div>
         <section id="main-content">
           <section className="wrapper">
-            <div class="row">
-              <div class="col-md-12">
+            <div className="row">
+              <div className="col-md-12">
                 <h3>
-                  <i class="fa fa-angle-right" aria-hidden="true"></i> Active
-                  Unit Offerings
+                  <i className="fa fa-angle-right" aria-hidden="true"></i>{" "}
+                  Active Unit Offerings
                 </h3>
               </div>
             </div>
-            <div class="row">
-              <div class="col-md-12">
-                <section class="task-panel tasks-widget">
-                  <div class="panel-heading">
-                    <div class="pull-left">
-                      <p class="mt">
+            <div className="row">
+              <div className="col-md-12">
+                <section className="task-panel tasks-widget">
+                  <div className="panel-heading">
+                    <div className="pull-left">
+                      <p className="mt">
                         Allocate yourself to any of the unit offerings listed
                         below.
                       </p>
                     </div>
                     <br />
                   </div>
-                  <div class="panel-body mt">
-                    <div class="task-content">
-                      <ul class="task-list">
+                  <div className="panel-body mt">
+                    <div className="task-content">
+                      <ul className="task-list">
                         {this.state.unitOfferings.length > 0
                           ? this.state.unitOfferings.map((doc) => (
-                              <li>
-                                <i class="fa fa-graduation-cap icon"></i>
-                                <div class="task-title">
-                                  <span class="task-title-sp">
-                                    <strong>{doc.unit.unitCode}</strong>{" "}
+                              <li
+                                key={doc.id}
+                                uid={doc.id}
+                                onClick={this.onClick}
+                              >
+                                <i
+                                  className="fa fa-graduation-cap icon"
+                                  uid={doc.id}
+                                  onClick={this.onClick}
+                                ></i>
+                                <div
+                                  className="task-title"
+                                  uid={doc.id}
+                                  onClick={this.onClick}
+                                >
+                                  <span
+                                    className="task-title-sp"
+                                    uid={doc.id}
+                                    onClick={this.onClick}
+                                  >
+                                    <strong uid={doc.id} onClick={this.onClick}>
+                                      {doc.unit.unitCode}
+                                    </strong>{" "}
                                     {doc.unit.name} - Semester{" "}
                                     {doc.semester.number}, {doc.semester.year} (
                                     {doc.semester.type})
                                   </span>
-                                  {/* <span class="badge bg-important">Allocated</span> */}
+                                  {/* <span className="badge bg-important">Allocated</span> */}
                                 </div>
                               </li>
                             ))
                           : " "}
                       </ul>
                     </div>
-                    {/* <div class=" add-task-row mb">
+                    {/* <div className=" add-task-row mb">
                       <a
-                        class="btn btn-success btn-sm pull-left"
+                        className="btn btn-success btn-sm pull-left"
                         href="todo_list.html#"
                       >
                         Add New Tasks
                       </a>
                       <a
-                        class="btn btn-default btn-sm pull-right"
+                        className="btn btn-default btn-sm pull-right"
                         href="todo_list.html#"
                       >
                         See All Tasks
