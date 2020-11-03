@@ -6,6 +6,7 @@ import * as ROUTES from "../../constants/routes";
 
 const INITIAL_STATE = {
   authUser: null,
+  warning: false,
   unitOfferings: [],
 };
 class DashboardPage extends React.Component {
@@ -61,7 +62,15 @@ class DashboardPage extends React.Component {
                   console.error(err);
                 });
             });
+          } else {
+            this.setState({
+              warning: true,
+            });
           }
+        } else {
+          this.setState({
+            warning: true,
+          });
         }
       });
     });
@@ -72,7 +81,12 @@ class DashboardPage extends React.Component {
     this.props.history.push(`/unit-offerings/${offeringID}`);
   };
 
+  findUnitOffering = () => {
+    this.props.history.push(ROUTES.FIND_UNIT_OFFERING);
+  };
+
   render() {
+    const { warning } = this.state;
     return (
       <div>
         <section id="main-content">
@@ -88,6 +102,26 @@ class DashboardPage extends React.Component {
                   ))
                 : " "}
             </div>
+            {warning == true ? (
+              <div>
+                <div className="alert alert-warning">
+                  <b>You are not allocated to any active unit offering.</b> To
+                  pick unit offerings in which are a tutor, click on the button
+                  below.
+                </div>
+                <p>
+                  <button
+                    type="button"
+                    className="btn btn-danger"
+                    onClick={this.findUnitOffering}
+                  >
+                    Allocate Yourself
+                  </button>
+                </p>
+              </div>
+            ) : (
+              ""
+            )}
           </section>
         </section>
       </div>

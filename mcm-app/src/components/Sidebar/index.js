@@ -97,7 +97,7 @@ const StudentNavbar = () => {
     <div>
       <h5 className="centered">Student Account</h5>
       <li className="mt">
-        <Link to={ROUTES.DASHBOARD} className="active">
+        <Link to={ROUTES.DASHBOARD}>
           <i className="fa fa-dashboard"></i>
           <span>Dashboard</span>
         </Link>
@@ -139,7 +139,7 @@ const TutorNavbar = () => {
     <div>
       <h5 className="centered">Tutor Account</h5>
       <li className="mt">
-        <Link to={ROUTES.DASHBOARD} className="active">
+        <Link to={ROUTES.DASHBOARD}>
           <i className="fa fa-dashboard"></i>
           <span>Dashboard</span>
         </Link>
