@@ -5,14 +5,8 @@ import { withFirebase } from "../Firebase";
 import { withAuthorization } from "../Session";
 
 const INITIAL_STATE = {
-  allocated: false,
-  allocateMessage: "Allocate Yourself",
-  authUser: null,
-  offeringID: null,
-  semester: null,
-  semesterError: null,
-  unit: null,
-  unitError: null,
+  unitOfferings: [],
+  error: null,
 };
 
 class FindOfferingPage extends React.Component {
@@ -22,74 +16,48 @@ class FindOfferingPage extends React.Component {
   }
 
   componentDidMount() {
-    const offeringID = this.props.match.params.offeringID;
-    this.setState({ offeringID });
-    console.log(offeringID);
-
-    // Recognize current user
-    this.props.firebase.onAuthUserListener((authUser) => {
-      this.setState({ authUser });
-      // Determine if a Tutor is already allocated to the unit offering currently being viewed, or not.
-      this.props.firebase.findAllocation(authUser.uid).then((res) => {
-        if (res) {
-          console.log("Response to debug:", res);
-          if (res.unitOfferings.includes(offeringID)) {
-            this.setState({ allocated: true, allocateMessage: "Allocated" });
-          }
-        }
-      });
-    });
-
     // Get all offerings
+    this.props.firebase
+      .getAllDocsInCollection("unitofferings")
+      .then((offerings) => {
+        let offeringsArray = [];
+        if (offerings.length > 0) {
+          offerings.forEach((doc) => {
+            console.log("Unit Offering doc:", doc);
+            let unitObj = {
+              unit: null,
+              semester: null,
+            };
+            // Get the corresponding semesters
+            this.props.firebase
+              .findSemester(doc.semesterID)
+              .then((semester) => {
+                unitObj.semester = semester;
+                return unitObj;
+              })
+              .then((unitObj) => {
+                this.props.firebase
+                  .findUnit(doc.unitID)
+                  .then((unit) => {
+                    unitObj.unit = unit;
+                    return unitObj;
+                  })
+                  .then((unitObj) => {
+                    offeringsArray = offeringsArray.concat(unitObj);
+                    this.setState({ unitOfferings: offeringsArray });
+                    console.log("Updated state:", this.state.unitOfferings);
+                  });
+              })
+              .catch((err) => console.error(err));
+          });
+        }
+      })
+      .catch((err) => {
+        this.setState({ error: err });
+      });
   }
 
-  onAllocate = (event) => {
-    this.props.firebase.findAllocation(this.state.authUser.uid).then((res) => {
-      if (res === undefined) {
-        const allocationData = {
-          tutorID: this.state.authUser.uid,
-          unitOfferings: [this.state.offeringID],
-        };
-        // Create an allocation entry for the logged in Tutor
-        this.props.firebase
-          .addData("allocations", allocationData)
-          .then((res) => {
-            console.log(res);
-            this.setState({ allocateMessage: "Allocated" });
-          });
-      } else {
-        if (!res.unitOfferings.includes(this.state.offeringID)) {
-          res.unitOfferings.push(this.state.offeringID);
-          // console.log("Allocation array:", res);
-          this.props.firebase
-            .updateData("allocations", res.id, {
-              unitOfferings: res.unitOfferings,
-            })
-            .then(() => {
-              this.setState({ allocated: true, allocateMessage: "Allocated" });
-            });
-        }
-      }
-    });
-  };
-
   render() {
-    const {
-      allocated,
-      allocateMessage,
-      authUser,
-      semester,
-      semesterError,
-      unit,
-      unitError,
-    } = this.state;
-    const invalid =
-      semesterError ==
-        "There was an error fetching the unit data for this unit offering." ||
-      semesterError == "Invalid semester." ||
-      unitError ==
-        "There was an error fetching the unit data for this unit offering." ||
-      unitError == "Invalid unit.";
     return (
       <div>
         <section id="main-content">
@@ -117,15 +85,21 @@ class FindOfferingPage extends React.Component {
                   <div class="panel-body mt">
                     <div class="task-content">
                       <ul class="task-list">
-                        <li>
-                          <i class="fa fa-graduation-cap icon"></i>
-                          <div class="task-title">
-                            <span class="task-title-sp">
-                              Dashio - Admin Panel & Front-end Theme
-                            </span>
-                            <span class="badge bg-important">Allocated</span>
-                          </div>
-                        </li>
+                        {this.state.unitOfferings.length > 0
+                          ? this.state.unitOfferings.map((doc) => (
+                              <li>
+                                <i class="fa fa-graduation-cap icon"></i>
+                                <div class="task-title">
+                                  <span class="task-title-sp">
+                                    {doc.unit.unitCode} {doc.unit.name} -
+                                    Semester {doc.semester.number},{" "}
+                                    {doc.semester.year} ({doc.semester.type})
+                                  </span>
+                                  {/* <span class="badge bg-important">Allocated</span> */}
+                                </div>
+                              </li>
+                            ))
+                          : " "}
                       </ul>
                     </div>
                     {/* <div class=" add-task-row mb">
