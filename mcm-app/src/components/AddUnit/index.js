@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
-
+import { withAuthorization } from "../Session";
 import { withFirebase } from "../Firebase";
 import { compose } from "recompose";
 
@@ -115,7 +115,9 @@ class AddUnitFormBase extends Component {
   }
 }
 
-export default AddUnitPage;
+const condition = (authUser) => authUser && authUser.role == "Tutor";
+
+export default compose(withAuthorization(condition))(AddUnitPage);
 
 const AddUnitForm = compose(withRouter, withFirebase)(AddUnitFormBase);
 
