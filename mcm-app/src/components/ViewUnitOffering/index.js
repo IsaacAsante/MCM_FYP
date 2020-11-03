@@ -1,8 +1,9 @@
 import { auth } from "firebase";
 import React from "react";
 import { withFirebase } from "../Firebase";
-
 import { withAuthorization } from "../Session";
+
+import * as ROUTES from "../../constants/routes";
 
 const INITIAL_STATE = {
   allocated: false,
@@ -116,6 +117,10 @@ class UnitOfferingPage extends React.Component {
     });
   };
 
+  goToAddTask = () => {
+    this.props.history.push(ROUTES.ADD_NEW_TASK);
+  };
+
   render() {
     const {
       allocated,
@@ -156,7 +161,12 @@ class UnitOfferingPage extends React.Component {
                 ) : (
                   <div className="row mt">
                     <div className="col-sm-12">
-                      <button className="btn btn-theme">Add New Task</button>
+                      <button
+                        className="btn btn-theme"
+                        onClick={this.goToAddTask}
+                      >
+                        Add New Task
+                      </button>
                       <button
                         disabled={allocated}
                         type="button"

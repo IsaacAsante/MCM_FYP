@@ -6,6 +6,7 @@ import "bootstrap/dist/js/bootstrap.bundle";
 
 // Import Basic components
 import AccountPage from "../Account";
+import AddNewTaskPage from "../AddNewTask";
 import AddUnitOfferingPage from "../AddUnitOffering";
 import AdminPage from "../Admin";
 import DashboardPage from "../Dashboard";
@@ -42,6 +43,7 @@ const App = () => (
       <Navigation />
       <Sidebar />
       <Route path={ROUTES.ACCOUNT} component={AccountPage} />
+      <Route path={ROUTES.ADD_NEW_TASK} component={AddNewTaskPage} />
       <Route path={ROUTES.ADD_UNIT_OFFERING} component={AddUnitOfferingPage} />
       <Route path={ROUTES.DASHBOARD} component={DashboardPage} />
       <Route path={ROUTES.FIND_UNIT_OFFERING} component={FindUnitOffering} />
