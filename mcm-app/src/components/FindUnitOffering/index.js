@@ -15,6 +15,17 @@ class FindOfferingPage extends React.Component {
     this.state = { ...INITIAL_STATE };
   }
 
+  // Function to sort the list of unit offerings by unit code
+  compare = (a, b) => {
+    if (a.unit.unitCode < b.unit.unitCode) {
+      return -1;
+    }
+    if (a.unitCode > b.unitCode) {
+      return 1;
+    }
+    return 0;
+  };
+
   componentDidMount() {
     // Get all offerings
     this.props.firebase
@@ -44,6 +55,8 @@ class FindOfferingPage extends React.Component {
                   })
                   .then((unitObj) => {
                     offeringsArray = offeringsArray.concat(unitObj);
+                    // Sort the array
+                    offeringsArray.sort(this.compare);
                     this.setState({ unitOfferings: offeringsArray });
                     console.log("Updated state:", this.state.unitOfferings);
                   });
