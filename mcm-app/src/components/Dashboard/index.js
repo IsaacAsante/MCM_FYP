@@ -6,8 +6,9 @@ import * as ROUTES from "../../constants/routes";
 
 const INITIAL_STATE = {
   authUser: null,
-  warning: false,
+  empty: false,
   unitOfferings: [],
+  warning: false,
 };
 class DashboardPage extends React.Component {
   constructor(props) {
@@ -22,6 +23,7 @@ class DashboardPage extends React.Component {
       // Determine if a Tutor is already allocated to the unit offering currently being viewed, or not.
       this.props.firebase.findAllocation(authUser.uid).then((allocations) => {
         if (allocations) {
+          this.setState({ warning: false });
           if (allocations.unitOfferings.length > 0) {
             let offerings = [];
             allocations.unitOfferings.forEach((offeringID) => {
@@ -64,11 +66,12 @@ class DashboardPage extends React.Component {
             });
           } else {
             this.setState({
-              warning: true,
+              empty: true,
             });
           }
         } else {
           this.setState({
+            empty: true,
             warning: true,
           });
         }
@@ -86,7 +89,7 @@ class DashboardPage extends React.Component {
   };
 
   render() {
-    const { warning } = this.state;
+    const { empty, warning } = this.state;
     return (
       <div>
         <section id="main-content">
@@ -102,12 +105,25 @@ class DashboardPage extends React.Component {
                   ))
                 : " "}
             </div>
-            {warning == true ? (
+            {empty ? (
               <div>
                 <div className="alert alert-warning">
-                  <b>You are not allocated to any active unit offering.</b> To
-                  pick unit offerings in which are a tutor, click on the button
-                  below.
+                  {warning ? (
+                    <span>
+                      <b>You are not allocated to any active unit offering.</b>{" "}
+                      To pick unit offerings in which you are a tutor, click on
+                      the button below.
+                    </span>
+                  ) : (
+                    <span>
+                      <b>
+                        Oops, your list of unit allocations in the system is
+                        empty.
+                      </b>{" "}
+                      To pick unit offerings in which you are a tutor, click on
+                      the button below.
+                    </span>
+                  )}
                 </div>
                 <p>
                   <button
