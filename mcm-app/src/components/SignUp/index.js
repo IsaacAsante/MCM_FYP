@@ -73,6 +73,31 @@ class SignUpFormBase extends Component {
             .addUserToDB("tutors", authUser.user.uid, userData)
             .then((res) => {
               this.setState({ ...INITIAL_STATE }); // Clear forms
+              // Send email
+              axios
+                .post(
+                  "/email/send",
+                  {
+                    firstname,
+                    lastname,
+                    email,
+                    passwordOne,
+                  },
+                  {
+                    method: "POST",
+                    headers: {
+                      "Content-type": "application/json",
+                    },
+                  }
+                )
+                .then((res) => {
+                  console.log("Backend res: ", res);
+                  this.props.history.push(ROUTES.DASHBOARD);
+                })
+                .catch((err) => {
+                  console.error("Error from backend: ", err);
+                });
+              this.props.history.push(ROUTES.DASHBOARD);
             })
             .catch((error) => this.setState({ error }));
         }
