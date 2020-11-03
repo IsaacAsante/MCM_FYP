@@ -198,7 +198,7 @@ class UnitOfferingPage extends React.Component {
                 )}
               </div>
             </div>
-            <AddNewTask offeringID={this.props.offeringID} />
+            <AddNewTask unitoffering={this.state.offeringID} />
           </section>
         </section>
       </div>

@@ -1,7 +1,7 @@
 import React from "react";
 import DatePicker from "react-datepicker";
 
-const AddNewTask = () => (
+const AddNewTask = (props) => (
   <div className="mt">
     <h4>
       <i className="fa fa-angle-right"></i> Adding Task
@@ -9,7 +9,7 @@ const AddNewTask = () => (
     <div className="row">
       <div className="col-lg-12">
         <div className="form-panel">
-          <AddNewTaskForm />
+          <AddNewTaskForm unitoffering={props.unitoffering} />
         </div>
       </div>
     </div>
@@ -45,7 +45,7 @@ class AddNewTaskForm extends React.Component {
         this.props.offeringID
       );
     }
-    console.log(this.state);
+    console.log(this.props.unitoffering);
   };
 
   updateSubmissions = (event) => {
