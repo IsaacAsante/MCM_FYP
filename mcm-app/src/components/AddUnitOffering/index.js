@@ -134,65 +134,121 @@ class AddUnitOfferingFormBase extends Component {
     const isInvalid = selectedUnit === "None" || selectedSemester === "None";
 
     return (
-      <form onSubmit={this.onSubmit} className="form-horizontal style-form">
-        <div className="form-group">
-          <label className="col-sm-2 control-label">Select Unit</label>
-          <div className="col-sm-10 col-md-4">
-            <select
-              className="form-control"
-              name="selectedUnit"
-              onChange={this.onChange}
-              value={selectedUnit}
-            >
-              <option key="1" value="None">
-                --
-              </option>
-              {units.map((doc) => (
-                <option key={doc.id} value={doc.id}>
-                  {doc.unitCode + " " + doc.name}
+      <div>
+        <form onSubmit={this.onSubmit} className="form-horizontal style-form">
+          <div className="form-group">
+            <label className="col-sm-2 control-label">Select Unit</label>
+            <div className="col-sm-10 col-md-4">
+              <select
+                className="form-control"
+                name="selectedUnit"
+                onChange={this.onChange}
+                value={selectedUnit}
+              >
+                <option key="1" value="None">
+                  --
                 </option>
-              ))}
-            </select>
+                {units.map((doc) => (
+                  <option key={doc.id} value={doc.id}>
+                    {doc.unitCode + " " + doc.name}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
-        </div>
 
-        <div className="form-group">
-          <label className="col-sm-2 control-label">Select Semester</label>
-          <div className="col-sm-10 col-md-4">
-            <select
-              className="form-control"
-              name="selectedSemester"
-              onChange={this.onChange}
-              value={selectedSemester}
-            >
-              <option key="1" value="None">
-                --
-              </option>
-              {semesters.map((doc) => (
-                <option key={doc.id} value={doc.id}>
-                  {"Semester " +
-                    doc.number +
-                    ", " +
-                    doc.year +
-                    " (" +
-                    doc.type +
-                    ")"}
+          <div className="form-group">
+            <label className="col-sm-2 control-label">Select Semester</label>
+            <div className="col-sm-10 col-md-4">
+              <select
+                className="form-control"
+                name="selectedSemester"
+                onChange={this.onChange}
+                value={selectedSemester}
+              >
+                <option key="1" value="None">
+                  --
                 </option>
-              ))}
-            </select>
+                {semesters.map((doc) => (
+                  <option key={doc.id} value={doc.id}>
+                    {"Semester " +
+                      doc.number +
+                      ", " +
+                      doc.year +
+                      " (" +
+                      doc.type +
+                      ")"}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
-        </div>
 
-        <button disabled={isInvalid} type="submit" className="btn btn-theme">
-          Add Unit Offering
-        </button>
-        <div className="form-group has-error">
-          <div className="col-lg-10">
-            <p className="help-block">{error}</p>
-            <p className="text-success">{success}</p>
+          <button disabled={isInvalid} type="submit" className="btn btn-theme">
+            Add Unit Offering
+          </button>
+          <div className="form-group has-error">
+            <div className="col-lg-10">
+              <p className="help-block">{error}</p>
+              <p className="text-success">{success}</p>
+            </div>
+          </div>
+        </form>
+
+        <div class="row mt">
+          <div class="col-md-12">
+            <section class="task-panel tasks-widget">
+              <div class="panel-heading">
+                <div class="pull-left">
+                  <h5>
+                    <i class="fa fa-tasks"></i> Todo List - Complex Style
+                  </h5>
+                </div>
+                <br />
+              </div>
+              <div class="panel-body">
+                <div class="task-content">
+                  <ul class="task-list">
+                    <li>
+                      <div class="task-title">
+                        <span class="task-title-sp">
+                          Dashio - Admin Panel & Front-end Theme
+                        </span>
+                        <span class="badge bg-important">Allocated</span>
+                        {/* <div class="pull-right hidden-phone">
+                          <button class="btn btn-success btn-xs ml-1">
+                            <i class=" fa fa-check"></i>
+                          </button>
+                          <button class="btn btn-primary btn-xs ml-1">
+                            <i class="fa fa-pencil"></i>
+                          </button>
+                          <button class="btn btn-danger btn-xs ml-1">
+                            <i class="fa fa-trash-o "></i>
+                          </button>
+                        </div> */}
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+                {/* <div class=" add-task-row">
+                  <a
+                    class="btn btn-success btn-sm pull-left"
+                    href="todo_list.html#"
+                  >
+                    Add New Tasks
+                  </a>
+                  <a
+                    class="btn btn-default btn-sm pull-right"
+                    href="todo_list.html#"
+                  >
+                    See All Tasks
+                  </a>
+                </div> */}
+              </div>
+            </section>
           </div>
         </div>
-      </form>
+      </div>
     );
   }
 }

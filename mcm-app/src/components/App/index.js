@@ -9,6 +9,7 @@ import AccountPage from "../Account";
 import AddUnitOfferingPage from "../AddUnitOffering";
 import AdminPage from "../Admin";
 import DashboardPage from "../Dashboard";
+import FindUnitOffering from "../FindUnitOffering";
 import LandingPage from "../Landing";
 import Navigation from "../Navigation";
 import PasswordResetPage from "../PasswordReset";
@@ -31,6 +32,7 @@ import "../../template/lib/bootstrap/css/bootstrap.min.css";
 import "../../template/lib/font-awesome/css/font-awesome.css";
 import "../../template/css/style.css";
 import "../../template/css/style-responsive.css";
+import "../../template/css/to-do.css";
 import "../../template/css/custom.css";
 
 // Manages local state of an authUser object
@@ -42,6 +44,7 @@ const App = () => (
       <Route path={ROUTES.ACCOUNT} component={AccountPage} />
       <Route path={ROUTES.ADD_UNIT_OFFERING} component={AddUnitOfferingPage} />
       <Route path={ROUTES.DASHBOARD} component={DashboardPage} />
+      <Route path={ROUTES.FIND_UNIT_OFFERING} component={FindUnitOffering} />
       <Route path={ROUTES.SIGN_IN} component={SignInPage} />
       <Route path={ROUTES.SIGN_UP} component={SignUpPage} />
       <Route path={ROUTES.PASSWORD_UPDATE} component={PasswordUpdatePage} />

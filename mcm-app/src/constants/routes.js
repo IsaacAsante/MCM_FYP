@@ -4,6 +4,7 @@ export const ADD_UNIT = "/add-unit";
 export const ADD_UNIT_OFFERING = "/add-unit-offering";
 export const ADMIN = "/admin";
 export const DASHBOARD = "/dashboard";
+export const FIND_UNIT_OFFERING = "/find-unit-offering";
 export const LANDING = "/";
 export const PASSWORD_RESET = "/password-reset";
 export const PASSWORD_UPDATE = "/password-update";

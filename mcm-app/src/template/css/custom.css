@@ -37,6 +37,25 @@
   margin-left: 25px;
 }
 
+.mr-0 {
+  margin-right: 0;
+}
+.mr-1 {
+  margin-right: 5px;
+}
+.mr-2 {
+  margin-right: 10px;
+}
+.mr-3 {
+  margin-right: 15px;
+}
+.mr-4 {
+  margin-right: 20px;
+}
+.mr-5 {
+  margin-right: 25px;
+}
+
 /* Dashboard - Cards */
 
 .grey-panel,
@@ -59,4 +78,16 @@
 .weather h2,
 .weather i {
   color: #757575;
+}
+
+/* Find Unit Offering - Tasks */
+
+.tasks-widget i.icon {
+  float: left;
+  padding-top: 2px;
+  width: 30px;
+}
+
+.tasks-widget .task-list > li {
+  padding: 20px 5px;
 }
