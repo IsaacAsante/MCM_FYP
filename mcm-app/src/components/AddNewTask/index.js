@@ -1,20 +1,18 @@
 import React from "react";
 import DatePicker from "react-datepicker";
 
-const AddNewTaskPage = () => (
-  <div>
-    <section id="main-content">
-      <section className="wrapper">
-        <h1>Add New Task component</h1>
-        <div className="row mt">
-          <div className="col-lg-12">
-            <div className="form-panel">
-              <AddNewTaskForm />
-            </div>
-          </div>
+const AddNewTask = () => (
+  <div className="mt">
+    <h4>
+      <i className="fa fa-angle-right"></i> Adding Task
+    </h4>
+    <div className="row">
+      <div className="col-lg-12">
+        <div className="form-panel">
+          <AddNewTaskForm />
         </div>
-      </section>
-    </section>
+      </div>
+    </div>
   </div>
 );
 
@@ -41,6 +39,12 @@ class AddNewTaskForm extends React.Component {
 
   onSubmit = (event) => {
     event.preventDefault();
+    if (this.props.offeringID) {
+      console.log(
+        "Component can access unit offering ID",
+        this.props.offeringID
+      );
+    }
     console.log(this.state);
   };
 
@@ -114,4 +118,4 @@ class AddNewTaskForm extends React.Component {
   }
 }
 
-export default AddNewTaskPage;
+export default AddNewTask;

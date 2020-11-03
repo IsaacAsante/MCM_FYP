@@ -4,6 +4,7 @@ import { withFirebase } from "../Firebase";
 import { withAuthorization } from "../Session";
 
 import * as ROUTES from "../../constants/routes";
+import AddNewTask from "../AddNewTask";
 
 const INITIAL_STATE = {
   allocated: false,
@@ -197,6 +198,7 @@ class UnitOfferingPage extends React.Component {
                 )}
               </div>
             </div>
+            <AddNewTask offeringID={this.props.offeringID} />
           </section>
         </section>
       </div>
