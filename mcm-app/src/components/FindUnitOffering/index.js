@@ -1,12 +1,13 @@
 import { auth } from "firebase";
 import React from "react";
 import { withFirebase } from "../Firebase";
-
 import { withAuthorization } from "../Session";
+
+import * as ROUTES from "../../constants/routes";
 
 const INITIAL_STATE = {
   unitOfferings: [],
-  error: null,
+  message: "",
 };
 
 class FindOfferingPage extends React.Component {
@@ -33,6 +34,7 @@ class FindOfferingPage extends React.Component {
       .then((offerings) => {
         let offeringsArray = [];
         if (offerings.length > 0) {
+          this.setState({ message: "" });
           offerings.forEach((doc) => {
             console.log("Unit Offering doc:", doc);
             let unitObj = {
@@ -64,6 +66,10 @@ class FindOfferingPage extends React.Component {
               })
               .catch((err) => console.error(err));
           });
+        } else {
+          this.setState({
+            message: "There are currently no unit offerings in the database.",
+          });
         }
       })
       .catch((err) => {
@@ -76,7 +82,12 @@ class FindOfferingPage extends React.Component {
     this.props.history.push(`/unit-offerings/${offeringID}`);
   };
 
+  goToUnitOffering = () => {
+    this.props.history.push(ROUTES.ADD_UNIT_OFFERING);
+  };
+
   render() {
+    const { message } = this.state;
     return (
       <div>
         <section id="main-content">
@@ -139,6 +150,26 @@ class FindOfferingPage extends React.Component {
                             ))
                           : " "}
                       </ul>
+
+                      {message != "" ? (
+                        <div>
+                          <div class="alert alert-info">
+                            <b>No unit offering was found.</b> Try creating one
+                            now by clicking on the button below.
+                          </div>
+                          <p>
+                            <button
+                              type="button"
+                              class="btn btn-theme"
+                              onClick={this.goToUnitOffering}
+                            >
+                              Add Unit Offering
+                            </button>
+                          </p>
+                        </div>
+                      ) : (
+                        ""
+                      )}
                     </div>
                     {/* <div className=" add-task-row mb">
                       <a
