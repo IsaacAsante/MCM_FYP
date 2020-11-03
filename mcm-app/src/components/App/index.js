@@ -34,6 +34,7 @@ import "../../template/lib/font-awesome/css/font-awesome.css";
 import "../../template/css/style.css";
 import "../../template/css/style-responsive.css";
 import "../../template/css/to-do.css";
+import "react-datepicker/dist/react-datepicker.css";
 import "../../template/css/custom.css";
 
 // Manages local state of an authUser object

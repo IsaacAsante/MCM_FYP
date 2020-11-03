@@ -96,3 +96,15 @@
   cursor: pointer;
   text-decoration: underline;
 }
+
+/* Add New Task - Date Picker */
+
+.react-datepicker {
+  font-size: 1rem;
+}
+
+.react-datepicker__day-name,
+.react-datepicker__day,
+.react-datepicker__time-name {
+  width: 2em;
+}

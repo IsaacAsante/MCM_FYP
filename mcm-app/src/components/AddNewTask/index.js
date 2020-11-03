@@ -1,4 +1,5 @@
 import React from "react";
+import DatePicker from "react-datepicker";
 
 const AddNewTaskPage = () => (
   <div>
@@ -19,7 +20,7 @@ const AddNewTaskPage = () => (
 
 const INITIAL_STATE = {
   taskname: "",
-  deadline: "",
+  deadline: new Date(),
   maxSubmissions: 0,
   error: "",
 };
@@ -32,6 +33,10 @@ class AddNewTaskForm extends React.Component {
 
   onChange = (event) => {
     this.setState({ [event.target.name]: event.target.value });
+  };
+
+  onDateSet = (dateValue) => {
+    this.setState({ deadline: new Date(dateValue) });
   };
 
   onSubmit = (event) => {
@@ -68,13 +73,11 @@ class AddNewTaskForm extends React.Component {
             Select Deadline
           </label>
           <div className="col-sm-10">
-            <input
+            <DatePicker
+              selected={deadline}
               name="deadline"
-              value={deadline}
-              onChange={this.onChange}
-              type="text"
-              placeholder="e.g. 19/03/2021"
               className="form-control"
+              onChange={this.onDateSet}
             />
           </div>
         </div>
