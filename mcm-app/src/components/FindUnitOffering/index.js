@@ -91,9 +91,10 @@ class FindOfferingPage extends React.Component {
                                 <i class="fa fa-graduation-cap icon"></i>
                                 <div class="task-title">
                                   <span class="task-title-sp">
-                                    {doc.unit.unitCode} {doc.unit.name} -
-                                    Semester {doc.semester.number},{" "}
-                                    {doc.semester.year} ({doc.semester.type})
+                                    <strong>{doc.unit.unitCode}</strong>{" "}
+                                    {doc.unit.name} - Semester{" "}
+                                    {doc.semester.number}, {doc.semester.year} (
+                                    {doc.semester.type})
                                   </span>
                                   {/* <span class="badge bg-important">Allocated</span> */}
                                 </div>

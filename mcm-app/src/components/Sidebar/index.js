@@ -154,7 +154,14 @@ const TutorNavbar = () => {
       <li>
         <Link to={ROUTES.ADD_UNIT_OFFERING}>
           <i className="fa fa-envelope"></i>
-          <span>Unit Offerings</span>
+          <span>Add Unit Offerings</span>
+          {/* <span className="label label-theme pull-right mail-info">2</span> */}
+        </Link>
+      </li>
+      <li>
+        <Link to={ROUTES.FIND_UNIT_OFFERING}>
+          <i className="fa fa-envelope"></i>
+          <span>Find Unit Offerings</span>
           {/* <span className="label label-theme pull-right mail-info">2</span> */}
         </Link>
       </li>
