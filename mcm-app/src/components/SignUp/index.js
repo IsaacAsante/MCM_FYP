@@ -4,6 +4,7 @@ import { compose } from "recompose";
 import axios from "axios";
 
 import { withFirebase } from "../Firebase";
+import { withAuthorization } from "../Session";
 import * as ROUTES from "../../constants/routes";
 import * as ROLES from "../../constants/roles";
 
@@ -110,6 +111,7 @@ class SignUpFormBase extends Component {
             .then((res) => {
               this.setState({ ...INITIAL_STATE }); // Clear forms
               this.setState({ success: true });
+              this.props.history.push(ROUTES.DASHBOARD);
             })
             .catch((error) => this.setState({ error }));
         }
@@ -333,6 +335,8 @@ const SignUpLink = () => (
 
 const SignUpForm = compose(withRouter, withFirebase)(SignUpFormBase);
 
-export default SignUpPage;
+const condition = (authUser) => authUser && authUser.role == "Tutor";
+
+export default withAuthorization(condition)(SignUpPage);
 
 export { SignUpForm, SignUpLink };

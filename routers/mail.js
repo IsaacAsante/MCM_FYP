@@ -23,13 +23,13 @@ router.post("/send", (req, res, next) => {
 
   const plainMSG = `Dear ${
     firstname + " " + lastname
-  },\n\nA new account has been created for you by the administrator of Swinburne Sarawak's MCM System.\n\nKindly note that you may login to update your password in your account's settings, using the details below.\n\nURL: ${
+  },\n\nA new user account has been created for you by the administrator of Swinburne Sarawak's MCM System.\n\nKindly note that you may login to update your password in your account's settings, using the details below.\n\nURL: ${
     req.protocol + "://" + req.get("host")
   }\nEmail: ${emailAddress}\nPassword: ${password}\n\nRegards,\nMCM Team`;
 
   const htmlMSG = `<p>Dear ${
     firstname + " " + lastname
-  },</p><p>A new student account has been created for you by the administrator of Swinburne Sarawak's MCM System.</p><p>Kindly note that you may login to update your password in your account's settings, using the details below.</p><p><strong>URL:</strong> <a href="${
+  },</p><p>A new user account has been created for you by the administrator of Swinburne Sarawak's MCM System.</p><p>Kindly note that you may login to update your password in your account's settings, using the details below.</p><p><strong>URL:</strong> <a href="${
     req.protocol + "://" + req.get("host")
   }">${
     req.protocol + "://" + req.get("host")
