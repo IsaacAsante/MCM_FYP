@@ -1,121 +1,153 @@
+import { auth } from "firebase";
 import React from "react";
-import DatePicker from "react-datepicker";
+import { withFirebase } from "../Firebase";
+import { withAuthorization } from "../Session";
 
-const AddNewTask = (props) => (
-  <div className="mt">
-    <h4>
-      <i className="fa fa-angle-right"></i> Adding Task
-    </h4>
-    <div className="row">
-      <div className="col-lg-12">
-        <div className="form-panel">
-          <AddNewTaskForm unitoffering={props.unitoffering} />
-        </div>
-      </div>
-    </div>
-  </div>
-);
+import * as ROUTES from "../../constants/routes";
+import AddNewTaskForm from "../AddNewTask/form";
 
 const INITIAL_STATE = {
-  taskname: "",
-  deadline: new Date(),
-  maxSubmissions: 0,
-  error: "",
+  allocated: false,
+  allocateMessage: "Allocate Yourself",
+  authUser: null,
+  offeringID: null,
+  semester: null,
+  semesterError: null,
+  unit: null,
+  unitError: null,
 };
 
-class AddNewTaskForm extends React.Component {
+class AddNewTaskPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = { ...INITIAL_STATE };
   }
 
-  onChange = (event) => {
-    this.setState({ [event.target.name]: event.target.value });
-  };
+  componentDidMount() {
+    const offeringID = this.props.match.params.offeringID;
+    this.setState({ offeringID });
+    console.log(offeringID);
 
-  onDateSet = (dateValue) => {
-    this.setState({ deadline: new Date(dateValue) });
-  };
+    // Recognize current user
+    this.props.firebase.onAuthUserListener((authUser) => {
+      this.setState({ authUser });
+      // Determine if a Tutor is already allocated to the unit offering currently being viewed, or not.
+      this.props.firebase.findAllocation(authUser.uid).then((res) => {
+        if (res) {
+          console.log("Response to debug:", res);
+          if (res.unitOfferings.includes(offeringID)) {
+            this.setState({ allocated: true, allocateMessage: "Allocated" });
+          }
+        }
+      });
+    });
 
-  onSubmit = (event) => {
-    event.preventDefault();
-    if (this.props.offeringID) {
-      console.log(
-        "Component can access unit offering ID",
-        this.props.offeringID
-      );
-    }
-    console.log(this.props.unitoffering);
-  };
+    // Get the offering's unit
+    this.props.firebase
+      .getUnitOffering(offeringID)
+      .then((result) => {
+        if (result !== undefined) {
+          console.log("Result:", result);
+          console.log(result.unitID, result.semesterID);
+          this.props.firebase
+            .findUnit(result.unitID)
+            .then((unit) => {
+              console.log("Unit loaded:", unit);
+              this.setState({ unit });
+              this.setState({ unitError: "" });
+            })
+            .catch((err) =>
+              this.setState({
+                unitError:
+                  "There was an error fetching the unit data for this unit offering.",
+              })
+            );
 
-  updateSubmissions = (event) => {
-    this.setState({ maxSubmissions: event.target.value });
-    // console.log(event.target.value);
-  };
+          // Get the offering's semester
+          this.props.firebase
+            .findSemester(result.semesterID)
+            .then((semester) => {
+              console.log("Semester loaded:", semester);
+              this.setState({ semester });
+              this.setState({ semesterError: "" });
+            })
+            .catch((err) => {
+              this.setState({
+                semesterError:
+                  "There was an error fetching the semester data for this unit offering.",
+              });
+            });
+          console.log(this.state);
+        } else {
+          this.setState({
+            semesterError: "Invalid semester.",
+            unitError: "Invalid unit.",
+          });
+        }
+      })
+      .catch((err) => console.error(err));
+  }
 
   render() {
-    const { taskname, deadline, maxSubmissions, error } = this.state;
-    const isInvalid = taskname == "" || deadline == "" || maxSubmissions == 0;
+    const {
+      allocated,
+      allocateMessage,
+      authUser,
+      semester,
+      semesterError,
+      unit,
+      unitError,
+    } = this.state;
+    const invalid =
+      semesterError ==
+        "There was an error fetching the unit data for this unit offering." ||
+      semesterError == "Invalid semester." ||
+      unitError ==
+        "There was an error fetching the unit data for this unit offering." ||
+      unitError == "Invalid unit.";
     return (
-      <form onSubmit={this.onSubmit} className="form-horizontal style-form">
-        <div className="form-group">
-          <label className="col-sm-2 col-sm-2 control-label">Task Name</label>
-          <div className="col-sm-10">
-            <input
-              name="taskname"
-              value={taskname}
-              onChange={this.onChange}
-              type="text"
-              placeholder="e.g. Assessment 1 or Distinction Task 2"
-              className="form-control"
-            />
-          </div>
-        </div>
+      <div>
+        <section id="main-content">
+          <section className="wrapper">
+            <div className="row">
+              <div className="col-sm-12">
+                {/* If valid - Show headings */}
+                <h2>
+                  {invalid ? " " : <i className="fa fa-angle-right"></i>}
+                  {unit && ` ${unit.unitCode} ${unit.name}`}
+                </h2>
+                <h3>
+                  {invalid ? " " : <i className="fa fa-angle-right"></i>}
+                  {semester &&
+                    ` Semester ${semester.number} - ${semester.year} (${semester.type})`}
+                </h3>
 
-        <div className="form-group">
-          <label className="col-sm-2 col-sm-2 control-label">
-            Select Deadline
-          </label>
-          <div className="col-sm-10">
-            <DatePicker
-              selected={deadline}
-              name="deadline"
-              className="form-control"
-              onChange={this.onDateSet}
-            />
-          </div>
-        </div>
-
-        <div className="form-group">
-          <label className="col-sm-2 control-label">Maximum Consultation</label>
-          <div className="col-sm-2">
-            <select
-              className="form-control"
-              name="role"
-              onChange={this.updateSubmissions}
-              value={this.state.maxSubmissions}
-            >
-              <option value="0">--</option>
-              <option value="1">1</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
-            </select>
-          </div>
-        </div>
-        <button disabled={isInvalid} type="submit" className="btn btn-theme">
-          Save
-        </button>
-        <button type="submit" className="btn btn-danger ml-1">
-          Cancel
-        </button>
-        <div className="form-group has-error">
-          <div className="col-lg-10">
-            <p className="help-block">{error && error.message}</p>
-          </div>
-        </div>
-      </form>
+                {/* If invalid - Show the error messages*/}
+                {invalid ? <h2>{invalid && "Invalid Unit Offering"}</h2> : " "}
+                {invalid ? <hr /> : " "}
+                <h3 className="text-danger">{semesterError}</h3>
+                <h3 className="text-danger">{unitError}</h3>
+                {invalid ? <hr /> : " "}
+                {invalid ? (
+                  <p>
+                    <strong>
+                      Please ensure this unit offering is available in the
+                      database.
+                    </strong>
+                  </p>
+                ) : (
+                  " "
+                )}
+              </div>
+            </div>
+            <AddNewTaskForm unitoffering={this.state.offeringID} />
+          </section>
+        </section>
+      </div>
     );
   }
 }
 
-export default AddNewTask;
+const condition = (authUser) => !!authUser;
+
+export default withAuthorization(condition)(AddNewTaskPage);

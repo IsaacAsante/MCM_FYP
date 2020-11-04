@@ -119,7 +119,7 @@ class UnitOfferingPage extends React.Component {
   };
 
   goToAddTask = () => {
-    this.props.history.push(ROUTES.ADD_NEW_TASK);
+    this.props.history.push(this.state.offeringID + "/tasks/add");
   };
 
   render() {
@@ -198,7 +198,6 @@ class UnitOfferingPage extends React.Component {
                 )}
               </div>
             </div>
-            <AddNewTask unitoffering={this.state.offeringID} />
           </section>
         </section>
       </div>
@@ -206,6 +205,6 @@ class UnitOfferingPage extends React.Component {
   }
 }
 
-const condition = (authUser) => !!authUser;
+const condition = (authUser) => authUser && authUser.role == "Tutor";
 
 export default withAuthorization(condition)(UnitOfferingPage);

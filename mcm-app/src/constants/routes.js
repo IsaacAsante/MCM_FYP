@@ -1,5 +1,5 @@
 export const ACCOUNT = "/account";
-export const ADD_NEW_TASK = "/tasks/add";
+export const ADD_NEW_TASK = "/unit-offerings/:offeringID/tasks/add";
 export const ADD_SEMESTER = "/add-semester";
 export const ADD_UNIT = "/add-unit";
 export const ADD_UNIT_OFFERING = "/add-unit-offering";

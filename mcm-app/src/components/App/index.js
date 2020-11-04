@@ -55,7 +55,11 @@ const App = () => (
       <Route path={ROUTES.ADD_UNIT} component={AddUnitPage} />
       <Route path={ROUTES.ADD_SEMESTER} component={AddSemesterPage} />
       <Route path={ROUTES.SINGLE_UNIT} component={DashboardPage} />
-      <Route path={ROUTES.SINGLE_UNIT_OFFERING} component={UnitOfferingPage} />
+      <Route
+        exact
+        path={ROUTES.SINGLE_UNIT_OFFERING}
+        component={UnitOfferingPage}
+      />
     </div>
   </Router>
 );
