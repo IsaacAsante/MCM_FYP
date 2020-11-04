@@ -128,6 +128,16 @@ class Firebase {
     return docData;
   };
 
+  addTask = async (offeringID, taskObj) => {
+    const res = await this.db
+      .collection("unitofferings")
+      .doc(offeringID)
+      .collection("tasks")
+      .add(taskObj);
+    console.log("Task added!");
+    return res;
+  };
+
   addUserToDB = async (collectionID, uid, dataObj) => {
     const res = await this.db.collection(collectionID).doc(uid).set(dataObj);
     console.log("Document added!");

@@ -2,6 +2,7 @@ import React from "react";
 import DatePicker from "react-datepicker";
 import { withRouter } from "react-router-dom";
 import { compose } from "recompose";
+import { withFirebase } from "../Firebase";
 
 const AddNewTaskForm = (props) => (
   <div className="mt">
@@ -19,9 +20,10 @@ const AddNewTaskForm = (props) => (
 );
 
 const INITIAL_STATE = {
-  taskname: "",
+  name: "",
   deadline: new Date(),
   maxSubmissions: 0,
+  submissions: [],
   error: "",
 };
 
@@ -40,14 +42,25 @@ class TaskFormBase extends React.Component {
   };
 
   onSubmit = (event) => {
+    const taskObj = {
+      name: this.state.name,
+      deadline: this.state.deadline,
+      maxSubmissions: this.state.maxSubmissions,
+      submissions: this.state.submissions,
+    };
+
     event.preventDefault();
-    if (this.props.offeringID) {
-      console.log(
-        "Component can access unit offering ID",
-        this.props.offeringID
-      );
-    }
-    console.log(this.props.unitoffering);
+    console.log(taskObj);
+    this.props.firebase
+      .addTask(this.props.unitoffering, taskObj)
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((error) => {
+        console.log(error);
+        this.setState({ error });
+      });
+    // console.log(this.props.unitoffering);
   };
 
   updateSubmissions = (event) => {
@@ -56,21 +69,21 @@ class TaskFormBase extends React.Component {
   };
 
   backToUnitOffering = () => {
-    console.log(this.props);
-    this.props.history.push("/unit-offerings/" + this.props.unitoffering);
+    console.log("Props:", this.props);
+    // this.props.history.push("/unit-offerings/" + this.props.unitoffering);
   };
 
   render() {
-    const { taskname, deadline, maxSubmissions, error } = this.state;
-    const isInvalid = taskname == "" || deadline == "" || maxSubmissions == 0;
+    const { name, deadline, maxSubmissions, error } = this.state;
+    const isInvalid = name == "" || deadline == "" || maxSubmissions == 0;
     return (
       <form onSubmit={this.onSubmit} className="form-horizontal style-form">
         <div className="form-group">
           <label className="col-sm-2 col-sm-2 control-label">Task Name</label>
           <div className="col-sm-10">
             <input
-              name="taskname"
-              value={taskname}
+              name="name"
+              value={name}
               onChange={this.onChange}
               type="text"
               placeholder="e.g. Assessment 1 or Distinction Task 2"
@@ -129,7 +142,7 @@ class TaskFormBase extends React.Component {
   }
 }
 
-const TaskForm = compose(withRouter)(TaskFormBase);
+const TaskForm = compose(withRouter, withFirebase)(TaskFormBase);
 
 export { TaskForm };
 

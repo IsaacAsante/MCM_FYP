@@ -47,8 +47,8 @@ class AddNewTaskPage extends React.Component {
       .getUnitOffering(offeringID)
       .then((result) => {
         if (result !== undefined) {
-          console.log("Result:", result);
-          console.log(result.unitID, result.semesterID);
+          // console.log("Result:", result);
+          // console.log(result.unitID, result.semesterID);
           this.props.firebase
             .findUnit(result.unitID)
             .then((unit) => {
@@ -67,7 +67,7 @@ class AddNewTaskPage extends React.Component {
           this.props.firebase
             .findSemester(result.semesterID)
             .then((semester) => {
-              console.log("Semester loaded:", semester);
+              // console.log("Semester loaded:", semester);
               this.setState({ semester });
               this.setState({ semesterError: "" });
             })
