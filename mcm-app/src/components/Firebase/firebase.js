@@ -134,7 +134,15 @@ class Firebase {
       .doc(offeringID)
       .collection("tasks")
       .add(taskObj);
-    console.log("Task added!");
+    console.log("Task added!", res.id);
+    if (res) {
+      const doc = await this.db
+        .collection("unitofferings")
+        .doc(offeringID)
+        .collection("tasks")
+        .doc(res.id)
+        .set({ id: res.id }, { merge: true });
+    }
     return res;
   };
 

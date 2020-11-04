@@ -69,8 +69,8 @@ class TaskFormBase extends React.Component {
   };
 
   backToUnitOffering = () => {
-    console.log("Props:", this.props);
-    // this.props.history.push("/unit-offerings/" + this.props.unitoffering);
+    // console.log("Props:", this.props);
+    this.props.history.push("/unit-offerings/" + this.props.unitoffering);
   };
 
   render() {
