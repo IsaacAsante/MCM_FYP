@@ -174,6 +174,15 @@ class Firebase {
     console.log("Document updated!");
   };
 
+  verifyTask = async (offeringID, taskName) => {
+    let tasks = await this.db
+      .collection("unitofferings")
+      .doc(offeringID)
+      .collection("tasks");
+    tasks = await tasks.where("name", "==", taskName);
+    return tasks.get();
+  };
+
   verifyUnitOffering = async (unitID, semesterID) => {
     let offerings = await this.db.collection("unitofferings");
     offerings = await offerings.where("unitID", "==", unitID);
