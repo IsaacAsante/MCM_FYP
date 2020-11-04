@@ -155,7 +155,7 @@ class TaskFormBase extends React.Component {
               className="btn btn-danger ml-1"
               onClick={this.backToUnitOffering}
             >
-              Cancel
+              Go Back
             </button>
           </form>
           {!success ? (

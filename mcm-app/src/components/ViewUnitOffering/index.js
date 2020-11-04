@@ -1,5 +1,6 @@
 import { auth } from "firebase";
 import React from "react";
+import { Link } from "react-router-dom";
 import { withFirebase } from "../Firebase";
 import { withAuthorization } from "../Session";
 
@@ -218,7 +219,13 @@ class UnitOfferingPage extends React.Component {
                       {this.state.tasks
                         ? this.state.tasks.map((doc) => (
                             <tr key={doc.id}>
-                              <td>{doc.name}</td>
+                              <td>
+                                <Link
+                                  to={`/unit-offerings/${this.state.offeringID}/tasks/${doc.id}`}
+                                >
+                                  {doc.name}
+                                </Link>
+                              </td>
                               <td>{doc.deadline.seconds}</td>
                             </tr>
                           ))
