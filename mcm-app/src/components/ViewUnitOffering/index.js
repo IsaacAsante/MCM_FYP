@@ -155,49 +155,81 @@ class UnitOfferingPage extends React.Component {
                   {semester &&
                     ` Semester ${semester.number} - ${semester.year} (${semester.type})`}
                 </h3>
-
-                {/* If invalid - Show the buttons */}
-                {invalid ? (
-                  " "
-                ) : (
-                  <div className="row mt">
-                    <div className="col-sm-12">
-                      <button
-                        className="btn btn-theme"
-                        onClick={this.goToAddTask}
-                      >
-                        Add New Task
-                      </button>
-                      <button
-                        disabled={allocated}
-                        type="button"
-                        className="btn btn-danger ml-1"
-                        onClick={this.onAllocate}
-                      >
-                        {allocateMessage}
-                      </button>
-                    </div>
-                  </div>
-                )}
-
-                {/* If invalid - Show the error messages*/}
-                {invalid ? <h2>{invalid && "Invalid Unit Offering"}</h2> : " "}
-                {invalid ? <hr /> : " "}
-                <h3 className="text-danger">{semesterError}</h3>
-                <h3 className="text-danger">{unitError}</h3>
-                {invalid ? <hr /> : " "}
-                {invalid ? (
-                  <p>
-                    <strong>
-                      Please ensure this unit offering is available in the
-                      database.
-                    </strong>
-                  </p>
-                ) : (
-                  " "
-                )}
               </div>
             </div>
+
+            {/* If invalid - Show the buttons */}
+            {invalid ? (
+              " "
+            ) : (
+              <div className="row mt">
+                <div className="col-sm-12">
+                  <button className="btn btn-theme" onClick={this.goToAddTask}>
+                    Add New Task
+                  </button>
+                  <button
+                    disabled={allocated}
+                    type="button"
+                    className="btn btn-danger ml-1"
+                    onClick={this.onAllocate}
+                  >
+                    {allocateMessage}
+                  </button>
+                </div>
+              </div>
+            )}
+            <div className="row mt">
+              <div className="col-sm-12">
+                <h4>
+                  <i className="fa fa-angle-right"></i> Task List
+                </h4>
+              </div>
+            </div>
+            {/* Show the tasks from the DB */}
+            <div className="row">
+              <div className="col-md-12">
+                <div className="content-panel">
+                  <table className="table">
+                    <thead>
+                      <tr>
+                        <th>Task Name</th>
+                        <th>Deadline</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>1</td>
+                        <td>Mark</td>
+                      </tr>
+                      <tr>
+                        <td>2</td>
+                        <td>Jacob</td>
+                      </tr>
+                      <tr>
+                        <td>3</td>
+                        <td>Larry</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            {/* If invalid - Show the error messages*/}
+            {invalid ? <h2>{invalid && "Invalid Unit Offering"}</h2> : " "}
+            {invalid ? <hr /> : " "}
+            <h3 className="text-danger">{semesterError}</h3>
+            <h3 className="text-danger">{unitError}</h3>
+            {invalid ? <hr /> : " "}
+            {invalid ? (
+              <p>
+                <strong>
+                  Please ensure this unit offering is available in the database.
+                </strong>
+              </p>
+            ) : (
+              " "
+            )}
           </section>
         </section>
       </div>
