@@ -23,7 +23,7 @@ router.post("/send", (req, res, next) => {
 
   const plainMSG = `Dear ${
     firstname + " " + lastname
-  },\n\nA new student account has been created for you by the administrator of Swinburne Sarawak's MCM System.\n\nKindly note that you may login to update your password in your account's settings, using the details below.\n\nURL: ${
+  },\n\nA new account has been created for you by the administrator of Swinburne Sarawak's MCM System.\n\nKindly note that you may login to update your password in your account's settings, using the details below.\n\nURL: ${
     req.protocol + "://" + req.get("host")
   }\nEmail: ${emailAddress}\nPassword: ${password}\n\nRegards,\nMCM Team`;
 
@@ -36,7 +36,7 @@ router.post("/send", (req, res, next) => {
   }</a><br/><strong>Email:</strong> ${emailAddress}<br /><strong>Password:</strong> ${password}</p><p>Regards,<br/>MCM Team</p>`;
 
   var mail = {
-    from: '"MCM System" 101208203@students.swinburne.edu.my',
+    from: '"MCM System" mcm@swinburne.edu.my',
     to: emailAddress,
     subject: "Your new MCM System account",
     text: plainMSG,
@@ -44,13 +44,13 @@ router.post("/send", (req, res, next) => {
   };
 
   let transporter = nodemailer.createTransport({
-    name: "smtp.office365.com",
-    host: "smtp.office365.com",
+    name: "smtp.mailtrap.io",
+    host: "smtp.mailtrap.io",
     port: 587,
     secure: false,
     auth: {
-      user: process.env.EMAIL,
-      pass: process.env.PASSWORD,
+      user: "61b7d62bc864f2",
+      pass: "182117176e9c85",
     },
     tls: {
       rejectUnauthorized: false,

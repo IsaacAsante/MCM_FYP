@@ -34,6 +34,7 @@ const INITIAL_STATE = {
   passwordOne: "",
   passwordTwo: "",
   role: "none",
+  success: false,
   error: null,
 };
 
@@ -67,7 +68,7 @@ class SignUpFormBase extends Component {
       .then((authUser) => {
         console.log(authUser);
         console.log("User: ", JSON.stringify(userData));
-        // Add data to Students collection
+        // Add data to tutors collection in Firestore
         if (role == ROLES.TUTOR) {
           this.props.firebase
             .addUserToDB("tutors", authUser.user.uid, userData)
@@ -91,7 +92,7 @@ class SignUpFormBase extends Component {
                   }
                 )
                 .then((res) => {
-                  console.log("Backend res: ", res);
+                  // console.log("Backend res: ", res);
                   this.props.history.push(ROUTES.DASHBOARD);
                 })
                 .catch((err) => {
@@ -102,36 +103,13 @@ class SignUpFormBase extends Component {
             .catch((error) => this.setState({ error }));
         }
 
+        // Add data to students collection in Firestore
         if (role == ROLES.STUDENT) {
           this.props.firebase
             .addUserToDB("students", authUser.user.uid, userData)
             .then((res) => {
               this.setState({ ...INITIAL_STATE }); // Clear forms
-              // Send email
-              axios
-                .post(
-                  "/email/send",
-                  {
-                    firstname,
-                    lastname,
-                    email,
-                    passwordOne,
-                  },
-                  {
-                    method: "POST",
-                    headers: {
-                      "Content-type": "application/json",
-                    },
-                  }
-                )
-                .then((res) => {
-                  console.log("Backend res: ", res);
-                  this.props.history.push(ROUTES.DASHBOARD);
-                })
-                .catch((err) => {
-                  console.error("Error from backend: ", err);
-                });
-              this.props.history.push(ROUTES.DASHBOARD);
+              this.setState({ success: true });
             })
             .catch((error) => this.setState({ error }));
         }
@@ -196,6 +174,7 @@ class SignUpFormBase extends Component {
       passwordOne,
       passwordTwo,
       role,
+      success,
       error,
     } = this.state;
 
@@ -208,109 +187,137 @@ class SignUpFormBase extends Component {
       role === "none";
 
     return (
-      <form onSubmit={this.onSubmit} className="form-horizontal style-form">
-        <div className="form-group">
-          <label className="col-sm-2 col-sm-2 control-label">
-            User's First Name
-          </label>
-          <div className="col-sm-10">
-            <input
-              name="firstname"
-              value={firstname}
-              onChange={this.onChange}
-              type="text"
-              placeholder="First name"
-              className="form-control"
-            />
+      <div>
+        {success ? (
+          <div className="row">
+            <div className="col-sm-12">
+              <div className="alert alert-success">
+                <b>Account created successfully.</b>
+              </div>
+            </div>
           </div>
-        </div>
-
-        <div className="form-group">
-          <label className="col-sm-2 col-sm-2 control-label">
-            User's Last Name
-          </label>
-          <div className="col-sm-10">
-            <input
-              name="lastname"
-              value={lastname}
-              onChange={this.onChange}
-              type="text"
-              placeholder="Last name"
-              className="form-control"
-            />
-          </div>
-        </div>
-
-        <div className="form-group">
-          <label className="col-sm-2 col-sm-2 control-label">User Email</label>
-          <div className="col-sm-10">
-            <input
-              name="email"
-              value={email}
-              onChange={this.onChange}
-              type="email"
-              placeholder="Email address"
-              className="form-control"
-            />
-          </div>
-        </div>
-
-        <div className="form-group">
-          <label className="col-sm-2 col-sm-2 control-label">Password</label>
-          <div className="col-sm-10">
-            <input
-              name="passwordOne"
-              value={passwordOne}
-              onChange={this.onChange}
-              type="password"
-              placeholder="Password"
-              className="form-control"
-            />
-          </div>
-        </div>
-
-        <div className="form-group">
-          <label className="col-sm-2 col-sm-2 control-label">
-            Confirm Password
-          </label>
-          <div className="col-sm-10">
-            <input
-              name="passwordTwo"
-              value={passwordTwo}
-              onChange={this.onChange}
-              type="password"
-              placeholder="Password must match"
-              className="form-control"
-            />
-          </div>
-        </div>
-
-        <div className="form-group">
-          <label className="col-sm-2 col-sm-2 control-label">
-            Account Type
-          </label>
-          <div className="col-sm-10">
-            <select
-              className="form-control"
-              name="role"
-              onChange={this.updateType}
-              value={this.state.role}
+        ) : (
+          ""
+        )}
+        <div className="row mt">
+          <div className="col-sm-12">
+            <form
+              onSubmit={this.onSubmit}
+              className="form-horizontal style-form"
             >
-              <option value="None">Select a role</option>
-              <option value="Tutor">Tutor</option>
-              <option value="Student">Student</option>
-            </select>
+              <div className="form-group">
+                <label className="col-sm-2 col-sm-2 control-label">
+                  User's First Name
+                </label>
+                <div className="col-sm-10">
+                  <input
+                    name="firstname"
+                    value={firstname}
+                    onChange={this.onChange}
+                    type="text"
+                    placeholder="First name"
+                    className="form-control"
+                  />
+                </div>
+              </div>
+
+              <div className="form-group">
+                <label className="col-sm-2 col-sm-2 control-label">
+                  User's Last Name
+                </label>
+                <div className="col-sm-10">
+                  <input
+                    name="lastname"
+                    value={lastname}
+                    onChange={this.onChange}
+                    type="text"
+                    placeholder="Last name"
+                    className="form-control"
+                  />
+                </div>
+              </div>
+
+              <div className="form-group">
+                <label className="col-sm-2 col-sm-2 control-label">
+                  User Email
+                </label>
+                <div className="col-sm-10">
+                  <input
+                    name="email"
+                    value={email}
+                    onChange={this.onChange}
+                    type="email"
+                    placeholder="Email address"
+                    className="form-control"
+                  />
+                </div>
+              </div>
+
+              <div className="form-group">
+                <label className="col-sm-2 col-sm-2 control-label">
+                  Password
+                </label>
+                <div className="col-sm-10">
+                  <input
+                    name="passwordOne"
+                    value={passwordOne}
+                    onChange={this.onChange}
+                    type="password"
+                    placeholder="Password"
+                    className="form-control"
+                  />
+                </div>
+              </div>
+
+              <div className="form-group">
+                <label className="col-sm-2 col-sm-2 control-label">
+                  Confirm Password
+                </label>
+                <div className="col-sm-10">
+                  <input
+                    name="passwordTwo"
+                    value={passwordTwo}
+                    onChange={this.onChange}
+                    type="password"
+                    placeholder="Password must match"
+                    className="form-control"
+                  />
+                </div>
+              </div>
+
+              <div className="form-group">
+                <label className="col-sm-2 col-sm-2 control-label">
+                  Account Type
+                </label>
+                <div className="col-sm-10">
+                  <select
+                    className="form-control"
+                    name="role"
+                    onChange={this.updateType}
+                    value={this.state.role}
+                  >
+                    <option value="None">Select a role</option>
+                    <option value="Tutor">Tutor</option>
+                    <option value="Student">Student</option>
+                  </select>
+                </div>
+              </div>
+              <button
+                disabled={isInvalid}
+                type="submit"
+                className="btn btn-theme"
+              >
+                Create User
+              </button>
+              <div className="form-group has-error">
+                <div className="col-lg-10">
+                  <p className="help-block">{error && error.message}</p>
+                </div>
+              </div>
+            </form>
           </div>
         </div>
-        <button disabled={isInvalid} type="submit" className="btn btn-theme">
-          Create User
-        </button>
-        <div className="form-group has-error">
-          <div className="col-lg-10">
-            <p className="help-block">{error && error.message}</p>
-          </div>
-        </div>
-      </form>
+      </div>
     );
   }
 }
