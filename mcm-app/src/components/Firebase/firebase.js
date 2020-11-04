@@ -86,6 +86,19 @@ class Firebase {
     return doc.data();
   };
 
+  getTasks = async (offeringID) => {
+    const tasksRef = this.db
+      .collection("unitofferings")
+      .doc(offeringID)
+      .collection("tasks");
+    const snapshot = await tasksRef.get();
+    let tasks = [];
+    snapshot.forEach((doc) => {
+      tasks.push(doc.data());
+    });
+    return tasks;
+  };
+
   getTutor = async (uid) => {
     const tutorRef = this.db.collection("tutors").doc(uid);
     let doc = await tutorRef.get();

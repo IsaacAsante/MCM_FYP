@@ -70,6 +70,17 @@ class UnitOfferingPage extends React.Component {
               console.log("Semester loaded:", semester);
               this.setState({ semester });
               this.setState({ semesterError: "" });
+              return;
+            })
+            .then(() => {
+              this.props.firebase
+                .getTasks(offeringID)
+                .then((tasks) => {
+                  console.log("Tasks:", tasks);
+                })
+                .catch((err) => {
+                  console.error(err);
+                });
             })
             .catch((err) => {
               this.setState({
