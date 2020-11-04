@@ -13,6 +13,7 @@ const INITIAL_STATE = {
   offeringID: null,
   semester: null,
   semesterError: null,
+  tasks: [],
   unit: null,
   unitError: null,
 };
@@ -26,7 +27,7 @@ class UnitOfferingPage extends React.Component {
   componentDidMount() {
     const offeringID = this.props.match.params.offeringID;
     this.setState({ offeringID });
-    console.log(offeringID);
+    // console.log(offeringID);
 
     // Recognize current user
     this.props.firebase.onAuthUserListener((authUser) => {
@@ -34,7 +35,7 @@ class UnitOfferingPage extends React.Component {
       // Determine if a Tutor is already allocated to the unit offering currently being viewed, or not.
       this.props.firebase.findAllocation(authUser.uid).then((res) => {
         if (res) {
-          console.log("Response to debug:", res);
+          // console.log("Allocation:", res);
           if (res.unitOfferings.includes(offeringID)) {
             this.setState({ allocated: true, allocateMessage: "Allocated" });
           }
@@ -47,12 +48,12 @@ class UnitOfferingPage extends React.Component {
       .getUnitOffering(offeringID)
       .then((result) => {
         if (result !== undefined) {
-          console.log("Result:", result);
-          console.log(result.unitID, result.semesterID);
+          // console.log("Result:", result);
+          // console.log(result.unitID, result.semesterID);
           this.props.firebase
             .findUnit(result.unitID)
             .then((unit) => {
-              console.log("Unit loaded:", unit);
+              // console.log("Unit loaded:", unit);
               this.setState({ unit });
               this.setState({ unitError: "" });
             })
@@ -67,7 +68,7 @@ class UnitOfferingPage extends React.Component {
           this.props.firebase
             .findSemester(result.semesterID)
             .then((semester) => {
-              console.log("Semester loaded:", semester);
+              // console.log("Semester loaded:", semester);
               this.setState({ semester });
               this.setState({ semesterError: "" });
               return;
@@ -76,7 +77,12 @@ class UnitOfferingPage extends React.Component {
               this.props.firebase
                 .getTasks(offeringID)
                 .then((tasks) => {
+                  tasks.forEach((doc) => {
+                    let deadline = new Date(doc.deadline.seconds * 1000);
+                    doc.deadline.seconds = deadline.toLocaleDateString();
+                  });
                   console.log("Tasks:", tasks);
+                  this.setState({ tasks });
                 })
                 .catch((err) => {
                   console.error(err);
@@ -140,6 +146,7 @@ class UnitOfferingPage extends React.Component {
       authUser,
       semester,
       semesterError,
+      tasks,
       unit,
       unitError,
     } = this.state;
@@ -208,18 +215,14 @@ class UnitOfferingPage extends React.Component {
                       </tr>
                     </thead>
                     <tbody>
-                      <tr>
-                        <td>1</td>
-                        <td>Mark</td>
-                      </tr>
-                      <tr>
-                        <td>2</td>
-                        <td>Jacob</td>
-                      </tr>
-                      <tr>
-                        <td>3</td>
-                        <td>Larry</td>
-                      </tr>
+                      {this.state.tasks
+                        ? this.state.tasks.map((doc) => (
+                            <tr key={doc.id}>
+                              <td>{doc.name}</td>
+                              <td>{doc.deadline.seconds}</td>
+                            </tr>
+                          ))
+                        : " "}
                     </tbody>
                   </table>
                 </div>
