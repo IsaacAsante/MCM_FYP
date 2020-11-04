@@ -231,17 +231,17 @@ class Firebase {
                   }
                 })
                 .catch((error) => {
-                  fallback();
+                  // fallback();
                   console.error(error);
                 });
             }
           })
           .catch((error) => {
-            fallback();
+            // fallback();
             console.error(error);
           });
       } else {
-        fallback();
+        // fallback();
       }
     });
 }

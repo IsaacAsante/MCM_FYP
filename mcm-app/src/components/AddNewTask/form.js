@@ -64,18 +64,17 @@ class TaskFormBase extends React.Component {
             success: false,
           });
         } else {
-          this.setState({ ...INITIAL_STATE });
-          this.setState({ success: true });
+          this.props.firebase
+            .addTask(this.props.unitoffering, taskObj)
+            .then((res) => {
+              this.setState({ ...INITIAL_STATE });
+              this.setState({ success: true });
+            })
+            .catch((error) => {
+              console.log(error);
+            });
         }
       });
-    // .addTask(this.props.unitoffering, taskObj)
-    // .then((res) => {
-    //   console.log(res);
-    // })
-    // .catch((error) => {
-    //   console.log(error);
-    //   this.setState({ error });
-    // });
     // console.log(this.props.unitoffering);
   };
 
@@ -93,8 +92,8 @@ class TaskFormBase extends React.Component {
     const { name, deadline, maxSubmissions, duplicate, success } = this.state;
     const isInvalid = name == "" || deadline == "" || maxSubmissions == 0;
     return (
-      <div class="row">
-        <div class="col-sm-2">
+      <div className="row">
+        <div className="col-sm-2">
           <form onSubmit={this.onSubmit} className="form-horizontal style-form">
             <div className="form-group">
               <label className="col-sm-2 col-sm-2 control-label">
