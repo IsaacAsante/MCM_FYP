@@ -15,7 +15,9 @@ app.post("/", function (req, res, next) {
 
 // Set router for email notifications
 const mailRouter = require("./routers/mail");
+const readerRouter = require("./routers/reader");
 app.use("/email", mailRouter);
+app.use("/reader", readerRouter);
 
 app.listen(port, () => {
   console.log(`Server is running on port: ${port}`);
