@@ -2,7 +2,8 @@ var express = require("express");
 var router = express.Router();
 var multer = require("multer");
 var cors = require("cors");
-var fs = require("fs");
+var path = require("path");
+var XLSX = require("xlsx");
 
 router.use(cors());
 
@@ -26,7 +27,9 @@ router.post("/", function (req, res) {
     } else if (err) {
       return res.status(500).json(err);
     }
-    return res.status(200).send(req.file);
+    const workbook = XLSX.readFile(path.join(__dirname, req.file.filename));
+    console.log(req.file.filename);
+    return res.status(200).send(workbook);
   });
 });
 

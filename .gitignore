@@ -8,8 +8,8 @@
 # Dependency directories
 node_modules/
 
-# Log files
-.log
+# All Log files
+*.log
 
-# Excel files
-.xls
+# All Excel files
+*.xls
