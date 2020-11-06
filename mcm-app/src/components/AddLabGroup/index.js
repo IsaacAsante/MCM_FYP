@@ -51,8 +51,9 @@ class AddLabGroupPage extends React.Component {
       for (const [k, v] of Object.entries(res.data)) {
         importData[k] = {};
         this.props.firebase
-          .findTutor("Tutor", "Lecturer")
+          .findTutor("Tutor", "Lectiurer")
           .then((res) => {
+            if (!res) throw "This tutor was not found in the DB";
             importData[k]["tutorEmail"] = res.email;
             return importData;
           })
@@ -65,7 +66,7 @@ class AddLabGroupPage extends React.Component {
             importData[k]["time"] = lab_time;
             importData[k]["weekDay"] = lab_day;
             importData[k]["offeringID"] = this.props.match.params.offeringID;
-            console.log("Lab detail:", importData);
+            // console.log("Lab detail:", importData);
             let student_IDs = [];
             for (const [k1, v1] of Object.entries(v)) {
               if (k1 >= "B" && k1 < "C") {
