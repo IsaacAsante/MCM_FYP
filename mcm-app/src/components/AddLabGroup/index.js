@@ -13,13 +13,25 @@ const INITIAL_STATE = {
   sheets: [],
 };
 
+const DAY = {
+  Mon: "Monday",
+  Tue: "Tuesday",
+  Wed: "Wednesday",
+  Thu: "Thursday",
+  Fri: "Friday",
+  Sat: "Saturday",
+  Sun: "Sunday",
+};
+
 class AddLabGroupPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = { ...INITIAL_STATE };
   }
 
-  componentDidMount() {}
+  componentDidMount() {
+    console.log(this.props.match.params.offeringID);
+  }
 
   getFile = (event) => {
     this.setState({ workbook: event.target.files[0] });
@@ -36,6 +48,16 @@ class AddLabGroupPage extends React.Component {
       let importData = {};
       for (const [k, v] of Object.entries(res.data)) {
         let group = [];
+        // Get Lab data
+        const lab_time_details = v["C3"].w.split(/[\s,]/);
+        const lab_day = DAY[lab_time_details[0]];
+        const lab_time = lab_time_details[2];
+        importData[k] = {};
+        importData[k]["time"] = lab_time;
+        importData[k]["weekDay"] = lab_day;
+        importData[k]["offeringID"] = this.props.match.params.offeringID;
+        console.log("Lab detail:", importData);
+        let student_IDs = [];
         for (const [k1, v1] of Object.entries(v)) {
           if (k1 >= "B" && k1 < "C") {
             // Only process the student data if the type of data in that B cell is of type number
@@ -48,6 +70,7 @@ class AddLabGroupPage extends React.Component {
               };
               // Look out for duplicate student entries (Lectures + Lab)
               if (!tracker.includes(student.id)) {
+                student_IDs.push(student.id);
                 group.push(student);
                 tracker.push(student.id);
               }
@@ -56,7 +79,7 @@ class AddLabGroupPage extends React.Component {
           }
         }
         console.log(group);
-        importData[k] = group;
+        importData[k]["students"] = student_IDs; // Maintain the lab names from the imported file
       }
       console.log("Import Data:", importData);
     });
