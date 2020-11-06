@@ -33,6 +33,7 @@ class AddLabGroupPage extends React.Component {
       console.log(res.data);
       // Main array to check for dups
       let tracker = [];
+      let importData = {};
       for (const [k, v] of Object.entries(res.data)) {
         let group = [];
         for (const [k1, v1] of Object.entries(v)) {
@@ -55,7 +56,9 @@ class AddLabGroupPage extends React.Component {
           }
         }
         console.log(group);
+        importData[k] = group;
       }
+      console.log("Import Data:", importData);
     });
   };
 
