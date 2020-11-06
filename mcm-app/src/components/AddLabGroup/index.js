@@ -9,8 +9,10 @@ import axios from "axios";
 import * as ROUTES from "../../constants/routes";
 
 const INITIAL_STATE = {
-  workbook: null,
+  error: null,
   sheets: [],
+  tutor: {},
+  workbook: null,
 };
 
 const DAY = {
@@ -47,39 +49,53 @@ class AddLabGroupPage extends React.Component {
       let tracker = [];
       let importData = {};
       for (const [k, v] of Object.entries(res.data)) {
-        let group = [];
-        // Get Lab data
-        const lab_time_details = v["C3"].w.split(/[\s,]/);
-        const lab_day = DAY[lab_time_details[0]];
-        const lab_time = lab_time_details[2];
         importData[k] = {};
-        importData[k]["time"] = lab_time;
-        importData[k]["weekDay"] = lab_day;
-        importData[k]["offeringID"] = this.props.match.params.offeringID;
-        console.log("Lab detail:", importData);
-        let student_IDs = [];
-        for (const [k1, v1] of Object.entries(v)) {
-          if (k1 >= "B" && k1 < "C") {
-            // Only process the student data if the type of data in that B cell is of type number
-            // If the type is number, then it refers to a student ID.
-            if (v1.t == "n") {
-              let row = k1.substring(1);
-              const student = {
-                id: v1.w,
-                name: v[`C${row}`].w,
-              };
-              // Look out for duplicate student entries (Lectures + Lab)
-              if (!tracker.includes(student.id)) {
-                student_IDs.push(student.id);
-                group.push(student);
-                tracker.push(student.id);
+        this.props.firebase
+          .findTutor("Tutor", "Lecturer")
+          .then((res) => {
+            importData[k]["tutorEmail"] = res.email;
+            return importData;
+          })
+          .then((importData) => {
+            let group = [];
+            // Get Lab data
+            const lab_time_details = v["C3"].w.split(/[\s,]/);
+            const lab_day = DAY[lab_time_details[0]];
+            const lab_time = lab_time_details[2];
+            importData[k]["time"] = lab_time;
+            importData[k]["weekDay"] = lab_day;
+            importData[k]["offeringID"] = this.props.match.params.offeringID;
+            console.log("Lab detail:", importData);
+            let student_IDs = [];
+            for (const [k1, v1] of Object.entries(v)) {
+              if (k1 >= "B" && k1 < "C") {
+                // Only process the student data if the type of data in that B cell is of type number
+                // If the type is number, then it refers to a student ID.
+                if (v1.t == "n") {
+                  let row = k1.substring(1);
+                  const student = {
+                    id: v1.w,
+                    name: v[`C${row}`].w,
+                  };
+                  // Look out for duplicate student entries (Lectures + Lab)
+                  if (!tracker.includes(student.id)) {
+                    student_IDs.push(student.id);
+                    group.push(student);
+                    tracker.push(student.id);
+                  }
+                  // console.log(`${k1}: ${v1.w}, C${row}: ${v[`C${row}`].w}`);
+                }
               }
-              // console.log(`${k1}: ${v1.w}, C${row}: ${v[`C${row}`].w}`);
             }
-          }
-        }
-        console.log(group);
-        importData[k]["students"] = student_IDs; // Maintain the lab names from the imported file
+            console.log(group);
+            importData[k]["students"] = student_IDs; // Maintain the lab names from the imported file
+          })
+          .catch((err) => {
+            console.log(err);
+            this.setState({
+              error: "An error occurred. Please retry again later.",
+            });
+          });
       }
       console.log("Import Data:", importData);
     });
