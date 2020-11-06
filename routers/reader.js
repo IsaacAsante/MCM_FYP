@@ -29,7 +29,7 @@ router.post("/", function (req, res) {
     }
     const workbook = XLSX.readFile(path.join(__dirname, req.file.filename));
     console.log(req.file.filename);
-    return res.status(200).send(workbook);
+    return res.status(200).send(workbook.Sheets);
   });
 });
 

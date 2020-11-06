@@ -10,6 +10,7 @@ import * as ROUTES from "../../constants/routes";
 
 const INITIAL_STATE = {
   workbook: null,
+  sheets: [],
 };
 
 class AddLabGroupPage extends React.Component {
@@ -29,7 +30,32 @@ class AddLabGroupPage extends React.Component {
     const data = new FormData();
     data.append("file", this.state.workbook);
     axios.post("/reader", data, {}).then((res) => {
-      console.log(res);
+      console.log(res.data);
+      // Main array to check for dups
+      let tracker = [];
+      for (const [k, v] of Object.entries(res.data)) {
+        let group = [];
+        for (const [k1, v1] of Object.entries(v)) {
+          if (k1 >= "B" && k1 < "C") {
+            // Only process the student data if the type of data in that B cell is of type number
+            // If the type is number, then it refers to a student ID.
+            if (v1.t == "n") {
+              let row = k1.substring(1);
+              const student = {
+                id: v1.w,
+                name: v[`C${row}`].w,
+              };
+              // Look out for duplicate student entries (Lectures + Lab)
+              if (!tracker.includes(student.id)) {
+                group.push(student);
+                tracker.push(student.id);
+              }
+              // console.log(`${k1}: ${v1.w}, C${row}: ${v[`C${row}`].w}`);
+            }
+          }
+        }
+        console.log(group);
+      }
     });
   };
 
@@ -41,7 +67,7 @@ class AddLabGroupPage extends React.Component {
           <form
             onSubmit={this.onSubmit}
             className="form-horizontal style-form"
-            enctype="multipart/form-data"
+            encType="multipart/form-data"
           >
             <div className="form-group">
               <label className="col-sm-2 col-sm-2 control-label">
