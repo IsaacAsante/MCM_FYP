@@ -44,6 +44,7 @@ const App = () => (
     <div id="container">
       <Navigation />
       <Sidebar />
+      <Route exact path={ROUTES.HOME} component={DashboardPage} />
       <Route path={ROUTES.ACCOUNT} component={AccountPage} />
       <Route path={ROUTES.ADD_LAB_GROUP} component={AddLabGroupPage} />
       <Route path={ROUTES.ADD_NEW_TASK} component={AddNewTaskPage} />

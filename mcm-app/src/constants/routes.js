@@ -1,3 +1,4 @@
+export const HOME = "/";
 export const ACCOUNT = "/account";
 export const ADD_LAB_GROUP = "/unit-offerings/:offeringID/lab-groups/add";
 export const ADD_NEW_TASK = "/unit-offerings/:offeringID/tasks/add";
