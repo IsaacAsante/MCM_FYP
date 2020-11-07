@@ -47,7 +47,7 @@ class AddLabGroupPage extends React.Component {
     axios
       .post("/reader", data, {})
       .then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         // Main array to check for dups
         let tracker = [];
         let importData = {};
@@ -56,12 +56,18 @@ class AddLabGroupPage extends React.Component {
           const tutorName = staff.substring(7).split(" ");
           const tutorFirstName = tutorName.shift();
           const tutorLastName = tutorName.join(" ");
+          // WARNING: Only Lab sheets must be read.
+          if (k.substring(0, 2) !== "LA") continue;
           importData[k] = {};
           this.props.firebase
             .findTutor(tutorFirstName, tutorLastName)
             .then((res) => {
-              if (!res)
-                throw `Operation aborted. The tutor ${tutorFirstName} ${tutorLastName} was not found in the database. Make sure they have an account in the system first before importing this file.`;
+              if (!res) {
+                this.setState({
+                  error: `Operation aborted. The tutor ${tutorFirstName} ${tutorLastName} was not found in the database. Please make sure they have an account in the system first before importing this file.`,
+                });
+                throw false;
+              }
               importData[k]["tutorEmail"] = res.email;
               return importData;
             })
@@ -98,18 +104,20 @@ class AddLabGroupPage extends React.Component {
               }
               // console.log(group);
               importData[k]["students"] = student_IDs; // Maintain the lab names from the imported file
-            })
-            .catch((error) => {
-              console.log(error);
-              this.setState({
-                error,
-                success: false,
-              });
             });
         }
+        return importData;
+      })
+      .then((importData) => {
         this.setState({ ...INITIAL_STATE });
         this.setState({ success: true });
         console.log("Import Data:", importData);
+      })
+      .catch((error) => {
+        console.log(error);
+        this.setState({
+          success: false,
+        });
       })
       .catch((error) => {
         console.log(error);
