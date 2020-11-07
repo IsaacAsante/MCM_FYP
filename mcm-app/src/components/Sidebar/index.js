@@ -35,7 +35,7 @@ class Sidebar extends Component {
     });
 
     // Hide nav when a link is clicked
-    $("#sidebar > ul > li > a").on("click", function () {
+    $("#sidebar > ul > div > li > a").on("click", function () {
       if ($(window).width() < 768) $("#sidebar > ul").hide();
     });
 
