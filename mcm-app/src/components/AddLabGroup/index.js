@@ -11,8 +11,8 @@ import * as ROUTES from "../../constants/routes";
 const INITIAL_STATE = {
   error: null,
   sheets: [],
+  studentsToAdd: [],
   success: false,
-  tutor: {},
   workbook: null,
 };
 
@@ -51,6 +51,7 @@ class AddLabGroupPage extends React.Component {
         // Main array to check for dups
         let tracker = [];
         let importData = {};
+        let studentsToAddArray = [];
         for (const [k, v] of Object.entries(res.data)) {
           let staff = v["C5"].w;
           const tutorName = staff.substring(7).split(" ");
@@ -68,12 +69,13 @@ class AddLabGroupPage extends React.Component {
                 });
                 throw false;
               }
+              importData[k]["name"] = k;
               importData[k]["tutorEmail"] = res.email;
               return importData;
             })
             .then((importData) => {
-              let group = [];
               // Get Lab data
+              let group = [];
               const lab_time_details = v["C3"].w.split(/[\s,]/);
               const lab_day = DAY[lab_time_details[0]];
               const lab_time = lab_time_details[2];
@@ -88,41 +90,48 @@ class AddLabGroupPage extends React.Component {
                   // If the type is number, then it refers to a student ID.
                   if (v1.t == "n") {
                     let row = k1.substring(1);
+                    const studentFullName = v[`C${row}`].w.split(" ");
                     const student = {
-                      id: v1.w,
-                      name: v[`C${row}`].w,
+                      studentID: v1.w,
+                      firstname: studentFullName.shift(),
+                      lastname: studentFullName.join(" "),
+                      role: "Student",
+                      email: `${v1.w}@students.swinburne.edu.my`,
+                      // reverse_password: v1.w.split("").reverse().join(""),
                     };
-                    // Look out for duplicate student entries (Lectures + Lab)
-                    if (!tracker.includes(student.id)) {
-                      student_IDs.push(student.id);
+                    // Look out for duplicate student entries
+                    if (!tracker.includes(student.studentID)) {
+                      student_IDs.push(student.studentID);
                       group.push(student);
-                      tracker.push(student.id);
+                      tracker.push(student.studentID);
                     }
                     // console.log(`${k1}: ${v1.w}, C${row}: ${v[`C${row}`].w}`);
                   }
                 }
               }
-              // console.log(group);
+              // console.log("Group:", group);
+              studentsToAddArray.push(group);
               importData[k]["students"] = student_IDs; // Maintain the lab names from the imported file
             });
         }
-        return importData;
+        return [importData, studentsToAddArray];
       })
-      .then((importData) => {
+      .then((data) => {
         this.setState({ ...INITIAL_STATE });
-        this.setState({ success: true });
-        console.log("Import Data:", importData);
+        this.setState({
+          success: true,
+          labData: data[0],
+          studentsToAdd: data[1],
+        });
+        return;
+      })
+      .then(() => {
+        console.log(this.state);
       })
       .catch((error) => {
         console.log(error);
         this.setState({
           success: false,
-        });
-      })
-      .catch((error) => {
-        console.log(error);
-        this.setState({
-          error: "Something went wrong. Please retry again later.",
         });
       });
   };
