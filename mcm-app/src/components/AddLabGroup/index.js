@@ -123,10 +123,7 @@ class AddLabGroupPage extends React.Component {
           labData: data[0],
           studentsToAdd: data[1],
         });
-        return;
-      })
-      .then(() => {
-        console.log(this.state);
+        return true;
       })
       .catch((error) => {
         console.log(error);
@@ -134,6 +131,24 @@ class AddLabGroupPage extends React.Component {
           success: false,
         });
       });
+  };
+
+  confirmImport = (event) => {
+    event.preventDefault();
+    if (this.state.studentsToAdd.length > 0) {
+      this.state.studentsToAdd.forEach((studentGroup) => {
+        studentGroup.forEach((student) => {
+          // Use the reverse of a student's ID as their default account password
+          const password = student.studentID.split("").reverse().join("");
+          console.log(student.studentID, password);
+        });
+      });
+    } else {
+      this.setState({
+        error: "An error occurred while trying to retrieve student data.",
+        success: false,
+      });
+    }
   };
 
   render() {
@@ -178,8 +193,13 @@ class AddLabGroupPage extends React.Component {
                 ""
               )
             ) : (
-              <div className="alert alert-success mt">
-                <span>File read successfully.</span>
+              <div>
+                <div className="alert alert-success mt">
+                  <span>File read successfully.</span>
+                </div>
+                <button className="btn btn-info" onClick={this.confirmImport}>
+                  Upload
+                </button>
               </div>
             )}
           </form>
