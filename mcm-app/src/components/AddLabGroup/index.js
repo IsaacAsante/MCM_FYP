@@ -14,11 +14,13 @@ const INITIAL_STATE = {
   byPassAuthRule: false,
   docsCreated: false,
   docsCreationStarted: false,
+  enrolmentStarted: false,
   error: null,
   finish: false,
   labsCreated: false,
   labCreationStarted: false,
   sheets: [],
+  studentsEnrolled: false,
   studentsToAdd: [],
   success: false,
   dbStudentObjects: [],
@@ -182,6 +184,11 @@ class AddLabGroupPage extends React.Component {
     this.addNewLab();
   };
 
+  processEnrolments = (event) => {
+    event.preventDefault();
+    this.enrolStudents();
+  };
+
   finish = (event) => {
     event.preventDefault();
     this.props.firebase.signOutUser();
@@ -263,19 +270,32 @@ class AddLabGroupPage extends React.Component {
   addNewLab = async () => {
     this.setState({ labCreationStarted: true });
     console.log("Lab Data:", this.state.labData);
-    setTimeout(() => console.log("Labs created with setTimeout()."), 2000);
-    this.setState({ labsCreated: true, error: false, success: true });
+    setTimeout(() => {
+      console.log("Labs created with setTimeout().");
+      this.setState({ labsCreated: true, error: false, success: true });
+    }, 2000);
+  };
+
+  enrolStudents = async () => {
+    this.setState({ enrolmentStarted: true });
+    console.log("Enrol students.");
+    setTimeout(() => {
+      console.log("Enroled Students with setTimeout().");
+      this.setState({ studentsEnrolled: true, error: false, success: true });
+    }, 2000);
   };
 
   render() {
     const {
       accountsCreated,
       accountCreationStarted,
-      finish,
+      enrolmentStarted,
       docsCreationStarted,
       docsCreated,
+      finish,
       labsCreated,
       labCreationStarted,
+      studentsEnrolled,
       error,
       success,
     } = this.state;
@@ -387,12 +407,38 @@ class AddLabGroupPage extends React.Component {
             ) : (
               " "
             )}
+            {/* Student Enrolments */}
+            {labsCreated && success ? (
+              <div>
+                <div className="alert alert-warning mt">
+                  <span>
+                    Begin the automatic student enrolment process. Students will
+                    be enrolled to their relevant lab groups under this unit
+                    offering.<b>Do not skip this step!</b>
+                  </span>
+                </div>
+                {enrolmentStarted ? (
+                  <div className="alert alert-info mt">
+                    <span>Enrolling students. Please wait...</span>
+                  </div>
+                ) : (
+                  <button
+                    className="btn btn-info"
+                    onClick={this.processEnrolments}
+                  >
+                    Process Enrolments
+                  </button>
+                )}
+              </div>
+            ) : (
+              " "
+            )}
 
             {accountsCreated &&
             success &&
             docsCreationStarted &&
             labsCreated &&
-            finish ? (
+            studentsEnrolled ? (
               <div>
                 <div className="alert alert-info mt">
                   <span>
