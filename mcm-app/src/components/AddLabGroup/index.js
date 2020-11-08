@@ -10,6 +10,9 @@ import * as ROUTES from "../../constants/routes";
 
 const INITIAL_STATE = {
   accountsCreated: false,
+  accountCreationStarted: false,
+  finish: false,
+  docsCreationStarted: false,
   error: null,
   sheets: [],
   studentsToAdd: [],
@@ -169,6 +172,7 @@ class AddLabGroupPage extends React.Component {
   };
 
   createAccounts = async () => {
+    this.setState({ accountCreationStarted: true });
     if (this.state.studentsToAdd.length > 0) {
       for (let i = 0; i < this.state.studentsToAdd.length; i++) {
         const studentGroup = this.state.studentsToAdd[i];
@@ -190,16 +194,25 @@ class AddLabGroupPage extends React.Component {
   };
 
   createAccountDocs = async () => {
+    this.setState({ docsCreationStarted: true });
     for (let i = 0; i < this.state.dbStudentObjects.length; i++) {
       const student = this.state.dbStudentObjects[i];
       console.log("Student to add:", student);
       // await this.props.firebase.setBatch(student, student.id);
     }
     // await this.props.firebase.commitBatch();
+    this.setState({ finish: true });
   };
 
   render() {
-    const { accountsCreated, error, success } = this.state;
+    const {
+      accountsCreated,
+      accountCreationStarted,
+      finish,
+      docsCreationStarted,
+      error,
+      success,
+    } = this.state;
     return (
       <div>
         <section id="main-content">
@@ -229,7 +242,7 @@ class AddLabGroupPage extends React.Component {
               className="btn btn-theme"
               onSubmit={this.onSubmit}
             >
-              Save
+              Import
             </button>
             {!success && !accountsCreated ? (
               error ? (
@@ -241,12 +254,19 @@ class AddLabGroupPage extends React.Component {
               )
             ) : (
               <div>
-                <div className="alert alert-success mt">
-                  <span>File read successfully.</span>
+                <div className="alert alert-info mt">
+                  <span>File parsed successfully.</span>
                 </div>
-                <button className="btn btn-info" onClick={this.confirmImport}>
-                  Create Accounts
-                </button>
+                {/* Hide this button once accounts started getting created. */}
+                {accountCreationStarted ? (
+                  <div className="alert alert-info mt">
+                    <span>Processing student accounts. Please wait...</span>
+                  </div>
+                ) : (
+                  <button className="btn btn-info" onClick={this.confirmImport}>
+                    Create Accounts
+                  </button>
+                )}
               </div>
             )}
             {accountsCreated && success ? (
@@ -256,12 +276,38 @@ class AddLabGroupPage extends React.Component {
                     Create documents. <b>Do not skip this step!</b>
                   </span>
                 </div>
-                <button className="btn btn-info" onClick={this.completeImport}>
-                  Create Documents
-                </button>
+                {docsCreationStarted ? (
+                  <div className="alert alert-info mt">
+                    <span>
+                      Sync'ing student documents in the database. Please wait...
+                    </span>
+                  </div>
+                ) : (
+                  <button
+                    className="btn btn-info"
+                    onClick={this.completeImport}
+                  >
+                    Create Documents
+                  </button>
+                )}
               </div>
             ) : (
               " "
+            )}
+            {accountsCreated && success && docsCreationStarted && finish ? (
+              <div>
+                <div className="alert alert-info mt">
+                  <span>
+                    Click the button below to finalize the process. You will be
+                    required to log into your tutor account again.
+                  </span>
+                </div>
+                <button className="btn btn-info" onClick={this.finish}>
+                  Finish
+                </button>
+              </div>
+            ) : (
+              ""
             )}
           </form>
         </section>
