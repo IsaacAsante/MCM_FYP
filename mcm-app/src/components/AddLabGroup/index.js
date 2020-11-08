@@ -15,6 +15,7 @@ const INITIAL_STATE = {
   studentsToAdd: [],
   success: false,
   dbStudentObjects: [],
+  numOfStudents: 0,
   workbook: null,
 };
 
@@ -106,6 +107,9 @@ class AddLabGroupPage extends React.Component {
                       student_IDs.push(student.studentID);
                       group.push(student);
                       tracker.push(student.studentID);
+                      this.setState({
+                        numOfStudents: this.state.numOfStudents + 1,
+                      }); // Record that a student was added
                     }
                     // console.log(`${k1}: ${v1.w}, C${row}: ${v[`C${row}`].w}`);
                   }
@@ -142,7 +146,7 @@ class AddLabGroupPage extends React.Component {
 
   completeImport = (event) => {
     event.preventDefault();
-    // this.createAccountDocs();
+    this.createAccountDocs();
   };
 
   appendAuthUID = async (student) => {
@@ -166,14 +170,18 @@ class AddLabGroupPage extends React.Component {
 
   createAccounts = async () => {
     if (this.state.studentsToAdd.length > 0) {
-      let counter = 1;
       for (let i = 0; i < this.state.studentsToAdd.length; i++) {
         const studentGroup = this.state.studentsToAdd[i];
         for (let j = 0; j < studentGroup.length; j++) {
           const student = studentGroup[j];
           await this.appendAuthUID(student); // This method creates the accounts
-          counter++;
-          if (counter == this.state.studentsToAdd.length) {
+          // Signal when the docs can be created
+          if (this.state.dbStudentObjects.length == this.state.numOfStudents) {
+            console.log(
+              "Objects ready:",
+              this.state.studentsToAdd.length,
+              this.state.dbStudentObjects.length
+            );
             this.setState({ accountsCreated: true });
           }
         }
@@ -185,9 +193,9 @@ class AddLabGroupPage extends React.Component {
     for (let i = 0; i < this.state.dbStudentObjects.length; i++) {
       const student = this.state.dbStudentObjects[i];
       console.log("Student to add:", student);
-      await this.props.firebase.setBatch(student, student.id);
+      // await this.props.firebase.setBatch(student, student.id);
     }
-    await this.props.firebase.commitBatch();
+    // await this.props.firebase.commitBatch();
   };
 
   render() {
