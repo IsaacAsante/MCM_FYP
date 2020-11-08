@@ -12,9 +12,12 @@ const INITIAL_STATE = {
   accountsCreated: false,
   accountCreationStarted: false,
   byPassAuthRule: false,
-  finish: false,
+  docsCreated: false,
   docsCreationStarted: false,
   error: null,
+  finish: false,
+  labsCreated: false,
+  labCreationStarted: false,
   sheets: [],
   studentsToAdd: [],
   success: false,
@@ -174,6 +177,11 @@ class AddLabGroupPage extends React.Component {
     this.createAccountDocs();
   };
 
+  createLabs = (event) => {
+    event.preventDefault();
+    this.addNewLab();
+  };
+
   finish = (event) => {
     event.preventDefault();
     this.props.firebase.signOutUser();
@@ -242,15 +250,21 @@ class AddLabGroupPage extends React.Component {
     for (let i = 0; i < this.state.dbStudentObjects.length; i++) {
       const student = this.state.dbStudentObjects[i];
       console.log("Student to add:", student);
-      await this.props.firebase.setBatch(student, student.id);
+      // await this.props.firebase.setBatch(student, student.id);
     }
-    await this.props.firebase.commitBatch();
+    // await this.props.firebase.commitBatch();
     this.setState({
-      accountsCreated: true,
+      docsCreated: true,
       error: false,
-      finish: true,
       success: true,
     });
+  };
+
+  addNewLab = async () => {
+    this.setState({ labCreationStarted: true });
+    console.log("Lab Data:", this.state.labData);
+    setTimeout(() => console.log("Labs created with setTimeout()."), 2000);
+    this.setState({ labsCreated: true, error: false, success: true });
   };
 
   render() {
@@ -259,6 +273,9 @@ class AddLabGroupPage extends React.Component {
       accountCreationStarted,
       finish,
       docsCreationStarted,
+      docsCreated,
+      labsCreated,
+      labCreationStarted,
       error,
       success,
     } = this.state;
@@ -347,7 +364,35 @@ class AddLabGroupPage extends React.Component {
             ) : (
               " "
             )}
-            {accountsCreated && success && docsCreationStarted && finish ? (
+            {/* Lab creation */}
+            {docsCreated && success ? (
+              <div>
+                <div className="alert alert-warning mt">
+                  <span>
+                    Click on the button below to automatically create lab
+                    entries for the labs found in the file.{" "}
+                    <b>Do not skip this step!</b>
+                  </span>
+                </div>
+                {labCreationStarted ? (
+                  <div className="alert alert-info mt">
+                    <span>Processing lab entries. Please wait...</span>
+                  </div>
+                ) : (
+                  <button className="btn btn-info" onClick={this.createLabs}>
+                    Create Labs
+                  </button>
+                )}
+              </div>
+            ) : (
+              " "
+            )}
+
+            {accountsCreated &&
+            success &&
+            docsCreationStarted &&
+            labsCreated &&
+            finish ? (
               <div>
                 <div className="alert alert-info mt">
                   <span>
