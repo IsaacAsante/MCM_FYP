@@ -3,16 +3,18 @@ import React from "react";
 import fs from "fs";
 // import XLSX from "xlsx";
 import { withFirebase } from "../Firebase";
-import { withAuthorization } from "../Session";
+import { withAuthentication, withAuthorization } from "../Session";
 import { compose } from "recompose";
 import axios from "axios";
 import * as ROUTES from "../../constants/routes";
 
 const INITIAL_STATE = {
+  accountsCreated: false,
   error: null,
   sheets: [],
   studentsToAdd: [],
   success: false,
+  dbStudentObjects: [],
   workbook: null,
 };
 
@@ -135,24 +137,61 @@ class AddLabGroupPage extends React.Component {
 
   confirmImport = (event) => {
     event.preventDefault();
+    this.createAccounts();
+  };
+
+  completeImport = (event) => {
+    event.preventDefault();
+    // this.createAccountDocs();
+  };
+
+  appendAuthUID = async (student) => {
+    // Use the reverse of a student's ID as their default account password
+    const password = student.studentID.split("").reverse().join("");
+    await this.props.firebase
+      .createUser(student.email, password)
+      .then((authUser) => {
+        console.log("AuthUser:", authUser.user.email, authUser.user.uid);
+        let studentObj = { ...student };
+        studentObj["id"] = authUser.user.uid;
+        // console.log("Checking ID:", studentObj);
+        const joined = this.state.dbStudentObjects.concat(studentObj);
+        this.setState({ dbStudentObjects: joined });
+        // console.log(this.state.dbStudentObjects);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  createAccounts = async () => {
     if (this.state.studentsToAdd.length > 0) {
-      this.state.studentsToAdd.forEach((studentGroup) => {
-        studentGroup.forEach((student) => {
-          // Use the reverse of a student's ID as their default account password
-          const password = student.studentID.split("").reverse().join("");
-          console.log(student.studentID, password);
-        });
-      });
-    } else {
-      this.setState({
-        error: "An error occurred while trying to retrieve student data.",
-        success: false,
-      });
+      let counter = 1;
+      for (let i = 0; i < this.state.studentsToAdd.length; i++) {
+        const studentGroup = this.state.studentsToAdd[i];
+        for (let j = 0; j < studentGroup.length; j++) {
+          const student = studentGroup[j];
+          await this.appendAuthUID(student); // This method creates the accounts
+          counter++;
+          if (counter == this.state.studentsToAdd.length) {
+            this.setState({ accountsCreated: true });
+          }
+        }
+      }
     }
   };
 
+  createAccountDocs = async () => {
+    for (let i = 0; i < this.state.dbStudentObjects.length; i++) {
+      const student = this.state.dbStudentObjects[i];
+      console.log("Student to add:", student);
+      await this.props.firebase.setBatch(student, student.id);
+    }
+    await this.props.firebase.commitBatch();
+  };
+
   render() {
-    const { error, success } = this.state;
+    const { accountsCreated, error, success } = this.state;
     return (
       <div>
         <section id="main-content">
@@ -184,7 +223,7 @@ class AddLabGroupPage extends React.Component {
             >
               Save
             </button>
-            {!success ? (
+            {!success && !accountsCreated ? (
               error ? (
                 <div className="alert alert-danger mt">
                   <span>{error}</span>
@@ -198,9 +237,23 @@ class AddLabGroupPage extends React.Component {
                   <span>File read successfully.</span>
                 </div>
                 <button className="btn btn-info" onClick={this.confirmImport}>
-                  Upload
+                  Create Accounts
                 </button>
               </div>
+            )}
+            {accountsCreated && success ? (
+              <div>
+                <div className="alert alert-warning mt">
+                  <span>
+                    Create documents. <b>Do not skip this step!</b>
+                  </span>
+                </div>
+                <button className="btn btn-info" onClick={this.completeImport}>
+                  Create Documents
+                </button>
+              </div>
+            ) : (
+              " "
             )}
           </form>
         </section>
@@ -209,6 +262,9 @@ class AddLabGroupPage extends React.Component {
   }
 }
 
-const condition = (authUser) => authUser && authUser.role == "Tutor";
+const condition = (authUser) => authUser;
 
-export default compose(withAuthorization(condition))(AddLabGroupPage);
+export default compose(
+  withAuthentication,
+  withAuthorization(condition)
+)(AddLabGroupPage);

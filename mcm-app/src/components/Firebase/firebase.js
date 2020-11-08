@@ -27,6 +27,7 @@ class Firebase {
     app.initializeApp(devFirebaseConfig); // Initialize app
     this.auth = app.auth(); // For Firebase Auth
     this.db = app.firestore(); // For Cloud Firestore
+    this.batch = app.firestore().batch(); // Used to create student docs in batch
   }
 
   /***** FIREBASE AUTH API  *****
@@ -52,6 +53,18 @@ class Firebase {
   // Update passwords
   updateUserPassword = (password) =>
     this.auth.currentUser.updatePassword(password);
+
+  // Save the currently logged-in user
+  getCurrentUser = () => {
+    return this.auth.currentUser;
+  };
+
+  // Force the current user to remain signed in (important for the Excel file import process)
+  stayLoggedIn = (user) => {
+    this.auth.updateCurrentUser(user);
+  };
+
+  reloadCurrentUser = async () => await this.auth.currentUser.reload();
 
   /***** CLOUD FIRESTORE API  *****
    * ===========================*/
@@ -222,6 +235,26 @@ class Firebase {
     semesters = await semesters.where("type", "==", semType);
     semesters = await semesters.where("number", "==", semNo);
     return semesters.get();
+  };
+
+  /***** FIRESTORE BATCH OPERATIONS *****
+   ***** ========================== ******/
+
+  getStudentRef = () => {
+    this.db.collection("students");
+  };
+
+  setBatch = async (studentObj, id) => {
+    const setting = await this.batch.set(
+      this.db.collection("students").doc(id),
+      studentObj
+    );
+    return setting;
+  };
+
+  commitBatch = async () => {
+    await this.batch.commit();
+    this.batch = this.db.batch(); // Use a new batch next time
   };
 
   /***** LOGIC FOR AUTHENTICATION IMPLEMENTATION *****
