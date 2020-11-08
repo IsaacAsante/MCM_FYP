@@ -278,9 +278,12 @@ class AddLabGroupPage extends React.Component {
         .then(async (res) => {
           console.log("Lab found:", res);
           if (!res) {
+            const labID =
+              obj.name.split("-").join("") + this.props.match.params.offeringID;
             this.props.firebase.setLabBatch(
               this.props.match.params.offeringID,
-              obj
+              obj,
+              labID
             );
           }
           await this.props.firebase.commitBatch();
@@ -414,8 +417,8 @@ class AddLabGroupPage extends React.Component {
                 <div className="alert alert-warning mt">
                   <span>
                     Click on the button below to automatically create lab
-                    entries for the labs found in the file.{" "}
-                    <b>Do not skip this step!</b>
+                    entries for the labs found in the file. If they already
+                    exist, they will be skipped. <b>Do not skip this step!</b>
                   </span>
                 </div>
                 {labCreationStarted ? (
@@ -438,7 +441,7 @@ class AddLabGroupPage extends React.Component {
                   <span>
                     Begin the automatic student enrolment process. Students will
                     be enrolled to their relevant lab groups under this unit
-                    offering.<b>Do not skip this step!</b>
+                    offering. <b>Do not skip this step!</b>
                   </span>
                 </div>
                 {enrolmentStarted ? (

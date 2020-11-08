@@ -263,13 +263,13 @@ class Firebase {
     return setting;
   };
 
-  setLabBatch = async (offeringID, labObj) => {
+  setLabBatch = async (offeringID, labObj, objID) => {
     const setting = this.batch.set(
       this.db
         .collection("unitofferings")
         .doc(offeringID)
         .collection("labgroups")
-        .doc(labObj.name),
+        .doc(objID),
       labObj
     );
     return setting;
