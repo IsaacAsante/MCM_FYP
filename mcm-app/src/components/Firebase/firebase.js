@@ -74,7 +74,18 @@ class Firebase {
     const snapshot = await allocationRef.where("tutorID", "==", tutorID).get();
     const tutors = [];
     snapshot.forEach((doc) => tutors.push(doc.data()));
-    return tutors[0]; // Return a single semester (by ID, so there's only one valid entry).
+    return tutors[0];
+  };
+
+  findLab = async (offeringID, labName) => {
+    const labRef = await this.db
+      .collection("unitofferings")
+      .doc(offeringID)
+      .collection("labgroups");
+    const snapshot = await labRef.where("name", "==", labName).get();
+    const labs = [];
+    snapshot.forEach((doc) => labs.push(doc.data()));
+    return labs[0];
   };
 
   findSemester = async (semesterID) => {
@@ -244,10 +255,22 @@ class Firebase {
     this.db.collection("students");
   };
 
-  setBatch = async (studentObj, id) => {
-    const setting = await this.batch.set(
+  setStudentBatch = async (studentObj, id) => {
+    const setting = this.batch.set(
       this.db.collection("students").doc(id),
       studentObj
+    );
+    return setting;
+  };
+
+  setLabBatch = async (offeringID, labObj) => {
+    const setting = this.batch.set(
+      this.db
+        .collection("unitofferings")
+        .doc(offeringID)
+        .collection("labgroups")
+        .doc(labObj.name),
+      labObj
     );
     return setting;
   };

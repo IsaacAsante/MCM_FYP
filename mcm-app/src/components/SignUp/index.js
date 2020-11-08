@@ -4,7 +4,7 @@ import { compose } from "recompose";
 import axios from "axios";
 
 import { withFirebase } from "../Firebase";
-import { withAuthorization } from "../Session";
+import { withAuthorization, withAuthentication } from "../Session";
 import * as ROUTES from "../../constants/routes";
 import * as ROLES from "../../constants/roles";
 
@@ -337,6 +337,9 @@ const SignUpForm = compose(withRouter, withFirebase)(SignUpFormBase);
 
 const condition = (authUser) => authUser && authUser.role == "Tutor";
 
-export default withAuthorization(condition)(SignUpPage);
+export default compose(
+  withAuthentication,
+  withAuthorization(condition)
+)(SignUpPage);
 
 export { SignUpForm, SignUpLink };

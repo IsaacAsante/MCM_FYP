@@ -19,6 +19,7 @@ const INITIAL_STATE = {
   finish: false,
   labsCreated: false,
   labCreationStarted: false,
+  labData: null,
   sheets: [],
   studentsEnrolled: false,
   studentsToAdd: [],
@@ -257,7 +258,7 @@ class AddLabGroupPage extends React.Component {
     for (let i = 0; i < this.state.dbStudentObjects.length; i++) {
       const student = this.state.dbStudentObjects[i];
       console.log("Student to add:", student);
-      // await this.props.firebase.setBatch(student, student.id);
+      // await this.props.firebase.setStudentBatch(student, student.id);
     }
     // await this.props.firebase.commitBatch();
     this.setState({
@@ -270,10 +271,33 @@ class AddLabGroupPage extends React.Component {
   addNewLab = async () => {
     this.setState({ labCreationStarted: true });
     console.log("Lab Data:", this.state.labData);
-    setTimeout(() => {
-      console.log("Labs created with setTimeout().");
-      this.setState({ labsCreated: true, error: false, success: true });
-    }, 2000);
+    for (const [name, obj] of Object.entries(this.state.labData)) {
+      console.log("Query for", name, obj);
+      await this.props.firebase
+        .findLab(this.props.match.params.offeringID, name)
+        .then(async (res) => {
+          console.log("Lab found:", res);
+          if (!res) {
+            this.props.firebase.setLabBatch(
+              this.props.match.params.offeringID,
+              obj
+            );
+          }
+          await this.props.firebase.commitBatch();
+          return true;
+        })
+        .then((res) => {
+          this.setState({ labsCreated: true, error: false, success: true });
+        })
+        .catch((error) => {
+          console.log(error);
+          this.setState({ error });
+        });
+    }
+    // setTimeout(() => {
+    //   console.log("Labs created with setTimeout().");
+    //   this.setState({ labsCreated: true, error: false, success: true });
+    // }, 2000);
   };
 
   enrolStudents = async () => {
