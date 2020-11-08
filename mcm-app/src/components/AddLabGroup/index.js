@@ -46,13 +46,13 @@ class AddLabGroupPage extends React.Component {
     this.setState({ workbook: event.target.files[0] });
   };
 
-  onSubmit = (event) => {
+  onSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData();
     data.append("file", this.state.workbook);
-    axios
+    await axios
       .post("/reader", data, {})
-      .then((res) => {
+      .then(async (res) => {
         // console.log(res.data);
         // Main array to check for dups
         let tracker = [];
@@ -66,9 +66,10 @@ class AddLabGroupPage extends React.Component {
           // WARNING: Only Lab sheets must be read.
           if (k.substring(0, 2) !== "LA") continue;
           importData[k] = {};
-          this.props.firebase
+          await this.props.firebase
             .findTutor(tutorFirstName, tutorLastName)
             .then((res) => {
+              console.log("FindTutor():", res);
               if (!res) {
                 this.setState({
                   error: `Operation aborted. The tutor ${tutorFirstName} ${tutorLastName} was not found in the database. Please make sure they have an account in the system first before importing this file.`,
@@ -121,18 +122,32 @@ class AddLabGroupPage extends React.Component {
               // console.log("Group:", group);
               studentsToAddArray.push(group);
               importData[k]["students"] = student_IDs; // Maintain the lab names from the imported file
+            })
+            .catch((error) => {
+              console.log(error);
+              this.setState({
+                success: false,
+              });
             });
         }
-        return [importData, studentsToAddArray];
+        // Error will be null if no error was thrown during the tutor verification process.
+        if (!this.state.error) {
+          return [importData, studentsToAddArray];
+        }
       })
       .then((data) => {
-        this.setState({ ...INITIAL_STATE });
-        this.setState({
-          success: true,
-          labData: data[0],
-          studentsToAdd: data[1],
-        });
-        return true;
+        // If there is data to add to Firebase, continue.
+        if (Array.isArray(data)) {
+          if (Object.keys(data[0]).length > 0 && data[1].length > 0) {
+            this.setState({ ...INITIAL_STATE });
+            this.setState({
+              success: true,
+              labData: data[0],
+              studentsToAdd: data[1],
+            });
+            return true;
+          }
+        }
       })
       .catch((error) => {
         console.log(error);
@@ -171,8 +186,9 @@ class AddLabGroupPage extends React.Component {
         this.setState({ dbStudentObjects: joined });
         // console.log(this.state.dbStudentObjects);
       })
-      .catch((err) => {
-        console.log(err);
+      .catch((error) => {
+        console.log(error);
+        this.setState({ error });
       });
   };
 
@@ -253,7 +269,7 @@ class AddLabGroupPage extends React.Component {
               </button>
             )}
 
-            {!success && !accountsCreated ? (
+            {!success ? (
               error ? (
                 <div className="alert alert-danger mt">
                   <span>{error}</span>
