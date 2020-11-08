@@ -11,6 +11,7 @@ import * as ROUTES from "../../constants/routes";
 const INITIAL_STATE = {
   accountsCreated: false,
   accountCreationStarted: false,
+  byPassAuthRule: false,
   finish: false,
   docsCreationStarted: false,
   error: null,
@@ -194,7 +195,7 @@ class AddLabGroupPage extends React.Component {
       })
       .catch((error) => {
         console.log(error);
-        this.setState({ error });
+        this.setState({ error, byPassAuthRule: true });
       });
   };
 
@@ -212,7 +213,14 @@ class AddLabGroupPage extends React.Component {
             this.state.dbStudentObjects.length
           );
           // Signal when the docs can be created
-          if (this.state.dbStudentObjects.length == this.state.numOfStudents) {
+          // Rule 1: If all the student objects have been created (this.state.dbStudentObjects)
+          // Rule 2: If the last element in the loop has been reached, and this.state.byPassAuthRule is TRUE because some student accounts were skipped.
+          if (
+            this.state.dbStudentObjects.length == this.state.numOfStudents ||
+            (i == this.state.studentsToAdd.length - 1 &&
+              j == this.state.studentsToAdd[i].length - 1 &&
+              this.state.byPassAuthRule)
+          ) {
             console.log(
               "Objects ready:",
               this.state.studentsToAdd.length,
