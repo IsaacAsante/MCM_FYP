@@ -111,9 +111,7 @@ class AddLabGroupPage extends React.Component {
                       student_IDs.push(student.studentID);
                       group.push(student);
                       tracker.push(student.studentID);
-                      this.setState({
-                        numOfStudents: this.state.numOfStudents + 1,
-                      }); // Record that a student was added
+                      console.log("Group:", group);
                     }
                     // console.log(`${k1}: ${v1.w}, C${row}: ${v[`C${row}`].w}`);
                   }
@@ -145,8 +143,16 @@ class AddLabGroupPage extends React.Component {
               labData: data[0],
               studentsToAdd: data[1],
             });
-            return true;
           }
+        }
+        return true;
+      })
+      .then(() => {
+        for (let i = 0; i < this.state.studentsToAdd.length; i++) {
+          const studentGroup = this.state.studentsToAdd[i];
+          this.setState({
+            numOfStudents: this.state.numOfStudents + studentGroup.length,
+          });
         }
       })
       .catch((error) => {
@@ -178,7 +184,7 @@ class AddLabGroupPage extends React.Component {
     await this.props.firebase
       .createUser(student.email, password)
       .then((authUser) => {
-        console.log("AuthUser:", authUser.user.email, authUser.user.uid);
+        // console.log("AuthUser:", authUser.user.email, authUser.user.uid);
         let studentObj = { ...student };
         studentObj["id"] = authUser.user.uid;
         // console.log("Checking ID:", studentObj);
@@ -200,6 +206,11 @@ class AddLabGroupPage extends React.Component {
         for (let j = 0; j < studentGroup.length; j++) {
           const student = studentGroup[j];
           await this.appendAuthUID(student); // This method creates the accounts
+          console.log(
+            "NumOfStudents and dbStudentObjects:",
+            this.state.numOfStudents,
+            this.state.dbStudentObjects.length
+          );
           // Signal when the docs can be created
           if (this.state.dbStudentObjects.length == this.state.numOfStudents) {
             console.log(
@@ -207,7 +218,11 @@ class AddLabGroupPage extends React.Component {
               this.state.studentsToAdd.length,
               this.state.dbStudentObjects.length
             );
-            this.setState({ accountsCreated: true });
+            this.setState({
+              accountsCreated: true,
+              error: false,
+              success: true,
+            });
           }
         }
       }
@@ -222,7 +237,12 @@ class AddLabGroupPage extends React.Component {
       await this.props.firebase.setBatch(student, student.id);
     }
     await this.props.firebase.commitBatch();
-    this.setState({ finish: true });
+    this.setState({
+      accountsCreated: true,
+      error: false,
+      finish: true,
+      success: true,
+    });
   };
 
   render() {
