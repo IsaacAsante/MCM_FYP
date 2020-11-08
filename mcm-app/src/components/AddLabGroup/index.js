@@ -76,7 +76,7 @@ class AddLabGroupPage extends React.Component {
           await this.props.firebase
             .findTutor(tutorFirstName, tutorLastName)
             .then((res) => {
-              console.log("FindTutor():", res);
+              // console.log("FindTutor():", res);
               if (!res) {
                 this.setState({
                   error: `Operation aborted. The tutor ${tutorFirstName} ${tutorLastName} was not found in the database. Please make sure they have an account in the system first before importing this file.`,
@@ -223,11 +223,11 @@ class AddLabGroupPage extends React.Component {
         for (let j = 0; j < studentGroup.length; j++) {
           const student = studentGroup[j];
           await this.appendAuthUID(student); // This method creates the accounts
-          console.log(
-            "NumOfStudents and dbStudentObjects:",
-            this.state.numOfStudents,
-            this.state.dbStudentObjects.length
-          );
+          // console.log(
+          //   "NumOfStudents and dbStudentObjects:",
+          //   this.state.numOfStudents,
+          //   this.state.dbStudentObjects.length
+          // );
           // Signal when the docs can be created
           // Rule 1: If all the student objects have been created (this.state.dbStudentObjects)
           // Rule 2: If the last element in the loop has been reached, and this.state.byPassAuthRule is TRUE because some student accounts were skipped.
@@ -237,11 +237,11 @@ class AddLabGroupPage extends React.Component {
               j == this.state.studentsToAdd[i].length - 1 &&
               this.state.byPassAuthRule)
           ) {
-            console.log(
-              "Objects ready:",
-              this.state.studentsToAdd.length,
-              this.state.dbStudentObjects.length
-            );
+            // console.log(
+            //   "Objects ready:",
+            //   this.state.studentsToAdd.length,
+            //   this.state.dbStudentObjects.length
+            // );
             this.setState({
               accountsCreated: true,
               error: false,
@@ -257,7 +257,7 @@ class AddLabGroupPage extends React.Component {
     this.setState({ docsCreationStarted: true });
     for (let i = 0; i < this.state.dbStudentObjects.length; i++) {
       const student = this.state.dbStudentObjects[i];
-      console.log("Student to add:", student);
+      // console.log("Student to add:", student);
       await this.props.firebase.setStudentBatch(student, student.id);
     }
     await this.props.firebase.commitBatch();
@@ -270,13 +270,13 @@ class AddLabGroupPage extends React.Component {
 
   addNewLab = async () => {
     this.setState({ labCreationStarted: true });
-    console.log("Lab Data:", this.state.labData);
+    // console.log("Lab Data:", this.state.labData);
     for (const [name, obj] of Object.entries(this.state.labData)) {
-      console.log("Query for", name, obj);
+      // console.log("Query for", name, obj);
       await this.props.firebase
         .findLab(this.props.match.params.offeringID, name)
         .then(async (res) => {
-          console.log("Lab found:", res);
+          // console.log("Lab found:", res);
           if (!res) {
             const labID =
               obj.name.split("-").join("") + this.props.match.params.offeringID;
@@ -302,10 +302,43 @@ class AddLabGroupPage extends React.Component {
   enrolStudents = async () => {
     this.setState({ enrolmentStarted: true });
     console.log("Enrol students.");
-    setTimeout(() => {
-      console.log("Enroled Students with setTimeout().");
-      this.setState({ studentsEnrolled: true, error: false, success: true });
-    }, 2000);
+    for (const [labName, labObj] of Object.entries(this.state.labData)) {
+      const studentIDArray = labObj.students;
+      const labID =
+        labName.split("-").join("") + this.props.match.params.offeringID;
+      for (let i = 0; i < studentIDArray.length; i++) {
+        const studentID = studentIDArray[i];
+        await this.props.firebase
+          .findEnrolment(studentID)
+          .then((enrolment) => {
+            if (enrolment === undefined) {
+              const enrolmentToAdd = {
+                studentID: studentID,
+                labGroups: [labID],
+                unitOfferings: [this.props.match.params.offeringID],
+              };
+              console.log("Enrolment data:", enrolmentToAdd);
+              this.props.firebase
+                .addData("enrolments", enrolmentToAdd)
+                .then((res) => {
+                  console.log(res);
+                })
+                .catch((error) => {
+                  console.log(error);
+                  this.setState({ error });
+                });
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+            this.setState({ error });
+          });
+      }
+    }
+    // setTimeout(() => {
+    //   console.log("Enroled Students with setTimeout().");
+    //   this.setState({ studentsEnrolled: true, error: false, success: true });
+    // }, 2000);
   };
 
   render() {

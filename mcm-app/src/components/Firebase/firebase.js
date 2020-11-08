@@ -77,6 +77,16 @@ class Firebase {
     return tutors[0];
   };
 
+  findEnrolment = async (studentID) => {
+    const enrolmentRef = await this.db.collection("enrolments");
+    const snapshot = await enrolmentRef
+      .where("studentID", "==", studentID)
+      .get();
+    const students = [];
+    snapshot.forEach((doc) => students.push(doc.data()));
+    return students[0];
+  };
+
   findLab = async (offeringID, labName) => {
     const labRef = await this.db
       .collection("unitofferings")
