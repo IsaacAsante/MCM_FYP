@@ -258,9 +258,9 @@ class AddLabGroupPage extends React.Component {
     for (let i = 0; i < this.state.dbStudentObjects.length; i++) {
       const student = this.state.dbStudentObjects[i];
       console.log("Student to add:", student);
-      // await this.props.firebase.setStudentBatch(student, student.id);
+      await this.props.firebase.setStudentBatch(student, student.id);
     }
-    // await this.props.firebase.commitBatch();
+    await this.props.firebase.commitBatch();
     this.setState({
       docsCreated: true,
       error: false,
@@ -297,10 +297,6 @@ class AddLabGroupPage extends React.Component {
           this.setState({ error });
         });
     }
-    // setTimeout(() => {
-    //   console.log("Labs created with setTimeout().");
-    //   this.setState({ labsCreated: true, error: false, success: true });
-    // }, 2000);
   };
 
   enrolStudents = async () => {
