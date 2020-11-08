@@ -152,6 +152,11 @@ class AddLabGroupPage extends React.Component {
     this.createAccountDocs();
   };
 
+  finish = (event) => {
+    event.preventDefault();
+    this.props.firebase.signOutUser();
+  };
+
   appendAuthUID = async (student) => {
     // Use the reverse of a student's ID as their default account password
     const password = student.studentID.split("").reverse().join("");
@@ -198,9 +203,9 @@ class AddLabGroupPage extends React.Component {
     for (let i = 0; i < this.state.dbStudentObjects.length; i++) {
       const student = this.state.dbStudentObjects[i];
       console.log("Student to add:", student);
-      // await this.props.firebase.setBatch(student, student.id);
+      await this.props.firebase.setBatch(student, student.id);
     }
-    // await this.props.firebase.commitBatch();
+    await this.props.firebase.commitBatch();
     this.setState({ finish: true });
   };
 
@@ -237,13 +242,17 @@ class AddLabGroupPage extends React.Component {
               </div>
             </div>
 
-            <button
-              type="submit"
-              className="btn btn-theme"
-              onSubmit={this.onSubmit}
-            >
-              Import
-            </button>
+            {/* The Import button should only show before the start of the process. */}
+            {!accountCreationStarted && (
+              <button
+                type="submit"
+                className="btn btn-theme"
+                onSubmit={this.onSubmit}
+              >
+                Import
+              </button>
+            )}
+
             {!success && !accountsCreated ? (
               error ? (
                 <div className="alert alert-danger mt">
@@ -302,7 +311,7 @@ class AddLabGroupPage extends React.Component {
                     required to log into your tutor account again.
                   </span>
                 </div>
-                <button className="btn btn-info" onClick={this.finish}>
+                <button className="btn btn-danger" onClick={this.finish}>
                   Finish
                 </button>
               </div>
