@@ -378,158 +378,161 @@ class AddLabGroupPage extends React.Component {
     return (
       <div>
         <section id="main-content">
-          <section className="wrapper"></section>
-          <form
-            onSubmit={this.onSubmit}
-            className="form-horizontal style-form"
-            encType="multipart/form-data"
-          >
-            <div className="form-group">
-              <label className="col-sm-2 col-sm-2 control-label">
-                Import file
-              </label>
-              <div className="col-sm-10">
-                <input
-                  name="excelFile"
-                  type="file"
-                  onChange={this.getFile}
-                  placeholder="e.g. Assessment 1 or Distinction Task 2"
-                  className="form-control"
-                />
+          <section className="wrapper">
+            <div className="mt">
+              <h3>
+                <i className="fa fa-angle-right"></i> Import Lab Data
+              </h3>
+              <div className="row">
+                <div className="col-lg-12">
+                  <div className="form-panel">
+                    <form
+                      onSubmit={this.onSubmit}
+                      className="form-horizontal style-form mt"
+                      encType="multipart/form-data"
+                    >
+                      <div className="form-group">
+                        <label className="col-sm-2 col-sm-2 control-label">
+                          File to import
+                        </label>
+                        <div className="col-sm-10">
+                          <input
+                            name="excelFile"
+                            type="file"
+                            onChange={this.getFile}
+                            placeholder="e.g. Assessment 1 or Distinction Task 2"
+                            className="form-control"
+                          />
+                        </div>
+                      </div>
+
+                      {/* The Import button should only show before the start of the process. */}
+
+                      <button
+                        type="submit"
+                        className="btn btn-info"
+                        onSubmit={this.onSubmit}
+                      >
+                        Begin Process
+                      </button>
+
+                      <div className="alert alert-danger mt">
+                        <span>{error}</span>
+                      </div>
+
+                      <div>
+                        <div className="alert alert-info mt">
+                          <span>File parsed successfully.</span>
+                        </div>
+                        {/* Hide this button once accounts started getting created. */}
+
+                        <div className="alert alert-info mt">
+                          <span>
+                            Processing student accounts. Please wait...
+                          </span>
+                        </div>
+
+                        <button
+                          className="btn btn-info"
+                          onClick={this.confirmImport}
+                        >
+                          Register Students
+                        </button>
+                      </div>
+
+                      <div>
+                        <div className="alert alert-warning mt">
+                          <span>
+                            Student accounts processed successfully. Please
+                            click the button below to sync the data in the
+                            system. <b>Do not skip this step!</b>
+                          </span>
+                        </div>
+
+                        <div className="alert alert-info mt">
+                          <span>
+                            Sync'ing student documents in the database. Please
+                            wait...
+                          </span>
+                        </div>
+
+                        <button
+                          className="btn btn-info"
+                          onClick={this.completeImport}
+                        >
+                          Sync Student Data
+                        </button>
+                      </div>
+
+                      {/* Lab creation */}
+
+                      <div>
+                        <div className="alert alert-warning mt">
+                          <span>
+                            Click on the button below to automatically create
+                            lab entries for the labs found in the file. If they
+                            already exist, they will be ignored.{" "}
+                            <b>Do not skip this step!</b>
+                          </span>
+                        </div>
+
+                        <div className="alert alert-info mt">
+                          <span>Processing lab entries. Please wait...</span>
+                        </div>
+
+                        <button
+                          className="btn btn-info"
+                          onClick={this.createLabs}
+                        >
+                          Create Lab Groups
+                        </button>
+                      </div>
+
+                      {/* Student Enrolments */}
+
+                      <div>
+                        <div className="alert alert-warning mt">
+                          <span>
+                            Begin the automatic student enrolment process.
+                            Students will be assigned to their relevant lab
+                            groups after getting enrolled in this unit offering.{" "}
+                            <b>Do not skip this step!</b>
+                          </span>
+                        </div>
+
+                        <div className="alert alert-info mt">
+                          <span>Enrolling students. Please wait...</span>
+                        </div>
+
+                        <button
+                          className="btn btn-info"
+                          onClick={this.processEnrolments}
+                        >
+                          Process Enrolments
+                        </button>
+                      </div>
+
+                      <div>
+                        <div className="alert alert-info mt">
+                          <span>
+                            Click the button below to finalize the process. You
+                            will logged out from the system and required to log
+                            into your tutor account again.
+                          </span>
+                        </div>
+                        <button
+                          className="btn btn-danger"
+                          onClick={this.finish}
+                        >
+                          Finish {`&`} Log Out
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
               </div>
             </div>
-
-            {/* The Import button should only show before the start of the process. */}
-            {!accountCreationStarted && (
-              <button
-                type="submit"
-                className="btn btn-theme"
-                onSubmit={this.onSubmit}
-              >
-                Import
-              </button>
-            )}
-
-            {!success ? (
-              error ? (
-                <div className="alert alert-danger mt">
-                  <span>{error}</span>
-                </div>
-              ) : (
-                ""
-              )
-            ) : (
-              <div>
-                <div className="alert alert-info mt">
-                  <span>File parsed successfully.</span>
-                </div>
-                {/* Hide this button once accounts started getting created. */}
-                {accountCreationStarted ? (
-                  <div className="alert alert-info mt">
-                    <span>Processing student accounts. Please wait...</span>
-                  </div>
-                ) : (
-                  <button className="btn btn-info" onClick={this.confirmImport}>
-                    Create Accounts
-                  </button>
-                )}
-              </div>
-            )}
-            {accountsCreated && success ? (
-              <div>
-                <div className="alert alert-warning mt">
-                  <span>
-                    Create documents. <b>Do not skip this step!</b>
-                  </span>
-                </div>
-                {docsCreationStarted ? (
-                  <div className="alert alert-info mt">
-                    <span>
-                      Sync'ing student documents in the database. Please wait...
-                    </span>
-                  </div>
-                ) : (
-                  <button
-                    className="btn btn-info"
-                    onClick={this.completeImport}
-                  >
-                    Create Documents
-                  </button>
-                )}
-              </div>
-            ) : (
-              " "
-            )}
-            {/* Lab creation */}
-            {docsCreated && success ? (
-              <div>
-                <div className="alert alert-warning mt">
-                  <span>
-                    Click on the button below to automatically create lab
-                    entries for the labs found in the file. If they already
-                    exist, they will be skipped. <b>Do not skip this step!</b>
-                  </span>
-                </div>
-                {labCreationStarted ? (
-                  <div className="alert alert-info mt">
-                    <span>Processing lab entries. Please wait...</span>
-                  </div>
-                ) : (
-                  <button className="btn btn-info" onClick={this.createLabs}>
-                    Create Labs
-                  </button>
-                )}
-              </div>
-            ) : (
-              " "
-            )}
-            {/* Student Enrolments */}
-            {labsCreated && success ? (
-              <div>
-                <div className="alert alert-warning mt">
-                  <span>
-                    Begin the automatic student enrolment process. Students will
-                    be enrolled to their relevant lab groups under this unit
-                    offering. <b>Do not skip this step!</b>
-                  </span>
-                </div>
-                {enrolmentStarted ? (
-                  <div className="alert alert-info mt">
-                    <span>Enrolling students. Please wait...</span>
-                  </div>
-                ) : (
-                  <button
-                    className="btn btn-info"
-                    onClick={this.processEnrolments}
-                  >
-                    Process Enrolments
-                  </button>
-                )}
-              </div>
-            ) : (
-              " "
-            )}
-
-            {accountsCreated &&
-            success &&
-            docsCreationStarted &&
-            labsCreated &&
-            studentsEnrolled ? (
-              <div>
-                <div className="alert alert-info mt">
-                  <span>
-                    Click the button below to finalize the process. You will be
-                    required to log into your tutor account again.
-                  </span>
-                </div>
-                <button className="btn btn-danger" onClick={this.finish}>
-                  Finish
-                </button>
-              </div>
-            ) : (
-              ""
-            )}
-          </form>
+          </section>
         </section>
       </div>
     );
