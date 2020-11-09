@@ -407,126 +407,154 @@ class AddLabGroupPage extends React.Component {
                       </div>
 
                       {/* The Import button should only show before the start of the process. */}
-
-                      <button
-                        type="submit"
-                        className="btn btn-info"
-                        onSubmit={this.onSubmit}
-                      >
-                        Begin Process
-                      </button>
-
-                      <div className="alert alert-danger mt">
-                        <span>{error}</span>
-                      </div>
-
-                      <div>
-                        <div className="alert alert-info mt">
-                          <span>File parsed successfully.</span>
-                        </div>
-                        {/* Hide this button once accounts started getting created. */}
-
-                        <div className="alert alert-info mt">
-                          <span>
-                            Processing student accounts. Please wait...
-                          </span>
-                        </div>
-
+                      {!accountCreationStarted && (
                         <button
+                          type="submit"
                           className="btn btn-info"
-                          onClick={this.confirmImport}
+                          onSubmit={this.onSubmit}
                         >
-                          Register Students
+                          Begin Process
                         </button>
-                      </div>
+                      )}
 
-                      <div>
-                        <div className="alert alert-warning mt">
-                          <span>
-                            Student accounts processed successfully. Please
-                            click the button below to sync the data in the
-                            system. <b>Do not skip this step!</b>
-                          </span>
+                      {!success ? (
+                        error ? (
+                          <div className="alert alert-danger mt">
+                            <span>{error}</span>
+                          </div>
+                        ) : (
+                          ""
+                        )
+                      ) : (
+                        <div>
+                          <div className="alert alert-info mt">
+                            <span>File parsed successfully.</span>
+                          </div>
+                          {/* Hide this button once accounts started getting created. */}
+                          {accountCreationStarted ? (
+                            <div className="alert alert-info mt">
+                              <span>
+                                Processing student accounts. Please wait...
+                              </span>
+                            </div>
+                          ) : (
+                            <button
+                              className="btn btn-info"
+                              onClick={this.confirmImport}
+                            >
+                              Register Students
+                            </button>
+                          )}
                         </div>
-
-                        <div className="alert alert-info mt">
-                          <span>
-                            Sync'ing student documents in the database. Please
-                            wait...
-                          </span>
+                      )}
+                      {accountsCreated && success ? (
+                        <div>
+                          <div className="alert alert-warning mt">
+                            <span>
+                              Student accounts processed successfully. Please
+                              click the button below to sync the data in the
+                              system. <b>Do not skip this step!</b>
+                            </span>
+                          </div>
+                          {docsCreationStarted ? (
+                            <div className="alert alert-info mt">
+                              <span>
+                                Sync'ing student documents in the database.
+                                Please wait...
+                              </span>
+                            </div>
+                          ) : (
+                            <button
+                              className="btn btn-info"
+                              onClick={this.completeImport}
+                            >
+                              Sync Student Data
+                            </button>
+                          )}
                         </div>
-
-                        <button
-                          className="btn btn-info"
-                          onClick={this.completeImport}
-                        >
-                          Sync Student Data
-                        </button>
-                      </div>
-
+                      ) : (
+                        " "
+                      )}
                       {/* Lab creation */}
-
-                      <div>
-                        <div className="alert alert-warning mt">
-                          <span>
-                            Click on the button below to automatically create
-                            lab entries for the labs found in the file. If they
-                            already exist, they will be ignored.{" "}
-                            <b>Do not skip this step!</b>
-                          </span>
+                      {docsCreated && success ? (
+                        <div>
+                          <div className="alert alert-warning mt">
+                            <span>
+                              Click on the button below to automatically create
+                              lab entries for the labs found in the file. If
+                              they already exist, they will be ignored.{" "}
+                              <b>Do not skip this step!</b>
+                            </span>
+                          </div>
+                          {labCreationStarted ? (
+                            <div className="alert alert-info mt">
+                              <span>
+                                Processing lab entries. Please wait...
+                              </span>
+                            </div>
+                          ) : (
+                            <button
+                              className="btn btn-info"
+                              onClick={this.createLabs}
+                            >
+                              Create Lab Groups
+                            </button>
+                          )}
                         </div>
-
-                        <div className="alert alert-info mt">
-                          <span>Processing lab entries. Please wait...</span>
-                        </div>
-
-                        <button
-                          className="btn btn-info"
-                          onClick={this.createLabs}
-                        >
-                          Create Lab Groups
-                        </button>
-                      </div>
-
+                      ) : (
+                        " "
+                      )}
                       {/* Student Enrolments */}
-
-                      <div>
-                        <div className="alert alert-warning mt">
-                          <span>
-                            Begin the automatic student enrolment process.
-                            Students will be assigned to their relevant lab
-                            groups after getting enrolled in this unit offering.{" "}
-                            <b>Do not skip this step!</b>
-                          </span>
+                      {labsCreated && success ? (
+                        <div>
+                          <div className="alert alert-warning mt">
+                            <span>
+                              Begin the automatic student enrolment process.
+                              Students will be assigned to their relevant lab
+                              groups after getting enrolled in this unit
+                              offering. <b>Do not skip this step!</b>
+                            </span>
+                          </div>
+                          {enrolmentStarted ? (
+                            <div className="alert alert-info mt">
+                              <span>Enrolling students. Please wait...</span>
+                            </div>
+                          ) : (
+                            <button
+                              className="btn btn-info"
+                              onClick={this.processEnrolments}
+                            >
+                              Process Enrolments
+                            </button>
+                          )}
                         </div>
+                      ) : (
+                        " "
+                      )}
 
-                        <div className="alert alert-info mt">
-                          <span>Enrolling students. Please wait...</span>
+                      {accountsCreated &&
+                      success &&
+                      docsCreationStarted &&
+                      labsCreated &&
+                      studentsEnrolled ? (
+                        <div>
+                          <div className="alert alert-info mt">
+                            <span>
+                              Click the button below to finalize the process.
+                              You will logged out from the system and required
+                              to log into your tutor account again.
+                            </span>
+                          </div>
+                          <button
+                            className="btn btn-danger"
+                            onClick={this.finish}
+                          >
+                            Finish {`&`} Log Out
+                          </button>
                         </div>
-
-                        <button
-                          className="btn btn-info"
-                          onClick={this.processEnrolments}
-                        >
-                          Process Enrolments
-                        </button>
-                      </div>
-
-                      <div>
-                        <div className="alert alert-info mt">
-                          <span>
-                            Click the button below to finalize the process. You
-                            will logged out from the system and required to log
-                            into your tutor account again.
-                          </span>
-                        </div>
-                        <button
-                          className="btn btn-danger"
-                          onClick={this.finish}
-                        >
-                          Finish {`&`} Log Out
-                        </button>
-                      </div>
+                      ) : (
+                        ""
+                      )}
                     </form>
                   </div>
                 </div>
