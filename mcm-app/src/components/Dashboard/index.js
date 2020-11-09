@@ -3,6 +3,7 @@ import { withFirebase } from "../Firebase";
 import { withAuthorization } from "../Session";
 
 import * as ROUTES from "../../constants/routes";
+import * as ROLES from "../../constants/roles";
 
 const INITIAL_STATE = {
   authUser: null,
@@ -19,63 +20,118 @@ class DashboardPage extends React.Component {
   componentDidMount() {
     // Recognize current user
     this.props.firebase.onAuthUserListener((authUser) => {
+      console.log("Dashboard current user:", authUser);
       this.setState({ authUser });
-      // Determine if a Tutor is already allocated to the unit offering currently being viewed, or not.
-      this.props.firebase.findAllocation(authUser.uid).then((allocations) => {
-        if (allocations) {
-          this.setState({ warning: false });
-          if (allocations.unitOfferings.length > 0) {
-            let offerings = [];
-            allocations.unitOfferings.forEach((offeringID) => {
-              this.props.firebase
-                .getUnitOffering(offeringID)
-                .then((offeringDoc) => {
-                  let offeringDataObj = {
-                    id: offeringDoc.id,
-                    semester: {},
-                    unit: {},
-                  };
-                  // Get the semester data for every allocation instance
-                  this.props.firebase
-                    .findSemester(offeringDoc.semesterID)
-                    .then((semesterData) => {
-                      offeringDataObj.semester = semesterData;
-                      return offeringDataObj;
-                    })
-                    .then((offeringDataObj) => {
-                      // Get the semester data for every allocation instance
-                      this.props.firebase
-                        .findUnit(offeringDoc.unitID)
-                        .then((unitData) => {
-                          offeringDataObj.unit = unitData;
-                          return offeringDataObj;
-                        })
-                        .then((offeringDataObj) => {
-                          offerings = offerings.concat(offeringDataObj);
-                          // console.log(offerings);
-                          this.setState({ unitOfferings: offerings });
-                        });
-                    })
-                    .catch((err) => {
-                      console.error(err);
-                    });
-                })
-                .catch((err) => {
-                  console.error(err);
-                });
-            });
+      if (authUser.role === ROLES.TUTOR) {
+        // Determine if a Tutor is already allocated to the unit offering currently being viewed, or not.
+        this.props.firebase.findAllocation(authUser.uid).then((allocations) => {
+          if (allocations) {
+            this.setState({ warning: false });
+            if (allocations.unitOfferings.length > 0) {
+              let offerings = [];
+              allocations.unitOfferings.forEach((offeringID) => {
+                this.props.firebase
+                  .getUnitOffering(offeringID)
+                  .then((offeringDoc) => {
+                    let offeringDataObj = {
+                      id: offeringDoc.id,
+                      semester: {},
+                      unit: {},
+                    };
+                    // Get the semester data for every allocation instance
+                    this.props.firebase
+                      .findSemester(offeringDoc.semesterID)
+                      .then((semesterData) => {
+                        offeringDataObj.semester = semesterData;
+                        return offeringDataObj;
+                      })
+                      .then((offeringDataObj) => {
+                        // Get the semester data for every allocation instance
+                        this.props.firebase
+                          .findUnit(offeringDoc.unitID)
+                          .then((unitData) => {
+                            offeringDataObj.unit = unitData;
+                            return offeringDataObj;
+                          })
+                          .then((offeringDataObj) => {
+                            offerings = offerings.concat(offeringDataObj);
+                            // console.log(offerings);
+                            this.setState({ unitOfferings: offerings });
+                          });
+                      })
+                      .catch((err) => {
+                        console.error(err);
+                      });
+                  })
+                  .catch((err) => {
+                    console.error(err);
+                  });
+              });
+            } else {
+              this.setState({
+                empty: true,
+              });
+            }
           } else {
             this.setState({
               empty: true,
+              warning: true,
             });
           }
-        } else {
-          this.setState({
-            empty: true,
-            warning: true,
+        });
+      } else if (authUser.role === ROLES.STUDENT) {
+        this.props.firebase
+          .findEnrolment(authUser.studentID)
+          .then((enrolment) => {
+            if (enrolment) this.setState({ warning: false });
+            if (enrolment.unitOfferings.length > 0) {
+              let offerings = [];
+              enrolment.unitOfferings.forEach((offeringID) => {
+                this.props.firebase
+                  .getUnitOffering(offeringID)
+                  .then((offeringDoc) => {
+                    let offeringDataObj = {
+                      id: offeringDoc.id,
+                      semester: {},
+                      unit: {},
+                    };
+                    // Get the semester data for every allocation instance
+                    this.props.firebase
+                      .findSemester(offeringDoc.semesterID)
+                      .then((semesterData) => {
+                        offeringDataObj.semester = semesterData;
+                        return offeringDataObj;
+                      })
+                      .then((offeringDataObj) => {
+                        // Get the semester data for every allocation instance
+                        this.props.firebase
+                          .findUnit(offeringDoc.unitID)
+                          .then((unitData) => {
+                            offeringDataObj.unit = unitData;
+                            return offeringDataObj;
+                          })
+                          .then((offeringDataObj) => {
+                            offerings = offerings.concat(offeringDataObj);
+                            // console.log(offerings);
+                            this.setState({ unitOfferings: offerings });
+                          });
+                      })
+                      .catch((err) => {
+                        console.error(err);
+                      });
+                  })
+                  .catch((err) => {
+                    console.error(err);
+                  });
+              });
+            } else {
+              this.setState({
+                empty: true,
+              });
+            }
+            console.log("Student enrolment found:", enrolment);
           });
-        }
-      });
+      }
     });
   }
 
