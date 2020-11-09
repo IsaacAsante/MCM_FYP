@@ -93,7 +93,7 @@ class TaskFormBase extends React.Component {
     const isInvalid = name == "" || deadline == "" || maxSubmissions == 0;
     return (
       <div className="row">
-        <div className="col-sm-2">
+        <div className="col-sm-12 col-md-8">
           <form onSubmit={this.onSubmit} className="form-horizontal style-form">
             <div className="form-group">
               <label className="col-sm-2 col-sm-2 control-label">
