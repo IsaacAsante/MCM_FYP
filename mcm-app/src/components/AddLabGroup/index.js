@@ -310,7 +310,7 @@ class AddLabGroupPage extends React.Component {
         const studentID = studentIDArray[i];
         await this.props.firebase
           .findEnrolment(studentID)
-          .then((enrolment) => {
+          .then(async (enrolment) => {
             if (enrolment === undefined) {
               const enrolmentToAdd = {
                 studentID: studentID,
@@ -327,6 +327,29 @@ class AddLabGroupPage extends React.Component {
                   console.log(error);
                   this.setState({ error });
                 });
+            } else {
+              if (!enrolment.labGroups.includes(labID)) {
+                enrolment.labGroups.push(labID);
+                await this.props.firebase.updateData(
+                  "enrolments",
+                  enrolment.id,
+                  { labGroups: enrolment.labGroups }
+                );
+              }
+              if (
+                !enrolment.unitOfferings.includes(
+                  this.props.match.params.offeringID
+                )
+              ) {
+                enrolment.unitOfferings.push(
+                  this.props.match.params.offeringID
+                );
+                await this.props.firebase.updateData(
+                  "enrolments",
+                  enrolment.id,
+                  { unitOfferings: enrolment.unitOfferings }
+                );
+              }
             }
           })
           .catch((error) => {
@@ -335,10 +358,7 @@ class AddLabGroupPage extends React.Component {
           });
       }
     }
-    // setTimeout(() => {
-    //   console.log("Enroled Students with setTimeout().");
-    //   this.setState({ studentsEnrolled: true, error: false, success: true });
-    // }, 2000);
+    this.setState({ studentsEnrolled: true, finish: true, success: true });
   };
 
   render() {
