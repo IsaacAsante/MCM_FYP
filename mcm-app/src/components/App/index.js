@@ -48,19 +48,27 @@ const App = () => (
       <Sidebar />
       <Route exact path={ROUTES.HOME} component={DashboardPage} />
       <Route path={ROUTES.ACCOUNT} component={AccountPage} />
-      <Route path={ROUTES.ADD_BOOKING_SLOT} component={AddBookingSlotPage} />
+      <Route
+        exact
+        path={ROUTES.ADD_BOOKING_SLOT}
+        component={AddBookingSlotPage}
+      />
       <Route path={ROUTES.ADD_LAB_GROUP} component={AddLabGroupPage} />
-      <Route path={ROUTES.ADD_NEW_TASK} component={AddNewTaskPage} />
+      <Route exact path={ROUTES.ADD_NEW_TASK} component={AddNewTaskPage} />
       <Route path={ROUTES.ADD_UNIT_OFFERING} component={AddUnitOfferingPage} />
       <Route path={ROUTES.DASHBOARD} component={DashboardPage} />
-      <Route path={ROUTES.FIND_UNIT_OFFERING} component={FindUnitOffering} />
+      <Route
+        exact
+        path={ROUTES.FIND_UNIT_OFFERING}
+        component={FindUnitOffering}
+      />
       <Route path={ROUTES.SIGN_IN} component={SignInPage} />
       <Route path={ROUTES.SIGN_UP} component={SignUpPage} />
       <Route path={ROUTES.PASSWORD_UPDATE} component={PasswordUpdatePage} />
       <Route path={ROUTES.PASSWORD_RESET} component={PasswordResetPage} />
       <Route path={ROUTES.ADD_UNIT} component={AddUnitPage} />
       <Route path={ROUTES.ADD_SEMESTER} component={AddSemesterPage} />
-      <Route exact path={ROUTES.SINGLE_TASK} component={TaskPage} />
+      <Route path={ROUTES.SINGLE_TASK} component={TaskPage} />
       <Route path={ROUTES.SINGLE_UNIT} component={DashboardPage} />
       <Route
         exact

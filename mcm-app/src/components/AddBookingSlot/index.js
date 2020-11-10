@@ -84,17 +84,19 @@ class AddNewBookingSlotPage extends React.Component {
               });
             });
 
-          await this.props.firebase
-            .findTask(this.state.offeringID, this.state.taskID)
-            .then((task) => {
-              if (!task) {
-                this.setState({ taskError: true });
-                console.log("Task was not found");
-              } else {
-                this.setState({ task });
-                console.log("Task found:", task);
-              }
-            });
+          if (this.state.taskID !== "add") {
+            await this.props.firebase
+              .findTask(this.state.offeringID, this.state.taskID)
+              .then((task) => {
+                if (!task) {
+                  this.setState({ taskError: true });
+                  console.log("Task was not found");
+                } else {
+                  this.setState({ task });
+                  console.log("Task found:", task);
+                }
+              });
+          }
           console.log(this.state);
         } else {
           this.setState({
