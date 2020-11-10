@@ -1,5 +1,7 @@
 export const HOME = "/";
 export const ACCOUNT = "/account";
+export const ADD_BOOKING_SLOT =
+  "/unit-offerings/:offeringID/tasks/:tasksID/slots/add";
 export const ADD_LAB_GROUP = "/unit-offerings/:offeringID/lab-groups/add";
 export const ADD_NEW_TASK = "/unit-offerings/:offeringID/tasks/add";
 export const ADD_SEMESTER = "/add-semester";
@@ -13,6 +15,7 @@ export const PASSWORD_RESET = "/password-reset";
 export const PASSWORD_UPDATE = "/password-update";
 export const SIGN_IN = "/login";
 export const SIGN_UP = "/register";
+export const SINGLE_TASK = "/unit-offerings/:offeringID/tasks/:taskID";
 export const SINGLE_UNIT = "/units/:unitCode";
 export const SINGLE_UNIT_OFFERING = "/unit-offerings/:offeringID";
 export const UNITS = "/units";

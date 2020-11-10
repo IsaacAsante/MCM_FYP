@@ -6,6 +6,7 @@ import "bootstrap/dist/js/bootstrap.bundle";
 
 // Import Basic components
 import AccountPage from "../Account";
+import AddBookingSlotPage from "../AddBookingSlot";
 import AddLabGroupPage from "../AddLabGroup";
 import AddNewTaskPage from "../AddNewTask";
 import AddUnitOfferingPage from "../AddUnitOffering";
@@ -46,6 +47,7 @@ const App = () => (
       <Sidebar />
       <Route exact path={ROUTES.HOME} component={DashboardPage} />
       <Route path={ROUTES.ACCOUNT} component={AccountPage} />
+      <Route path={ROUTES.ADD_BOOKING_SLOT} component={AddBookingSlotPage} />
       <Route path={ROUTES.ADD_LAB_GROUP} component={AddLabGroupPage} />
       <Route path={ROUTES.ADD_NEW_TASK} component={AddNewTaskPage} />
       <Route path={ROUTES.ADD_UNIT_OFFERING} component={AddUnitOfferingPage} />
