@@ -7,7 +7,7 @@ import { withFirebase } from "../Firebase";
 const AddBookingSlotForm = (props) => (
   <div className="mt">
     <h4>
-      <i className="fa fa-angle-right"></i> Adding Task
+      <i className="fa fa-angle-right"></i> Adding Booking Slot
     </h4>
     <div className="row">
       <div className="col-lg-12">
@@ -41,44 +41,69 @@ class BookingSlotFormBase extends React.Component {
   render() {
     return (
       <div className="row">
-        <div className="col-sm-12 col-md-8">
+        <div className="col-sm-12 col-md-10">
           <form onSubmit={this.onSubmit} className="form-horizontal style-form">
             <div className="form-group">
-              <label className="col-sm-2 col-sm-2 control-label">
-                Task Name
-              </label>
-              <div className="col-sm-10">
-                <input
-                  name="name"
-                  type="text"
-                  placeholder="e.g. Assessment 1 or Distinction Task 2"
-                  className="form-control"
-                />
-              </div>
-            </div>
-
-            <div className="form-group">
-              <label className="col-sm-2 col-sm-2 control-label">
-                Select Deadline
-              </label>
+              <label className="col-sm-2 control-label">Date</label>
               <div className="col-sm-10">
                 <DatePicker name="deadline" className="form-control" />
               </div>
             </div>
 
             <div className="form-group">
+              <label className="control-label col-sm-2">Available Period</label>
+              <div className="col-sm-10">
+                <div
+                  className="input-group input-large"
+                  data-date="01/01/2014"
+                  data-date-format="mm/dd/yyyy"
+                >
+                  <input
+                    type="text"
+                    className="form-control dpd1"
+                    name="from"
+                  />
+                  <span className="input-group-addon">To</span>
+                  <input type="text" className="form-control dpd2" name="to" />
+                </div>
+                <span className="help-block">
+                  <em>*Select times</em>
+                </span>
+              </div>
+            </div>
+
+            <div className="form-group">
               <label className="col-sm-2 control-label">
-                Maximum Consultation
+                Maximum Time Allowed
               </label>
-              <div className="col-sm-2">
-                <select className="form-control" name="role">
+              <div className="col-sm-10">
+                <select className="form-control" name="maxtime">
                   <option value="0">--</option>
-                  <option value="1">1</option>
-                  <option value="2">2</option>
-                  <option value="3">3</option>
+                  <option value="10">10min</option>
+                  <option value="15">15min</option>
+                  <option value="20">20min</option>
+                  <option value="25">25min</option>
+                  <option value="30">30min</option>
                 </select>
               </div>
             </div>
+
+            <div className="form-group">
+              <label className="col-sm-2 control-label">Location</label>
+              <div className="col-sm-10">
+                <input type="text" name="deadline" className="form-control" />
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label className="col-sm-2 control-label">Lab Group</label>
+              <div className="col-sm-10">
+                <select className="form-control" name="labgroup">
+                  <option value="0">--</option>
+                </select>
+              </div>
+            </div>
+
             <button type="submit" className="btn btn-theme">
               Save
             </button>
@@ -86,14 +111,14 @@ class BookingSlotFormBase extends React.Component {
               Go Back
             </button>
           </form>
-          <div className="alert alert-danger mt">
+          {/* <div className="alert alert-danger mt">
             <span>
               A task with the same name already exists for this unit offering.
             </span>
           </div>
           <div className="alert alert-success mt">
             <span>Task created successfully.</span>
-          </div>
+          </div> */}
         </div>
       </div>
     );
