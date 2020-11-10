@@ -50,7 +50,14 @@ class AddLabGroupPage extends React.Component {
   }
 
   getFile = (event) => {
-    this.setState({ workbook: event.target.files[0] });
+    // Only .xls files may be uploaded/imported.
+    const splitName = event.target.files[0].name.split(".");
+    const fileExt = splitName[splitName.length - 1];
+    if (fileExt == "xls") {
+      this.setState({ workbook: event.target.files[0] });
+    } else {
+      this.setState({ workbook: null });
+    }
   };
 
   onSubmit = async (event) => {
@@ -118,7 +125,7 @@ class AddLabGroupPage extends React.Component {
                       student_IDs.push(student.studentID);
                       group.push(student);
                       tracker.push(student.studentID);
-                      console.log("Group:", group);
+                      // console.log("Group:", group);
                     }
                     // console.log(`${k1}: ${v1.w}, C${row}: ${v[`C${row}`].w}`);
                   }
@@ -372,6 +379,7 @@ class AddLabGroupPage extends React.Component {
       labsCreated,
       labCreationStarted,
       studentsEnrolled,
+      workbook,
       error,
       success,
     } = this.state;
@@ -412,6 +420,7 @@ class AddLabGroupPage extends React.Component {
                           type="submit"
                           className="btn btn-info"
                           onSubmit={this.onSubmit}
+                          disabled={workbook == null}
                         >
                           Begin Process
                         </button>
