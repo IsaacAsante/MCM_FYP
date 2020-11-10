@@ -13,6 +13,8 @@ const INITIAL_STATE = {
   offeringID: null,
   semester: null,
   semesterError: null,
+  task: null,
+  taskError: false,
   taskID: null,
   unit: null,
   unitError: null,
@@ -86,8 +88,10 @@ class AddNewBookingSlotPage extends React.Component {
             .findTask(this.state.offeringID, this.state.taskID)
             .then((task) => {
               if (!task) {
+                this.setState({ taskError: true });
                 console.log("Task was not found");
               } else {
+                this.setState({ task });
                 console.log("Task found:", task);
               }
             });
@@ -109,6 +113,8 @@ class AddNewBookingSlotPage extends React.Component {
       authUser,
       semester,
       semesterError,
+      task,
+      taskError,
       unit,
       unitError,
     } = this.state;
@@ -156,7 +162,16 @@ class AddNewBookingSlotPage extends React.Component {
                 )}
               </div>
             </div>
-            <AddBookingSlotForm unitoffering={this.state.offeringID} />
+            {semester && task && unit ? (
+              <AddBookingSlotForm unitoffering={this.state.offeringID} />
+            ) : taskError ? (
+              <div className="alert alert-danger">
+                <strong>Invalid task.</strong> The task ID from this page's URL
+                does not exist in the system.
+              </div>
+            ) : (
+              ""
+            )}
           </section>
         </section>
       </div>
