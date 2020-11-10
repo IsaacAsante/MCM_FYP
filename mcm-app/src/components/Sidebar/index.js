@@ -103,27 +103,6 @@ const StudentNavbar = () => {
         </Link>
       </li>
       <li>
-        <Link to={ROUTES.SIGN_IN}>
-          <i className="fa fa-envelope"></i>
-          <span>Units</span>
-          {/* <span className="label label-theme pull-right mail-info">2</span> */}
-        </Link>
-      </li>
-      <li>
-        <Link to={ROUTES.SIGN_IN}>
-          <i className="fa fa-envelope"></i>
-          <span>Tasks</span>
-          {/* <span className="label label-theme pull-right mail-info">2</span> */}
-        </Link>
-      </li>
-      <li>
-        <Link to={ROUTES.SIGN_IN}>
-          <i className="fa fa-envelope"></i>
-          <span>Bookings </span>
-          {/* <span className="label label-theme pull-right mail-info">2</span> */}
-        </Link>
-      </li>
-      <li>
         <Link to={ROUTES.ACCOUNT}>
           <i className="fa fa-envelope"></i>
           <span>Your Account</span>
