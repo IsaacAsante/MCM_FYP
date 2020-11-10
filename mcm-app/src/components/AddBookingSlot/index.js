@@ -115,13 +115,15 @@ class AddNewBookingSlotPage extends React.Component {
                 <h2>
                   {invalid ? " " : <i className="fa fa-angle-right"></i>}
                   {unit && ` ${unit.unitCode} ${unit.name}`}
-                </h2>
+                </h2>{" "}
                 <h3>
                   {invalid ? " " : <i className="fa fa-angle-right"></i>}
                   {semester &&
                     ` Semester ${semester.number} - ${semester.year} (${semester.type})`}
                 </h3>
-
+                <span className="label label-danger">
+                  {allocated && allocateMessage}
+                </span>
                 {/* If invalid - Show the error messages*/}
                 {invalid ? <h2>{invalid && "Invalid Unit Offering"}</h2> : " "}
                 {invalid ? <hr /> : " "}
