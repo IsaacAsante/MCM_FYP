@@ -150,6 +150,6 @@ class AddNewBookingSlotPage extends React.Component {
   }
 }
 
-const condition = (authUser) => !!authUser;
+const condition = (authUser) => authUser && authUser.role == "Tutor";
 
 export default withAuthorization(condition)(AddNewBookingSlotPage);

@@ -83,53 +83,55 @@ class DashboardPage extends React.Component {
         this.props.firebase
           .findEnrolment(authUser.studentID)
           .then((enrolment) => {
-            if (enrolment) this.setState({ warning: false });
-            if (enrolment.unitOfferings.length > 0) {
-              let offerings = [];
-              enrolment.unitOfferings.forEach((offeringID) => {
-                this.props.firebase
-                  .getUnitOffering(offeringID)
-                  .then((offeringDoc) => {
-                    let offeringDataObj = {
-                      id: offeringDoc.id,
-                      semester: {},
-                      unit: {},
-                    };
-                    // Get the semester data for every allocation instance
-                    this.props.firebase
-                      .findSemester(offeringDoc.semesterID)
-                      .then((semesterData) => {
-                        offeringDataObj.semester = semesterData;
-                        return offeringDataObj;
-                      })
-                      .then((offeringDataObj) => {
-                        // Get the semester data for every allocation instance
-                        this.props.firebase
-                          .findUnit(offeringDoc.unitID)
-                          .then((unitData) => {
-                            offeringDataObj.unit = unitData;
-                            return offeringDataObj;
-                          })
-                          .then((offeringDataObj) => {
-                            offerings = offerings.concat(offeringDataObj);
-                            // console.log(offerings);
-                            this.setState({ unitOfferings: offerings });
-                          });
-                      })
-                      .catch((err) => {
-                        console.error(err);
-                      });
-                  })
-                  .catch((err) => {
-                    console.error(err);
-                  });
-              });
-            } else {
-              this.setState({
-                empty: true,
-              });
+            if (enrolment) {
+              this.setState({ warning: false });
+              if (enrolment.unitOfferings.length > 0) {
+                let offerings = [];
+                enrolment.unitOfferings.forEach((offeringID) => {
+                  this.props.firebase
+                    .getUnitOffering(offeringID)
+                    .then((offeringDoc) => {
+                      let offeringDataObj = {
+                        id: offeringDoc.id,
+                        semester: {},
+                        unit: {},
+                      };
+                      // Get the semester data for every allocation instance
+                      this.props.firebase
+                        .findSemester(offeringDoc.semesterID)
+                        .then((semesterData) => {
+                          offeringDataObj.semester = semesterData;
+                          return offeringDataObj;
+                        })
+                        .then((offeringDataObj) => {
+                          // Get the semester data for every allocation instance
+                          this.props.firebase
+                            .findUnit(offeringDoc.unitID)
+                            .then((unitData) => {
+                              offeringDataObj.unit = unitData;
+                              return offeringDataObj;
+                            })
+                            .then((offeringDataObj) => {
+                              offerings = offerings.concat(offeringDataObj);
+                              // console.log(offerings);
+                              this.setState({ unitOfferings: offerings });
+                            });
+                        })
+                        .catch((err) => {
+                          console.error(err);
+                        });
+                    })
+                    .catch((err) => {
+                      console.error(err);
+                    });
+                });
+              } else {
+                this.setState({
+                  empty: true,
+                });
+              }
+              console.log("Student enrolment found:", enrolment);
             }
-            console.log("Student enrolment found:", enrolment);
           });
       }
     });
