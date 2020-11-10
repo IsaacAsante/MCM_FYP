@@ -20,10 +20,8 @@ const AddBookingSlotForm = (props) => (
 );
 
 const INITIAL_STATE = {
-  name: "",
-  deadline: new Date(),
-  maxSubmissions: 0,
-  submissions: [],
+  offeringID: null,
+  taskID: null,
   duplicate: false,
   success: false,
 };
@@ -34,8 +32,23 @@ class BookingSlotFormBase extends React.Component {
     this.state = { ...INITIAL_STATE };
   }
 
+  componentDidMount() {
+    this.setState({
+      offeringID: this.props.match.params.offeringID,
+      taskID: this.props.match.params.taskID,
+    });
+  }
+
   onSubmit = (event) => {
     event.preventDefault();
+  };
+
+  backToTask = (event) => {
+    // console.log("Props:", this.props);
+    event.preventDefault();
+    this.props.history.push(
+      `/unit-offerings/${this.state.offeringID}/tasks/${this.state.taskID}/`
+    );
   };
 
   render() {
@@ -107,7 +120,11 @@ class BookingSlotFormBase extends React.Component {
             <button type="submit" className="btn btn-theme">
               Save
             </button>
-            <button type="submit" className="btn btn-danger ml-1">
+            <button
+              type="submit"
+              className="btn btn-danger ml-1"
+              onClick={this.backToTask}
+            >
               Go Back
             </button>
           </form>
