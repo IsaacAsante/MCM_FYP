@@ -13,6 +13,7 @@ const INITIAL_STATE = {
   offeringID: null,
   semester: null,
   semesterError: null,
+  taskID: null,
   unit: null,
   unitError: null,
 };
@@ -25,8 +26,9 @@ class AddNewBookingSlotPage extends React.Component {
 
   componentDidMount() {
     const offeringID = this.props.match.params.offeringID;
-    this.setState({ offeringID });
-    console.log(offeringID);
+    const taskID = this.props.match.params.taskID;
+    this.setState({ offeringID, taskID });
+    // console.log(taskID);
 
     // Recognize current user
     this.props.firebase.onAuthUserListener((authUser) => {
@@ -34,7 +36,7 @@ class AddNewBookingSlotPage extends React.Component {
       // Determine if a Tutor is already allocated to the unit offering currently being viewed, or not.
       this.props.firebase.findAllocation(authUser.uid).then((res) => {
         if (res) {
-          console.log("Response to debug:", res);
+          //   console.log("Response to debug:", res);
           if (res.unitOfferings.includes(offeringID)) {
             this.setState({ allocated: true, allocateMessage: "Allocated" });
           }
@@ -45,14 +47,16 @@ class AddNewBookingSlotPage extends React.Component {
     // Get the offering's unit
     this.props.firebase
       .getUnitOffering(offeringID)
-      .then((result) => {
+      .then(async (result) => {
         if (result !== undefined) {
           // console.log("Result:", result);
           // console.log(result.unitID, result.semesterID);
-          this.props.firebase
+
+          // Get the unit offering's details
+          await this.props.firebase
             .findUnit(result.unitID)
             .then((unit) => {
-              console.log("Unit loaded:", unit);
+              //   console.log("Unit loaded:", unit);
               this.setState({ unit });
               this.setState({ unitError: "" });
             })
@@ -64,7 +68,7 @@ class AddNewBookingSlotPage extends React.Component {
             );
 
           // Get the offering's semester
-          this.props.firebase
+          await this.props.firebase
             .findSemester(result.semesterID)
             .then((semester) => {
               // console.log("Semester loaded:", semester);
@@ -76,6 +80,16 @@ class AddNewBookingSlotPage extends React.Component {
                 semesterError:
                   "There was an error fetching the semester data for this unit offering.",
               });
+            });
+
+          await this.props.firebase
+            .findTask(this.state.offeringID, this.state.taskID)
+            .then((task) => {
+              if (!task) {
+                console.log("Task was not found");
+              } else {
+                console.log("Task found:", task);
+              }
             });
           console.log(this.state);
         } else {

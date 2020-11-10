@@ -106,6 +106,17 @@ class Firebase {
     return semesters[0]; // Return a single semester (by ID, so there's only one valid entry).
   };
 
+  findTask = async (offeringID, taskID) => {
+    const taskRef = this.db
+      .collection("unitofferings")
+      .doc(offeringID)
+      .collection("tasks");
+    const snapshot = await taskRef.where("id", "==", taskID).get();
+    const tasks = [];
+    snapshot.forEach((doc) => tasks.push(doc.data()));
+    return tasks[0]; // Return a single task (by ID, so only one entry possible)
+  };
+
   findTutor = async (firstName, lastName) => {
     const tutorRef = this.db.collection("tutors");
     let tutors = await tutorRef.where("firstname", "==", firstName);
