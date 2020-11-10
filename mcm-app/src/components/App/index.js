@@ -24,6 +24,7 @@ import Sidebar from "../Sidebar";
 // Import Features components
 import AddUnitPage from "../AddUnit";
 import AddSemesterPage from "../Semester";
+import TaskPage from "../ViewTask";
 import UnitOfferingPage from "../ViewUnitOffering";
 
 // Routing
@@ -59,6 +60,7 @@ const App = () => (
       <Route path={ROUTES.PASSWORD_RESET} component={PasswordResetPage} />
       <Route path={ROUTES.ADD_UNIT} component={AddUnitPage} />
       <Route path={ROUTES.ADD_SEMESTER} component={AddSemesterPage} />
+      <Route exact path={ROUTES.SINGLE_TASK} component={TaskPage} />
       <Route path={ROUTES.SINGLE_UNIT} component={DashboardPage} />
       <Route
         exact
