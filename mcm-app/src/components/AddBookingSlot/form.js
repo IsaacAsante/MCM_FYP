@@ -120,6 +120,13 @@ class BookingSlotFormBase extends React.Component {
       });
     } else {
       this.setState({ error: null });
+      const bookingSlotObj = {
+        date: this.state.bookingDate,
+        startTime: this.state.startTime,
+        endTime: this.state.endTime,
+        location: this.state.location,
+      };
+      // await this.props.firebase.addBookingSlot(this.state.offeringID, this.state.taskID)
     }
   };
 

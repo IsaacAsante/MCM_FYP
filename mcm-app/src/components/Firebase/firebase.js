@@ -210,6 +210,27 @@ class Firebase {
     return docData;
   };
 
+  addBookingSlot = async (offeringID, taskID, bookingSlotObj) => {
+    const res = await this.db
+      .collection("unitofferings")
+      .doc(offeringID)
+      .collection("tasks")
+      .doc(taskID)
+      .collection("bookingslots")
+      .add(bookingSlotObj);
+    if (res) {
+      const doc = await this.db
+        .collection("unitofferings")
+        .doc(offeringID)
+        .collection("tasks")
+        .doc(taskID)
+        .collection("bookingslots")
+        .doc(res.id)
+        .set({ id: res.id }, { merge: true });
+    }
+    return res;
+  };
+
   addTask = async (offeringID, taskObj) => {
     const res = await this.db
       .collection("unitofferings")

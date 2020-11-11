@@ -287,6 +287,8 @@ class AddLabGroupPage extends React.Component {
           if (!res) {
             const labID =
               obj.name.split("-").join("") + this.props.match.params.offeringID;
+            obj["id"] = labID;
+            console.log("Lab to be added:", obj);
             this.props.firebase.setLabBatch(
               this.props.match.params.offeringID,
               obj,
