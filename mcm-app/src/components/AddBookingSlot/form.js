@@ -58,11 +58,12 @@ const INITIAL_STATE = {
   labGroups: [],
   location: "",
   offeringID: null,
-  selectedLabGroup: null,
+  selectedLabGroup: "",
   startTime: times[0],
   taskID: null,
   duplicate: false,
   success: false,
+  error: null,
 };
 
 class BookingSlotFormBase extends React.Component {
@@ -106,6 +107,20 @@ class BookingSlotFormBase extends React.Component {
   onSubmit = (event) => {
     event.preventDefault();
     console.log(this.state);
+
+    const midnightToday = new Date().setHours(0, 0, 0, 0);
+    if (this.state.endTime <= this.state.startTime) {
+      this.setState({
+        error:
+          "Your booking slot's end time must be greater than your start time.",
+      });
+    } else if (this.state.bookingDate < midnightToday) {
+      this.setState({
+        error: "Your booking slot cannot be set to a past date.",
+      });
+    } else {
+      this.setState({ error: null });
+    }
   };
 
   backToTask = (event) => {
@@ -117,7 +132,16 @@ class BookingSlotFormBase extends React.Component {
   };
 
   render() {
-    const { bookingDate, endTime, labGroups, startTime } = this.state;
+    const {
+      bookingDate,
+      endTime,
+      error,
+      labGroups,
+      location,
+      selectedLabGroup,
+      startTime,
+    } = this.state;
+    const invalid = location == "" || selectedLabGroup == "";
     return (
       <div className="row">
         <div className="col-sm-12 col-md-10">
@@ -201,7 +225,7 @@ class BookingSlotFormBase extends React.Component {
                   name="labgroups"
                   onChange={this.onSelect}
                 >
-                  <option value="0">--</option>
+                  <option value="">--</option>
                   {labGroups.map((doc) => (
                     <option key={doc.name} value={doc.name}>
                       {doc.name}
@@ -214,9 +238,10 @@ class BookingSlotFormBase extends React.Component {
             <button
               type="submit"
               className="btn btn-theme"
+              disabled={invalid}
               onClick={this.onSubmit}
             >
-              Save
+              Create Booking Slot
             </button>
             <button
               type="submit"
@@ -226,11 +251,13 @@ class BookingSlotFormBase extends React.Component {
               Go Back
             </button>
           </form>
-          {/* <div className="alert alert-danger mt">
-            <span>
-              A task with the same name already exists for this unit offering.
-            </span>
-          </div>
+          {error && (
+            <div className="alert alert-danger mt">
+              <span>{error}</span>
+            </div>
+          )}
+
+          {/*
           <div className="alert alert-success mt">
             <span>Task created successfully.</span>
           </div> */}
