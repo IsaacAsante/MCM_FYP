@@ -58,6 +58,7 @@ const INITIAL_STATE = {
   labGroups: [],
   location: "",
   offeringID: null,
+  selectedLabGroup: null,
   startTime: times[0],
   taskID: null,
   duplicate: false,
@@ -75,6 +76,19 @@ class BookingSlotFormBase extends React.Component {
       offeringID: this.props.match.params.offeringID,
       taskID: this.props.match.params.taskID,
     });
+
+    // Retrieve lab groups under the current unit offering
+    this.props.firebase
+      .getLabGroups(this.props.match.params.offeringID)
+      .then((labGroups) => {
+        if (labGroups.length > 0) {
+          console.log("Lab Groups:", labGroups);
+          this.setState({ labGroups });
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   }
 
   onChange = (event) => {
@@ -83,6 +97,10 @@ class BookingSlotFormBase extends React.Component {
 
   onDateSet = (dateValue) => {
     this.setState({ bookingDate: new Date(dateValue) });
+  };
+
+  onSelect = (event) => {
+    this.setState({ selectedLabGroup: event.target.value });
   };
 
   onSubmit = (event) => {
@@ -99,7 +117,7 @@ class BookingSlotFormBase extends React.Component {
   };
 
   render() {
-    const { bookingDate, endTime, startTime } = this.state;
+    const { bookingDate, endTime, labGroups, startTime } = this.state;
     return (
       <div className="row">
         <div className="col-sm-12 col-md-10">
@@ -178,8 +196,17 @@ class BookingSlotFormBase extends React.Component {
             <div className="form-group">
               <label className="col-sm-2 control-label">Lab Group</label>
               <div className="col-sm-10">
-                <select className="form-control" name="labgroup">
+                <select
+                  className="form-control"
+                  name="labgroups"
+                  onChange={this.onSelect}
+                >
                   <option value="0">--</option>
+                  {labGroups.map((doc) => (
+                    <option key={doc.name} value={doc.name}>
+                      {doc.name}
+                    </option>
+                  ))}
                 </select>
               </div>
             </div>

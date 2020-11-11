@@ -138,6 +138,17 @@ class Firebase {
     return units[0]; // Return a single unit (by ID, so there's only one valid entry).
   };
 
+  getLabGroups = async (offeringID) => {
+    const labGroupRef = this.db
+      .collection("unitofferings")
+      .doc(offeringID)
+      .collection("labgroups");
+    const snapshot = await labGroupRef.get();
+    const labGroups = [];
+    snapshot.forEach((doc) => labGroups.push(doc.data()));
+    return labGroups; // Return the entire array
+  };
+
   getStudent = async (uid) => {
     const studentRef = this.db.collection("students").doc(uid);
     let doc = await studentRef.get();
