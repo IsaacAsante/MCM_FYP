@@ -63,7 +63,7 @@ const INITIAL_STATE = {
   taskID: null,
   duplicate: false,
   success: false,
-  error: null,
+  error: false,
 };
 
 class BookingSlotFormBase extends React.Component {
@@ -104,7 +104,7 @@ class BookingSlotFormBase extends React.Component {
     this.setState({ selectedLabGroup: event.target.value });
   };
 
-  onSubmit = (event) => {
+  onSubmit = async (event) => {
     event.preventDefault();
     console.log(this.state);
 
@@ -119,14 +119,30 @@ class BookingSlotFormBase extends React.Component {
         error: "Your booking slot cannot be set to a past date.",
       });
     } else {
-      this.setState({ error: null });
+      this.setState({ error: false });
       const bookingSlotObj = {
         date: this.state.bookingDate,
         startTime: this.state.startTime,
         endTime: this.state.endTime,
         location: this.state.location,
+        labGroupID: this.state.selectedLabGroup,
+        slotStatus: "Available",
+        taskID: this.state.taskID,
       };
-      // await this.props.firebase.addBookingSlot(this.state.offeringID, this.state.taskID)
+      await this.props.firebase
+        .addBookingSlot(
+          this.state.offeringID,
+          this.state.taskID,
+          bookingSlotObj
+        )
+        .then((res) => {
+          console.log(res);
+          this.setState({ success: true, error: false });
+        })
+        .catch((error) => {
+          console.error(error);
+          this.setState({ error });
+        });
     }
   };
 
@@ -147,6 +163,7 @@ class BookingSlotFormBase extends React.Component {
       location,
       selectedLabGroup,
       startTime,
+      success,
     } = this.state;
     const invalid = location == "" || selectedLabGroup == "";
     return (
@@ -234,7 +251,7 @@ class BookingSlotFormBase extends React.Component {
                 >
                   <option value="">--</option>
                   {labGroups.map((doc) => (
-                    <option key={doc.name} value={doc.name}>
+                    <option key={doc.id} value={doc.id}>
                       {doc.name}
                     </option>
                   ))}
@@ -264,10 +281,11 @@ class BookingSlotFormBase extends React.Component {
             </div>
           )}
 
-          {/*
-          <div className="alert alert-success mt">
-            <span>Task created successfully.</span>
-          </div> */}
+          {success && (
+            <div className="alert alert-success mt">
+              <span>Booking slot created successfully.</span>
+            </div>
+          )}
         </div>
       </div>
     );
