@@ -55,7 +55,7 @@ class Firebase {
     this.auth.currentUser.updatePassword(password);
 
   // Save the currently logged-in user
-  getCurrentUser = () => {
+  getCurrentUser = async () => {
     return this.auth.currentUser;
   };
 
@@ -96,6 +96,19 @@ class Firebase {
     const labs = [];
     snapshot.forEach((doc) => labs.push(doc.data()));
     return labs[0];
+  };
+
+  findLabsByTutor = async (offeringID, tutorEmail) => {
+    const labGroupRef = this.db
+      .collection("unitofferings")
+      .doc(offeringID)
+      .collection("labgroups");
+    const snapshot = await labGroupRef
+      .where("tutorEmail", "==", tutorEmail)
+      .get();
+    const tutorLabGroups = [];
+    snapshot.forEach((doc) => tutorLabGroups.push(doc.data()));
+    return tutorLabGroups; // Return the entire array
   };
 
   findSemester = async (semesterID) => {

@@ -57,10 +57,12 @@ const INITIAL_STATE = {
   endTime: times[1],
   labGroups: [],
   location: "",
+  noAllocation: true,
   offeringID: null,
   selectedLabGroup: "",
   startTime: times[0],
   taskID: null,
+  user: null,
   duplicate: false,
   success: false,
   error: false,
@@ -78,14 +80,29 @@ class BookingSlotFormBase extends React.Component {
       taskID: this.props.match.params.taskID,
     });
 
-    // Retrieve lab groups under the current unit offering
     this.props.firebase
-      .getLabGroups(this.props.match.params.offeringID)
-      .then((labGroups) => {
-        if (labGroups.length > 0) {
-          console.log("Lab Groups:", labGroups);
-          this.setState({ labGroups });
-        }
+      .getCurrentUser()
+      .then((user) => {
+        console.log("User:", user);
+        this.setState({ user });
+        return user;
+      })
+      .then((user) => {
+        // Retrieve lab groups under the current unit offering
+        this.props.firebase
+          .findLabsByTutor(this.props.match.params.offeringID, user.email)
+          .then((labGroups) => {
+            if (labGroups.length > 0) {
+              this.setState({ noAllocation: false });
+              console.log("Lab Groups:", labGroups);
+              this.setState({ labGroups });
+            } else {
+              this.setState({ noAllocation: true });
+            }
+          })
+          .catch((err) => {
+            console.error(err);
+          });
       })
       .catch((err) => {
         console.error(err);
@@ -154,6 +171,13 @@ class BookingSlotFormBase extends React.Component {
     );
   };
 
+  importLab = (event) => {
+    event.preventDefault();
+    this.props.history.push(
+      `/unit-offerings/${this.state.offeringID}/lab-groups/add`
+    );
+  };
+
   render() {
     const {
       bookingDate,
@@ -161,6 +185,7 @@ class BookingSlotFormBase extends React.Component {
       error,
       labGroups,
       location,
+      noAllocation,
       selectedLabGroup,
       startTime,
       success,
@@ -169,112 +194,143 @@ class BookingSlotFormBase extends React.Component {
     return (
       <div className="row">
         <div className="col-sm-12 col-md-10">
-          <form
-            onSubmit={this.onSubmit}
-            className="form-horizontal style-form"
-            autoComplete="false"
-          >
-            <div className="form-group">
-              <label className="col-sm-2 control-label">Date</label>
-              <div className="col-sm-10">
-                <DatePicker
-                  selected={bookingDate}
-                  name="bookingDate"
-                  className="form-control"
-                  onChange={this.onDateSet}
-                  autoComplete="false"
-                />
+          {noAllocation ? (
+            <div className="row">
+              <div className="col-sm-12">
+                <div className="alert alert-warning mt">
+                  <p>
+                    <strong>Access denied.</strong>
+                  </p>
+                  <p>
+                    You are currently not recognized as a Lab tutor under this
+                    unit offering. Please import an excel file containing your
+                    name as a staff for a Lab group, along with the list of
+                    students in your Lab.
+                  </p>
+                </div>
+              </div>
+              <div className="row">
+                <div className="col-sm-12">
+                  <button
+                    type="submit"
+                    className="btn btn-info ml-3 mb-3"
+                    onClick={this.importLab}
+                  >
+                    Import Lab Data
+                  </button>
+                </div>
               </div>
             </div>
+          ) : (
+            <form
+              onSubmit={this.onSubmit}
+              className="form-horizontal style-form"
+              autoComplete="false"
+            >
+              <div className="form-group">
+                <label className="col-sm-2 control-label">Date</label>
+                <div className="col-sm-10">
+                  <DatePicker
+                    selected={bookingDate}
+                    name="bookingDate"
+                    className="form-control"
+                    onChange={this.onDateSet}
+                    autoComplete="false"
+                  />
+                </div>
+              </div>
 
-            <div className="form-group">
-              <label className="control-label col-sm-2">Available Period</label>
-              <div className="col-sm-10">
-                <div
-                  className="input-group input-large"
-                  data-date="01/01/2014"
-                  data-date-format="mm/dd/yyyy"
-                >
-                  {/* Cannot start after 16:45m hence the use of the slice() Array method. */}
-                  <select
-                    className="form-control dpd1"
-                    name="startTime"
-                    onChange={this.onChange}
-                    value={startTime}
+              <div className="form-group">
+                <label className="control-label col-sm-2">
+                  Available Period
+                </label>
+                <div className="col-sm-10">
+                  <div
+                    className="input-group input-large"
+                    data-date="01/01/2014"
+                    data-date-format="mm/dd/yyyy"
                   >
-                    {times.slice(0, times.length - 1).map((time, idx) => (
-                      <option key={idx} value={time}>
-                        {time}
-                      </option>
-                    ))}
-                  </select>
-                  <span className="input-group-addon">To</span>
-                  <select
-                    className="form-control dpd2"
-                    name="endTime"
+                    {/* Cannot start after 16:45m hence the use of the slice() Array method. */}
+                    <select
+                      className="form-control dpd1"
+                      name="startTime"
+                      onChange={this.onChange}
+                      value={startTime}
+                    >
+                      {times.slice(0, times.length - 1).map((time, idx) => (
+                        <option key={idx} value={time}>
+                          {time}
+                        </option>
+                      ))}
+                    </select>
+                    <span className="input-group-addon">To</span>
+                    <select
+                      className="form-control dpd2"
+                      name="endTime"
+                      onChange={this.onChange}
+                      value={endTime}
+                    >
+                      {times.map((time, idx) => (
+                        <option key={idx} value={time}>
+                          {time}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <span className="help-block">
+                    <em>*Start time and end time for this booking</em>
+                  </span>
+                </div>
+              </div>
+
+              <div className="form-group">
+                <label className="col-sm-2 control-label">Location</label>
+                <div className="col-sm-10">
+                  <input
+                    type="text"
+                    name="location"
+                    className="form-control"
                     onChange={this.onChange}
-                    value={endTime}
+                    autoComplete="false"
+                  />
+                </div>
+              </div>
+
+              <div className="form-group">
+                <label className="col-sm-2 control-label">Lab Group</label>
+                <div className="col-sm-10">
+                  <select
+                    className="form-control"
+                    name="labgroups"
+                    onChange={this.onSelect}
                   >
-                    {times.map((time, idx) => (
-                      <option key={idx} value={time}>
-                        {time}
+                    <option value="">--</option>
+                    {labGroups.map((doc) => (
+                      <option key={doc.id} value={doc.id}>
+                        {doc.name}
                       </option>
                     ))}
                   </select>
                 </div>
-                <span className="help-block">
-                  <em>*Start time and end time for this booking</em>
-                </span>
               </div>
-            </div>
 
-            <div className="form-group">
-              <label className="col-sm-2 control-label">Location</label>
-              <div className="col-sm-10">
-                <input
-                  type="text"
-                  name="location"
-                  className="form-control"
-                  onChange={this.onChange}
-                  autoComplete="false"
-                />
-              </div>
-            </div>
-
-            <div className="form-group">
-              <label className="col-sm-2 control-label">Lab Group</label>
-              <div className="col-sm-10">
-                <select
-                  className="form-control"
-                  name="labgroups"
-                  onChange={this.onSelect}
-                >
-                  <option value="">--</option>
-                  {labGroups.map((doc) => (
-                    <option key={doc.id} value={doc.id}>
-                      {doc.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-
-            <button
-              type="submit"
-              className="btn btn-theme"
-              disabled={invalid}
-              onClick={this.onSubmit}
-            >
-              Create Booking Slot
-            </button>
-            <button
-              type="submit"
-              className="btn btn-danger ml-1"
-              onClick={this.backToTask}
-            >
-              Go Back
-            </button>
-          </form>
+              <button
+                type="submit"
+                className="btn btn-theme"
+                disabled={invalid}
+                onClick={this.onSubmit}
+              >
+                Create Booking Slot
+              </button>
+              <button
+                type="submit"
+                className="btn btn-danger ml-1"
+                onClick={this.backToTask}
+              >
+                Go Back
+              </button>
+            </form>
+          )}
           {error && (
             <div className="alert alert-danger mt">
               <span>{error}</span>
