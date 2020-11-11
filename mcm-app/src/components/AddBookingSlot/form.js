@@ -19,8 +19,46 @@ const AddBookingSlotForm = (props) => (
   </div>
 );
 
+const times = [
+  "09:00",
+  "09:15",
+  "09:30",
+  "09:45",
+  "10:00",
+  "10:15",
+  "10:30",
+  "10:45",
+  "11:00",
+  "11:15",
+  "11:30",
+  "11:45",
+  "12:00",
+  "13:00",
+  "13:15",
+  "13:30",
+  "13:45",
+  "14:00",
+  "14:15",
+  "14:30",
+  "14:45",
+  "15:00",
+  "15:15",
+  "15:30",
+  "15:45",
+  "16:00",
+  "16:15",
+  "16:30",
+  "16:45",
+  "17:00",
+];
+
 const INITIAL_STATE = {
+  bookingDate: new Date(),
+  endTime: times[1],
+  labGroups: [],
+  location: "",
   offeringID: null,
+  startTime: times[0],
   taskID: null,
   duplicate: false,
   success: false,
@@ -39,8 +77,17 @@ class BookingSlotFormBase extends React.Component {
     });
   }
 
+  onChange = (event) => {
+    this.setState({ [event.target.name]: event.target.value });
+  };
+
+  onDateSet = (dateValue) => {
+    this.setState({ bookingDate: new Date(dateValue) });
+  };
+
   onSubmit = (event) => {
     event.preventDefault();
+    console.log(this.state);
   };
 
   backToTask = (event) => {
@@ -52,14 +99,25 @@ class BookingSlotFormBase extends React.Component {
   };
 
   render() {
+    const { bookingDate, endTime, startTime } = this.state;
     return (
       <div className="row">
         <div className="col-sm-12 col-md-10">
-          <form onSubmit={this.onSubmit} className="form-horizontal style-form">
+          <form
+            onSubmit={this.onSubmit}
+            className="form-horizontal style-form"
+            autoComplete="false"
+          >
             <div className="form-group">
               <label className="col-sm-2 control-label">Date</label>
               <div className="col-sm-10">
-                <DatePicker name="deadline" className="form-control" />
+                <DatePicker
+                  selected={bookingDate}
+                  name="bookingDate"
+                  className="form-control"
+                  onChange={this.onDateSet}
+                  autoComplete="false"
+                />
               </div>
             </div>
 
@@ -71,40 +129,49 @@ class BookingSlotFormBase extends React.Component {
                   data-date="01/01/2014"
                   data-date-format="mm/dd/yyyy"
                 >
-                  <input
-                    type="text"
+                  {/* Cannot start after 16:45m hence the use of the slice() Array method. */}
+                  <select
                     className="form-control dpd1"
-                    name="from"
-                  />
+                    name="startTime"
+                    onChange={this.onChange}
+                    value={startTime}
+                  >
+                    {times.slice(0, times.length - 1).map((time, idx) => (
+                      <option key={idx} value={time}>
+                        {time}
+                      </option>
+                    ))}
+                  </select>
                   <span className="input-group-addon">To</span>
-                  <input type="text" className="form-control dpd2" name="to" />
+                  <select
+                    className="form-control dpd2"
+                    name="endTime"
+                    onChange={this.onChange}
+                    value={endTime}
+                  >
+                    {times.map((time, idx) => (
+                      <option key={idx} value={time}>
+                        {time}
+                      </option>
+                    ))}
+                  </select>
                 </div>
                 <span className="help-block">
-                  <em>*Select times</em>
+                  <em>*Start time and end time for this booking</em>
                 </span>
-              </div>
-            </div>
-
-            <div className="form-group">
-              <label className="col-sm-2 control-label">
-                Maximum Time Allowed
-              </label>
-              <div className="col-sm-10">
-                <select className="form-control" name="maxtime">
-                  <option value="0">--</option>
-                  <option value="10">10min</option>
-                  <option value="15">15min</option>
-                  <option value="20">20min</option>
-                  <option value="25">25min</option>
-                  <option value="30">30min</option>
-                </select>
               </div>
             </div>
 
             <div className="form-group">
               <label className="col-sm-2 control-label">Location</label>
               <div className="col-sm-10">
-                <input type="text" name="deadline" className="form-control" />
+                <input
+                  type="text"
+                  name="location"
+                  className="form-control"
+                  onChange={this.onChange}
+                  autoComplete="false"
+                />
               </div>
             </div>
 
@@ -117,7 +184,11 @@ class BookingSlotFormBase extends React.Component {
               </div>
             </div>
 
-            <button type="submit" className="btn btn-theme">
+            <button
+              type="submit"
+              className="btn btn-theme"
+              onClick={this.onSubmit}
+            >
               Save
             </button>
             <button

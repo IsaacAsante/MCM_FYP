@@ -111,6 +111,13 @@ class TaskPage extends React.Component {
     }
   }
 
+  addSlot = (event) => {
+    event.preventDefault();
+    this.props.history.push(
+      `/unit-offerings/${this.state.offeringID}/tasks/${this.state.taskID}/slots/add`
+    );
+  };
+
   render() {
     const {
       allocated,
@@ -173,18 +180,31 @@ class TaskPage extends React.Component {
                   )}
                 </div>
               </div>
-              {semester && task && unit ? (
-                <div className="alert alert-warning">
-                  <p>No booking slot found.</p>
+
+              <div className="row">
+                <div className="col-sm-12">
+                  <button className="btn btn-theme" onClick={this.addSlot}>
+                    Add Booking Slot
+                  </button>
                 </div>
-              ) : taskError ? (
-                <div className="alert alert-danger">
-                  <strong>Invalid task.</strong> The task ID from this page's
-                  URL does not exist in the system.
+              </div>
+
+              <div className="row mt">
+                <div className="col-sm-12">
+                  {semester && task && unit ? (
+                    <div className="alert alert-warning">
+                      <p>No booking slot found.</p>
+                    </div>
+                  ) : taskError ? (
+                    <div className="alert alert-danger">
+                      <strong>Invalid task.</strong> The task ID from this
+                      page's URL does not exist in the system.
+                    </div>
+                  ) : (
+                    ""
+                  )}
                 </div>
-              ) : (
-                ""
-              )}
+              </div>
             </section>
           </section>
         ) : (
