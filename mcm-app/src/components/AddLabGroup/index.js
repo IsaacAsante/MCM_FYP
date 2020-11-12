@@ -300,6 +300,15 @@ class AddLabGroupPage extends React.Component {
         })
         .then((res) => {
           this.setState({ labsCreated: true, error: false, success: true });
+          return true;
+        })
+        .then(async (res) => {
+          // Allocate unit offerings to every tutor
+          await this.props.firebase
+            .getTutorUID(obj.tutorEmail)
+            .then((tutorUID) => {
+              console.log("Tutor by email:", tutorUID);
+            });
         })
         .catch((error) => {
           console.log(error);
@@ -326,11 +335,11 @@ class AddLabGroupPage extends React.Component {
                 labGroups: [labID],
                 unitOfferings: [this.props.match.params.offeringID],
               };
-              console.log("Enrolment data:", enrolmentToAdd);
+              // console.log("Enrolment data:", enrolmentToAdd);
               this.props.firebase
                 .addData("enrolments", enrolmentToAdd)
                 .then((res) => {
-                  console.log(res);
+                  // console.log(res);
                 })
                 .catch((error) => {
                   console.log(error);

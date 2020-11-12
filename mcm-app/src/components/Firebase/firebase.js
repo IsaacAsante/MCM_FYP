@@ -187,6 +187,14 @@ class Firebase {
     return doc.data();
   };
 
+  getTutorUID = async (tutorEmail) => {
+    const tutorRef = this.db.collection("tutors");
+    let snapshot = await tutorRef.where("email", "==", tutorEmail).get();
+    let tutors = [];
+    snapshot.forEach((doc) => tutors.push(doc.id));
+    return tutors[0]; // Return a single tutor (by email, so only one entry possible)
+  };
+
   getUnit = async (uCode) => {
     const unitRef = this.db.collection("units");
     // Query values in Firestore are case-sensitive, hence the use of toUpperCase() string method.
