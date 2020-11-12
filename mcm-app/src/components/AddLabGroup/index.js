@@ -11,6 +11,8 @@ import * as ROUTES from "../../constants/routes";
 const INITIAL_STATE = {
   accountsCreated: false,
   accountCreationStarted: false,
+  allocated: false,
+  allocateMessage: "Allocate Yourself",
   byPassAuthRule: false,
   docsCreated: false,
   docsCreationStarted: false,
@@ -20,10 +22,14 @@ const INITIAL_STATE = {
   labsCreated: false,
   labCreationStarted: false,
   labData: null,
+  semester: null,
+  semesterError: null,
   sheets: [],
   studentsEnrolled: false,
   studentsToAdd: [],
   success: false,
+  unit: null,
+  unitError: null,
   dbStudentObjects: [],
   numOfStudents: 0,
   workbook: null,
@@ -46,7 +52,67 @@ class AddLabGroupPage extends React.Component {
   }
 
   componentDidMount() {
-    console.log(this.props.match.params.offeringID);
+    const offeringID = this.props.match.params.offeringID;
+    this.setState({ offeringID });
+
+    // Recognize current user
+    this.props.firebase.onAuthUserListener((authUser) => {
+      this.setState({ authUser });
+      // Determine if a Tutor is already allocated to the unit offering currently being viewed, or not.
+      this.props.firebase.findAllocation(authUser.uid).then((res) => {
+        if (res) {
+          // console.log("Allocation:", res);
+          if (res.unitOfferings.includes(offeringID)) {
+            this.setState({ allocated: true, allocateMessage: "Allocated" });
+          }
+        }
+      });
+    });
+
+    // Get the offering's unit
+    this.props.firebase
+      .getUnitOffering(offeringID)
+      .then((result) => {
+        if (result !== undefined) {
+          // console.log("Result:", result);
+          // console.log(result.unitID, result.semesterID);
+          this.props.firebase
+            .findUnit(result.unitID)
+            .then((unit) => {
+              // console.log("Unit loaded:", unit);
+              this.setState({ unit });
+              this.setState({ unitError: "" });
+            })
+            .catch((err) =>
+              this.setState({
+                unitError:
+                  "There was an error fetching the unit data for this unit offering.",
+              })
+            );
+
+          // Get the offering's semester
+          this.props.firebase
+            .findSemester(result.semesterID)
+            .then((semester) => {
+              // console.log("Semester loaded:", semester);
+              this.setState({ semester });
+              this.setState({ semesterError: "" });
+            })
+            .catch((err) => {
+              this.setState({
+                semesterError:
+                  "There was an error fetching the semester data for this unit offering.",
+              });
+            });
+          console.log(this.state);
+        } else {
+          this.setState({
+            semesterError: "Invalid semester.",
+            unitError: "Invalid unit.",
+          });
+        }
+      })
+      .catch((err) => console.error(err));
   }
 
   getFile = (event) => {
@@ -200,6 +266,13 @@ class AddLabGroupPage extends React.Component {
   finish = (event) => {
     event.preventDefault();
     this.props.firebase.signOutUser();
+  };
+
+  backToUnitOffering = (event) => {
+    event.preventDefault();
+    this.props.history.push(
+      `/unit-offerings/${this.props.match.params.offeringID}`
+    );
   };
 
   appendAuthUID = async (student) => {
@@ -409,24 +482,78 @@ class AddLabGroupPage extends React.Component {
     const {
       accountsCreated,
       accountCreationStarted,
+      allocated,
+      allocateMessage,
       enrolmentStarted,
       docsCreationStarted,
       docsCreated,
       finish,
       labsCreated,
       labCreationStarted,
+      semester,
+      semesterError,
       studentsEnrolled,
+      unit,
+      unitError,
       workbook,
       error,
       success,
     } = this.state;
+
+    const invalid =
+      semesterError ==
+        "There was an error fetching the unit data for this unit offering." ||
+      semesterError == "Invalid semester." ||
+      unitError ==
+        "There was an error fetching the unit data for this unit offering." ||
+      unitError == "Invalid unit.";
     return (
       <div>
         <section id="main-content">
           <section className="wrapper">
+            {/* Avoid the unit offering's data from disappearing due to the authUser changing. */}
+            {success ? (
+              ""
+            ) : (
+              <div className="row">
+                <div className="col-sm-12">
+                  {/* If valid - Show headings */}
+                  <h2>
+                    {invalid ? " " : <i className="fa fa-angle-right"></i>}
+                    {unit && ` ${unit.unitCode} ${unit.name}`}
+                  </h2>
+                  <h3>
+                    {invalid ? " " : <i className="fa fa-angle-right"></i>}
+                    {semester &&
+                      ` Semester ${semester.number} - ${semester.year} (${semester.type})`}
+                  </h3>
+                </div>
+              </div>
+            )}
+
+            {/* If invalid - Show the buttons */}
+            {invalid ? (
+              " "
+            ) : (
+              <div className="row mt">
+                <div className="col-sm-12">
+                  <span className="label label-danger">
+                    {allocated && allocateMessage}
+                  </span>
+                </div>
+              </div>
+            )}
+
             <div className="mt">
               <h3>
-                <i className="fa fa-angle-right"></i> Import Lab Data
+                <i className="fa fa-angle-right"></i>{" "}
+                {success ? (
+                  <span>
+                    Importing Lab Data <strong>(Do Not Quit!)</strong>
+                  </span>
+                ) : (
+                  <span>Import Lab Data</span>
+                )}
               </h3>
               <div className="row">
                 <div className="col-lg-12">
@@ -452,15 +579,25 @@ class AddLabGroupPage extends React.Component {
                       </div>
 
                       {/* The Import button should only show before the start of the process. */}
-                      {!accountCreationStarted && (
-                        <button
-                          type="submit"
-                          className="btn btn-info"
-                          onSubmit={this.onSubmit}
-                          disabled={workbook == null}
-                        >
-                          Begin Process
-                        </button>
+                      {!success && (
+                        <div>
+                          <button
+                            type="submit"
+                            className="btn btn-info"
+                            onSubmit={this.onSubmit}
+                            disabled={workbook == null}
+                          >
+                            Begin Process
+                          </button>
+
+                          <button
+                            type="submit"
+                            className="btn btn-danger ml-1"
+                            onClick={this.backToUnitOffering}
+                          >
+                            Go Back
+                          </button>
+                        </div>
                       )}
 
                       {!success ? (
@@ -587,8 +724,8 @@ class AddLabGroupPage extends React.Component {
                           <div className="alert alert-info mt">
                             <span>
                               Click the button below to finalize the process.
-                              You will logged out from the system and required
-                              to log into your tutor account again.
+                              You will be logged out from the system and
+                              required to log into your tutor account again.
                             </span>
                           </div>
                           <button

@@ -57,7 +57,7 @@ const INITIAL_STATE = {
   endTime: times[1],
   labGroups: [],
   location: "",
-  noAllocation: true,
+  noAllocation: null,
   offeringID: null,
   selectedLabGroup: "",
   startTime: times[0],
@@ -171,6 +171,11 @@ class BookingSlotFormBase extends React.Component {
     );
   };
 
+  backToUnitOffering = (event) => {
+    event.preventDefault();
+    this.props.history.push(`/unit-offerings/${this.state.offeringID}`);
+  };
+
   importLab = (event) => {
     event.preventDefault();
     this.props.history.push(
@@ -212,11 +217,16 @@ class BookingSlotFormBase extends React.Component {
               <div className="row">
                 <div className="col-sm-12">
                   <button
-                    type="submit"
                     className="btn btn-info ml-3 mb-3"
                     onClick={this.importLab}
                   >
                     Import Lab Data
+                  </button>
+                  <button
+                    className="btn btn-danger ml-1 mb-3"
+                    onClick={this.backToUnitOffering}
+                  >
+                    Go Back
                   </button>
                 </div>
               </div>

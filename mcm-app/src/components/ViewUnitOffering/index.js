@@ -140,6 +140,13 @@ class UnitOfferingPage extends React.Component {
     this.props.history.push(this.state.offeringID + "/tasks/add");
   };
 
+  goToLabImport = (event) => {
+    event.preventDefault();
+    this.props.history.push(
+      `/unit-offerings/${this.props.match.params.offeringID}/lab-groups/add`
+    );
+  };
+
   render() {
     const {
       allocated,
@@ -236,6 +243,21 @@ class UnitOfferingPage extends React.Component {
               </div>
             </div>
 
+            {invalid ? (
+              ""
+            ) : (
+              <div className="row">
+                <div className="col-sm-12">
+                  <hr />
+                  <button
+                    className="btn btn-info ml-1"
+                    onClick={this.goToLabImport}
+                  >
+                    Import Lab
+                  </button>
+                </div>
+              </div>
+            )}
             {/* If invalid - Show the error messages*/}
             {invalid ? <h2>{invalid && "Invalid Unit Offering"}</h2> : " "}
             {invalid ? <hr /> : " "}
