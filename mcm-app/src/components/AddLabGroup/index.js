@@ -306,8 +306,34 @@ class AddLabGroupPage extends React.Component {
           // Allocate unit offerings to every tutor
           await this.props.firebase
             .getTutorUID(obj.tutorEmail)
-            .then((tutorUID) => {
+            .then(async (tutorUID) => {
               console.log("Tutor by email:", tutorUID);
+              await this.props.firebase.findAllocation(tutorUID).then((res) => {
+                if (res === undefined) {
+                  const allocationData = {
+                    tutorID: tutorUID,
+                    unitOfferings: [this.props.match.params.offeringID],
+                  };
+                  // Create an allocation entry for the logged in Tutor
+                  this.props.firebase
+                    .addData("allocations", allocationData)
+                    .then((res) => {
+                      console.log(res);
+                    });
+                } else {
+                  if (
+                    !res.unitOfferings.includes(
+                      this.props.match.params.offeringID
+                    )
+                  ) {
+                    res.unitOfferings.push(this.props.match.params.offeringID);
+                    // console.log("Allocation array:", res);
+                    this.props.firebase.updateData("allocations", res.id, {
+                      unitOfferings: res.unitOfferings,
+                    });
+                  }
+                }
+              });
             });
         })
         .catch((error) => {
