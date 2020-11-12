@@ -151,6 +151,19 @@ class Firebase {
     return units[0]; // Return a single unit (by ID, so there's only one valid entry).
   };
 
+  getBookingSlotsByTutor = async (offeringID, taskID, tutorID) => {
+    const bookingSlotRef = this.db
+      .collection("unitofferings")
+      .doc(offeringID)
+      .collection("tasks")
+      .doc(taskID)
+      .collection("bookingslots");
+    const snapshot = bookingSlotRef.where("tutorID", "==", tutorID).get();
+    const bookingSlots = [];
+    (await snapshot).forEach((doc) => bookingSlots.push(doc.data()));
+    return bookingSlots; // Return all matching docs
+  };
+
   getLabGroups = async (offeringID) => {
     const labGroupRef = this.db
       .collection("unitofferings")

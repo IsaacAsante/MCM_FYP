@@ -87,9 +87,9 @@ class BookingSlotFormBase extends React.Component {
         this.setState({ user });
         return user;
       })
-      .then((user) => {
+      .then(async (user) => {
         // Retrieve lab groups under the current unit offering
-        this.props.firebase
+        await this.props.firebase
           .findLabsByTutor(this.props.match.params.offeringID, user.email)
           .then((labGroups) => {
             if (labGroups.length > 0) {
@@ -102,6 +102,19 @@ class BookingSlotFormBase extends React.Component {
           })
           .catch((err) => {
             console.error(err);
+          });
+
+        await this.props.firebase
+          .getBookingSlotsByTutor(
+            this.props.match.params.offeringID,
+            this.props.match.params.taskID,
+            user.uid
+          )
+          .then((bookingSlots) => {
+            console.log("Booking Slots in DB:", bookingSlots);
+          })
+          .catch((err) => {
+            console.log(err);
           });
       })
       .catch((err) => {
