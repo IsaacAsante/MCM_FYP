@@ -145,6 +145,8 @@ class BookingSlotFormBase extends React.Component {
         labGroupID: this.state.selectedLabGroup,
         slotStatus: "Available",
         taskID: this.state.taskID,
+        tutorEmail: this.state.user.email,
+        tutorID: this.state.user.uid,
       };
       await this.props.firebase
         .addBookingSlot(
