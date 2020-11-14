@@ -276,6 +276,6 @@ class UnitOfferingPage extends React.Component {
   }
 }
 
-const condition = (authUser) => authUser && authUser.role == "Tutor";
+const condition = (authUser) => authUser;
 
 export default withAuthorization(condition)(UnitOfferingPage);
