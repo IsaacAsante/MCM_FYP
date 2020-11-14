@@ -114,7 +114,7 @@ class TaskPage extends React.Component {
   addSlot = (event) => {
     event.preventDefault();
     this.props.history.push(
-      `/unit-offerings/${this.state.offeringID}/tasks/${this.state.taskID}/slots/add`
+      `/unit-offerings/${this.state.offeringID}/tasks/${this.state.taskID}/add-booking-slots`
     );
   };
 
