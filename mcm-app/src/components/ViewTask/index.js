@@ -20,6 +20,16 @@ const INITIAL_STATE = {
   unitError: null,
 };
 
+const DAYS = {
+  1: "Mon",
+  2: "Tue",
+  3: "Wed",
+  4: "Thu",
+  5: "Fri",
+  6: "Sat",
+  7: "Sun",
+};
+
 class TaskPage extends React.Component {
   constructor(props) {
     super(props);
@@ -104,6 +114,14 @@ class TaskPage extends React.Component {
                     .then((slots) => {
                       if (slots.length > 0) {
                         console.log("Booking slots on task page:", slots);
+                        // Sort the booking slots by dates, then by time
+                        slots.sort((a, b) => {
+                          return (
+                            a.date - b.date ||
+                            a.startTime.localeCompare(b.startTime)
+                          );
+                        });
+
                         this.setState({
                           bookingSlotsFound: true,
                           bookingslots: slots,
@@ -143,6 +161,13 @@ class TaskPage extends React.Component {
   backToOffering = (event) => {
     event.preventDefault();
     this.props.history.push(`/unit-offerings/${this.state.offeringID}`);
+  };
+
+  convertDate = (dateValue) => {
+    let date = new Date(dateValue * 1000); // Firestore will return the seconds instead of milliseconds
+    return `${DAYS[date.getDay()]}, ${date.getDate()}/${
+      date.getMonth() + 1
+    }/${date.getFullYear()}`;
   };
 
   render() {
@@ -225,21 +250,19 @@ class TaskPage extends React.Component {
                       <table className="table table-bordered table-striped table-condensed">
                         <thead>
                           <tr>
-                            <th>Time / Date</th>
-                            <th>Tutor</th>
+                            <th>Date</th>
+                            <th>Start</th>
+                            <th>End</th>
                             <th>Status</th>
-                            <th>Lab Group</th>
                           </tr>
                         </thead>
                         <tbody>
                           {bookingslots.map((slot) => (
                             <tr key={slot.id}>
-                              <td>
-                                {slot.startTime} - {slot.endTime}
-                              </td>
-                              <td>{slot.tutorEmail}</td>
+                              <td>{this.convertDate(slot.date.seconds)}</td>
+                              <td>{slot.startTime}</td>
+                              <td>{slot.endTime}</td>
                               <td>{slot.slotStatus}</td>
-                              <td>LA-01</td>
                             </tr>
                           ))}
                         </tbody>
