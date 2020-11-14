@@ -163,6 +163,13 @@ class TaskPage extends React.Component {
     this.props.history.push(`/unit-offerings/${this.state.offeringID}`);
   };
 
+  goToBookingSlot = (slotID) => {
+    // event.preventDefault();
+    this.props.history.push(
+      `/unit-offerings/${this.state.offeringID}/tasks/${this.state.taskID}/booking-slots/${slotID}`
+    );
+  };
+
   convertDate = (dateValue) => {
     let date = new Date(dateValue * 1000); // Firestore will return the seconds instead of milliseconds
     return `${DAYS[date.getDay()]}, ${date.getDate()}/${
@@ -247,7 +254,7 @@ class TaskPage extends React.Component {
                 <div className="col-sm-12">
                   {semester && task && unit ? (
                     bookingslots && bookingSlotsFound ? (
-                      <table className="table table-bordered table-striped table-condensed">
+                      <table className="table table-bordered table-striped table-condensed slots-table">
                         <thead>
                           <tr>
                             <th>Date</th>
@@ -265,6 +272,7 @@ class TaskPage extends React.Component {
                                   ? "row-bold"
                                   : "row-fade"
                               }
+                              onClick={() => this.goToBookingSlot(slot.id)}
                             >
                               <td>{this.convertDate(slot.date.seconds)}</td>
                               <td>{slot.startTime}</td>

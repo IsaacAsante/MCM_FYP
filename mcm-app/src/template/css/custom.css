@@ -115,13 +115,29 @@
 
 /* View Task - Booking Slot Rows (Table) */
 
-.table .row-bold td {
+.table.slots-table th {
+  background-color: #212121;
+  color: #fff;
+  padding: 0.8em 0.75em;
+}
+
+.table.slots-table .row-bold td,
+.table.slots-table .row-fade td {
+  padding: 1em 0.75em;
+  cursor: pointer;
+}
+
+.table.slots-table .row-bold td {
   font-weight: bold;
 }
 
-.table .row-fade {
+.table.slots-table .row-fade {
   background-color: #ffebee;
   color: #757575;
+}
+
+.table.slots-table tr:hover {
+  background-color: #eceff1;
 }
 
 /* Add Booking Slot - Option Select */
