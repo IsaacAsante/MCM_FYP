@@ -85,7 +85,7 @@ class BookingSlotFormBase extends React.Component {
     this.props.firebase
       .getCurrentUser()
       .then((user) => {
-        console.log("User:", user);
+        // console.log("User:", user);
         this.setState({ user });
         return user;
       })
@@ -96,7 +96,7 @@ class BookingSlotFormBase extends React.Component {
           .then((labGroups) => {
             if (labGroups.length > 0) {
               this.setState({ noAllocation: false });
-              console.log("Lab Groups:", labGroups);
+              // console.log("Lab Groups:", labGroups);
               this.setState({ labGroups });
             } else {
               this.setState({ noAllocation: true });
@@ -123,7 +123,7 @@ class BookingSlotFormBase extends React.Component {
         datetime
       )
       .then((bookingSlots) => {
-        console.log("Booking Slots in DB:", bookingSlots);
+        // console.log("Booking Slots in DB:", bookingSlots);
         if (bookingSlots.length > 0) {
           for (let i = 0; i < bookingSlots.length; i++) {
             for (let j = 0; j < this.state.times.length; j++) {
@@ -171,7 +171,7 @@ class BookingSlotFormBase extends React.Component {
 
   onChange = (event) => {
     this.setState({ [event.target.name]: event.target.value });
-    console.log(this.state.startTime, this.state.endTime);
+    // console.log(this.state.startTime, this.state.endTime);
   };
 
   onDateSet = async (dateValue) => {
@@ -184,7 +184,7 @@ class BookingSlotFormBase extends React.Component {
     );
     // Clear the times
     this.setState({ startTime: "", endTime: "" });
-    console.log(this.state.bookingDate);
+    // console.log(this.state.bookingDate);
   };
 
   onSelect = (event) => {
@@ -193,7 +193,7 @@ class BookingSlotFormBase extends React.Component {
 
   onSubmit = async (event) => {
     event.preventDefault();
-    console.log(this.state);
+    // console.log(this.state);
 
     // Check if the slot spans across invalid times
     for (let i = 0; i < this.state.times.length; i++) {
@@ -208,7 +208,7 @@ class BookingSlotFormBase extends React.Component {
             clash: true,
             success: false,
           });
-          console.log("Invalid");
+          // console.log("Invalid");
           return;
         }
     }
@@ -255,7 +255,7 @@ class BookingSlotFormBase extends React.Component {
             bookingSlotObj
           )
           .then(async (res) => {
-            console.log(res);
+            // console.log(res);
             // Revert date to current date, and make sure times get disabled if they are not free
             await this.filterOutTimes(
               this.state.user,
