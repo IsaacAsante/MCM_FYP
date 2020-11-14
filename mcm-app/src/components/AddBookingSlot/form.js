@@ -299,7 +299,7 @@ class BookingSlotFormBase extends React.Component {
   importLab = (event) => {
     event.preventDefault();
     this.props.history.push(
-      `/unit-offerings/${this.state.offeringID}/lab-groups/add`
+      `/unit-offerings/${this.state.offeringID}/add-lab-group`
     );
   };
 
