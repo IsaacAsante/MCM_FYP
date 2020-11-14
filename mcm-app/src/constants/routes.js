@@ -4,12 +4,12 @@ export const ADD_BOOKING_SLOT =
   "/unit-offerings/:offeringID/tasks/:taskID/slots/add";
 export const ADD_LAB_GROUP = "/unit-offerings/:offeringID/lab-groups/add";
 export const ADD_NEW_TASK = "/unit-offerings/:offeringID/tasks/add";
-export const ADD_SEMESTER = "/add-semester";
-export const ADD_UNIT = "/add-unit";
-export const ADD_UNIT_OFFERING = "/add-unit-offering";
+export const ADD_SEMESTER = "/semesters/add";
+export const ADD_UNIT = "/units/add";
+export const ADD_UNIT_OFFERING = "/unit-offerings/add";
 export const ADMIN = "/admin";
 export const DASHBOARD = "/dashboard";
-export const FIND_UNIT_OFFERING = "/find-unit-offering";
+export const FIND_UNIT_OFFERING = "/unit-offerings/find";
 export const LANDING = "/";
 export const PASSWORD_RESET = "/password-reset";
 export const PASSWORD_UPDATE = "/password-update";
