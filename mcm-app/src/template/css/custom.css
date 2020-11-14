@@ -113,6 +113,17 @@
   z-index: 5;
 }
 
+/* View Task - Booking Slot Rows (Table) */
+
+.table .row-bold td {
+  font-weight: bold;
+}
+
+.table .row-fade {
+  background-color: #ffebee;
+  color: #757575;
+}
+
 /* Add Booking Slot - Option Select */
 
 .option-bold {

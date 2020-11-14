@@ -258,7 +258,14 @@ class TaskPage extends React.Component {
                         </thead>
                         <tbody>
                           {bookingslots.map((slot) => (
-                            <tr key={slot.id}>
+                            <tr
+                              key={slot.id}
+                              className={
+                                slot.slotStatus == "Available"
+                                  ? "row-bold"
+                                  : "row-fade"
+                              }
+                            >
                               <td>{this.convertDate(slot.date.seconds)}</td>
                               <td>{slot.startTime}</td>
                               <td>{slot.endTime}</td>
