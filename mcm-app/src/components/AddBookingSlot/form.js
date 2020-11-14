@@ -53,7 +53,7 @@ const TIMES = [
 ];
 
 const INITIAL_STATE = {
-  bookingDate: new Date(),
+  bookingDate: new Date(new Date().setHours(0, 0, 0, 0)),
   clash: false,
   endTime: "",
   labGroups: [],
@@ -107,44 +107,66 @@ class BookingSlotFormBase extends React.Component {
           });
 
         // Disable all the time periods that are unavailable.
-        this.filterOutTimes(user);
+        await this.filterOutTimes(user, this.state.bookingDate);
       })
       .catch((err) => {
         console.error(err);
       });
   }
 
-  filterOutTimes = async (user) => {
+  filterOutTimes = async (user, datetime) => {
     await this.props.firebase
       .getBookingSlotsByTutor(
         this.props.match.params.offeringID,
         this.props.match.params.taskID,
-        user.uid
+        user.uid,
+        datetime
       )
       .then((bookingSlots) => {
         console.log("Booking Slots in DB:", bookingSlots);
-        for (let i = 0; i < bookingSlots.length; i++) {
-          for (let j = 0; j < this.state.times.length; j++) {
-            if (
-              this.state.times[j].time >= bookingSlots[i].startTime &&
-              this.state.times[j].time < bookingSlots[i].endTime
-            ) {
-              // const startTime = bookingSlots[i].startTime;
-              // const endTime = bookingSlots[i].endTime;
-              // const timeOfDay = this.state.times[j].time;
-              // console.log(startTime, endTime, timeOfDay);
-              this.state.times[j].free = false;
-              this.setState({ times: this.state.times });
-            } else if (this.state.times[j].time == bookingSlots[i].endTime) {
-              break;
+        if (bookingSlots.length > 0) {
+          for (let i = 0; i < bookingSlots.length; i++) {
+            for (let j = 0; j < this.state.times.length; j++) {
+              if (
+                this.state.times[j].time >= bookingSlots[i].startTime &&
+                this.state.times[j].time < bookingSlots[i].endTime
+              ) {
+                this.state.times[j].free = false;
+                this.setState({ times: this.state.times });
+              }
             }
           }
+        } else {
+          for (let i = 0; i < this.state.times.length; i++) {
+            this.state.times[i].free = true;
+            this.setState({ times: this.state.times });
+          }
         }
-        console.log(this.state.times);
       })
       .catch((err) => {
         console.log(err);
       });
+  };
+
+  resetTimesForNewDay = () => {
+    for (let i = 0; i < this.state.times.length; i++) {
+      this.state.times[i].free = true;
+    }
+  };
+
+  // This function serves as a guard for date-time conflicts that may slip through the slot booking process.
+  verifyDateTimeConflict = () => {
+    for (let i = 0; i < this.state.times.length; i++) {
+      if (
+        (this.state.times[i].time == this.state.startTime &&
+          this.state.times[i].free == false) ||
+        (this.state.times[i].time == this.state.endTime &&
+          this.state.times[i].free == false)
+      ) {
+        return true;
+      }
+    }
+    return false; // No conflict was found in this last date-time conflict check.
   };
 
   onChange = (event) => {
@@ -152,8 +174,17 @@ class BookingSlotFormBase extends React.Component {
     console.log(this.state.startTime, this.state.endTime);
   };
 
-  onDateSet = (dateValue) => {
-    this.setState({ bookingDate: new Date(dateValue) });
+  onDateSet = async (dateValue) => {
+    this.setState({ bookingDate: new Date(dateValue.setHours(0, 0, 0, 0)) });
+    this.resetTimesForNewDay();
+    // After resetting, proceed to disable invalid times.
+    await this.filterOutTimes(
+      this.state.user,
+      new Date(dateValue.setHours(0, 0, 0, 0))
+    );
+    // Clear the times
+    this.setState({ startTime: "", endTime: "" });
+    console.log(this.state.bookingDate);
   };
 
   onSelect = (event) => {
@@ -163,19 +194,6 @@ class BookingSlotFormBase extends React.Component {
   onSubmit = async (event) => {
     event.preventDefault();
     console.log(this.state);
-
-    if (
-      (this.state.startTime == "09:00" && this.state.times[0].free == false) ||
-      (this.state.endTime == "09:15" && !this.state.time[1].free == false)
-    ) {
-      this.setState({
-        error:
-          "Your selected times are clashing with an existing booking slot.",
-        clash: true,
-        success: false,
-      });
-      return;
-    }
 
     // Check if the slot spans across invalid times
     for (let i = 0; i < this.state.times.length; i++) {
@@ -210,46 +228,58 @@ class BookingSlotFormBase extends React.Component {
         success: false,
       });
     } else {
-      this.setState({ error: false });
-      const bookingSlotObj = {
-        date: this.state.bookingDate,
-        startTime: this.state.startTime,
-        endTime: this.state.endTime,
-        location: this.state.location,
-        labGroupID: this.state.selectedLabGroup,
-        slotStatus: "Available",
-        taskID: this.state.taskID,
-        tutorEmail: this.state.user.email,
-        tutorID: this.state.user.uid,
-      };
-      await this.props.firebase
-        .addBookingSlot(
-          this.state.offeringID,
-          this.state.taskID,
-          bookingSlotObj
-        )
-        .then(async (res) => {
-          console.log(res);
-          // Make sure times get disabled if they are not free
-          await this.filterOutTimes(this.state.user);
-          return true;
-        })
-        .then((res) => {
-          this.setState({
-            success: true,
-            error: false,
-            clash: false,
-            bookingDate: new Date(),
-            startTime: "",
-            endTime: "",
-            location: "",
-            selectedLabGroup: "",
-          });
-        })
-        .catch((error) => {
-          console.error(error);
-          this.setState({ error });
+      const conflict = this.verifyDateTimeConflict();
+      if (conflict) {
+        this.setState({
+          error: "Invalid booking slot. Please verify your date or time again.",
+          clash: true,
+          success: false,
         });
+      } else {
+        this.setState({ error: false });
+        const bookingSlotObj = {
+          date: this.state.bookingDate,
+          startTime: this.state.startTime,
+          endTime: this.state.endTime,
+          location: this.state.location,
+          labGroupID: this.state.selectedLabGroup,
+          slotStatus: "Available",
+          taskID: this.state.taskID,
+          tutorEmail: this.state.user.email,
+          tutorID: this.state.user.uid,
+        };
+        await this.props.firebase
+          .addBookingSlot(
+            this.state.offeringID,
+            this.state.taskID,
+            bookingSlotObj
+          )
+          .then(async (res) => {
+            console.log(res);
+            // Revert date to current date, and make sure times get disabled if they are not free
+            await this.filterOutTimes(
+              this.state.user,
+              new Date(new Date().setHours(0, 0, 0, 0))
+            );
+            return true;
+          })
+          .then((res) => {
+            this.setState({
+              success: true,
+              error: false,
+              clash: false,
+              bookingDate: new Date(new Date().setHours(0, 0, 0, 0)),
+              location: "",
+              startTime: "",
+              endTime: "",
+              selectedLabGroup: "",
+            });
+          })
+          .catch((error) => {
+            console.error(error);
+            this.setState({ error });
+          });
+      }
     }
   };
 
@@ -286,7 +316,11 @@ class BookingSlotFormBase extends React.Component {
       success,
       times,
     } = this.state;
-    const invalid = location == "" || selectedLabGroup == "";
+    const invalid =
+      startTime == "" ||
+      endTime == "" ||
+      location == "" ||
+      selectedLabGroup == "";
     return (
       <div className="row">
         <div className="col-sm-12 col-md-10">
@@ -358,6 +392,7 @@ class BookingSlotFormBase extends React.Component {
                       onChange={this.onChange}
                       value={startTime}
                     >
+                      <option value="">Starting at</option>
                       {times.slice(0, times.length - 1).map((obj, idx) => (
                         <option
                           key={idx}
@@ -378,6 +413,7 @@ class BookingSlotFormBase extends React.Component {
                       onChange={this.onChange}
                       value={endTime}
                     >
+                      <option value="">Ending at</option>
                       {times.slice(1, times.length).map((obj, idx) => (
                         <option
                           key={idx}
