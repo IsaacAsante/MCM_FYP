@@ -7,6 +7,8 @@ const INITIAL_STATE = {
   allocated: false,
   allocateMessage: "Allocate Yourself",
   authUser: null,
+  bookingslots: null,
+  bookingSlotsFound: false,
   loadTask: false,
   offeringID: null,
   semester: null,
@@ -95,14 +97,20 @@ class TaskPage extends React.Component {
                 } else {
                   this.setState({ task });
                   console.log("Task found:", task);
+
                   // Load all booking slots available
                   await this.props.firebase
                     .getBookingSlots(this.state.offeringID, this.state.taskID)
                     .then((slots) => {
                       if (slots.length > 0) {
                         console.log("Booking slots on task page:", slots);
+                        this.setState({
+                          bookingSlotsFound: true,
+                          bookingslots: slots,
+                        });
                       } else {
                         console.log("The task does not have booking slots.");
+                        this.setState({ bookingSlotsFound: false });
                       }
                     })
                     .catch((err) => {
@@ -142,6 +150,8 @@ class TaskPage extends React.Component {
       allocated,
       allocateMessage,
       authUser,
+      bookingslots,
+      bookingSlotsFound,
       loadTask,
       semester,
       semesterError,
@@ -211,9 +221,34 @@ class TaskPage extends React.Component {
               <div className="row mt">
                 <div className="col-sm-12">
                   {semester && task && unit ? (
-                    <div className="alert alert-warning">
-                      <p>No booking slot found.</p>
-                    </div>
+                    bookingslots && bookingSlotsFound ? (
+                      <table className="table table-bordered table-striped table-condensed">
+                        <thead>
+                          <tr>
+                            <th>Time / Date</th>
+                            <th>Tutor</th>
+                            <th>Status</th>
+                            <th>Lab Group</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {bookingslots.map((slot) => (
+                            <tr key={slot.id}>
+                              <td>
+                                {slot.startTime} - {slot.endTime}
+                              </td>
+                              <td>{slot.tutorEmail}</td>
+                              <td>{slot.slotStatus}</td>
+                              <td>LA-01</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    ) : (
+                      <div className="alert alert-warning">
+                        <p>No booking slot found.</p>
+                      </div>
+                    )
                   ) : taskError ? (
                     <div className="alert alert-danger">
                       <strong>Invalid task.</strong> The task ID from this
