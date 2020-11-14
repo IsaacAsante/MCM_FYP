@@ -85,15 +85,29 @@ class TaskPage extends React.Component {
                 });
               });
 
+            // Get the task's info
             await this.props.firebase
               .findTask(this.state.offeringID, this.state.taskID)
-              .then((task) => {
+              .then(async (task) => {
                 if (!task) {
                   this.setState({ taskError: true });
                   console.log("Task was not found");
                 } else {
                   this.setState({ task });
                   console.log("Task found:", task);
+                  // Load all booking slots available
+                  await this.props.firebase
+                    .getBookingSlots(this.state.offeringID, this.state.taskID)
+                    .then((slots) => {
+                      if (slots.length > 0) {
+                        console.log("Booking slots on task page:", slots);
+                      } else {
+                        console.log("The task does not have booking slots.");
+                      }
+                    })
+                    .catch((err) => {
+                      console.error(err);
+                    });
                 }
               });
             console.log(this.state);

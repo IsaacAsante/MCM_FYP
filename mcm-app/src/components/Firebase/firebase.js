@@ -151,6 +151,20 @@ class Firebase {
     return units[0]; // Return a single unit (by ID, so there's only one valid entry).
   };
 
+  getBookingSlots = async (offeringID, taskID) => {
+    const bookingSlotRef = this.db
+      .collection("unitofferings")
+      .doc(offeringID)
+      .collection("tasks")
+      .doc(taskID)
+      .collection("bookingslots");
+
+    const snapshot = await bookingSlotRef.get();
+    let slots = [];
+    snapshot.forEach((doc) => slots.push(doc.data()));
+    return slots; // Return all booking slots under the task in question
+  };
+
   getBookingSlotsByTutor = async (offeringID, taskID, tutorID, datetime) => {
     const bookingSlotRef = this.db
       .collection("unitofferings")
@@ -161,7 +175,7 @@ class Firebase {
     let snapshot = bookingSlotRef.where("tutorID", "==", tutorID);
     snapshot = snapshot.where("date", "==", datetime).get();
     const bookingSlots = [];
-    (await snapshot).forEach((doc) => bookingSlots.push(doc.data()));
+    snapshot.forEach((doc) => bookingSlots.push(doc.data()));
     return bookingSlots; // Return all matching docs
   };
 
