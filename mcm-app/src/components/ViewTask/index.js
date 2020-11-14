@@ -132,6 +132,11 @@ class TaskPage extends React.Component {
     );
   };
 
+  backToOffering = (event) => {
+    event.preventDefault();
+    this.props.history.push(`/unit-offerings/${this.state.offeringID}`);
+  };
+
   render() {
     const {
       allocated,
@@ -217,6 +222,17 @@ class TaskPage extends React.Component {
                   ) : (
                     ""
                   )}
+                </div>
+              </div>
+
+              <div className="row mt">
+                <div className="col-sm-12">
+                  <button
+                    className="btn btn-danger"
+                    onClick={this.backToOffering}
+                  >
+                    Go Back
+                  </button>
                 </div>
               </div>
             </section>
