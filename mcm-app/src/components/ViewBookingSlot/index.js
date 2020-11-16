@@ -213,11 +213,12 @@ class BookingSlotPage extends React.Component {
                   )}
                 </div>
               </div>
+              <hr />
 
               <div className="row">
                 <div className="col-sm-12">
                   <button className="btn btn-theme" onClick={this.addSlot}>
-                    Add Booking Slot
+                    Create Booking
                   </button>
                 </div>
               </div>
@@ -226,7 +227,19 @@ class BookingSlotPage extends React.Component {
                 <div className="col-sm-12">
                   {semester && task && unit ? (
                     slot ? (
-                      <p>Booking slot available.</p>
+                      <div className="row">
+                        <div className="col-sm-12">
+                          <div className="alert alert-info">
+                            <p>
+                              This consultation booking slot was created for{" "}
+                              <strong>
+                                {this.convertDate(slot.date.seconds)},{" "}
+                                {slot.startTime} - {slot.endTime}.
+                              </strong>
+                            </p>
+                          </div>
+                        </div>
+                      </div>
                     ) : (
                       slotError && (
                         <div className="alert alert-danger">
