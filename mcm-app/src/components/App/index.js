@@ -11,6 +11,7 @@ import AddLabGroupPage from "../AddLabGroup";
 import AddNewTaskPage from "../AddNewTask";
 import AddUnitOfferingPage from "../AddUnitOffering";
 import AdminPage from "../Admin";
+import BookingSlotPage from "../ViewBookingSlot";
 import DashboardPage from "../Dashboard";
 import FindUnitOffering from "../FindUnitOffering";
 import LandingPage from "../Landing";
@@ -66,6 +67,7 @@ const App = () => (
       <Route exact path={ROUTES.HOME} component={DashboardPage} />
       <Route path={ROUTES.PASSWORD_UPDATE} component={PasswordUpdatePage} />
       <Route path={ROUTES.PASSWORD_RESET} component={PasswordResetPage} />
+      <Route path={ROUTES.SINGLE_BOOKING_SLOT} component={BookingSlotPage} />
       <Route exact path={ROUTES.SINGLE_TASK} component={TaskPage} />
       <Route
         exact

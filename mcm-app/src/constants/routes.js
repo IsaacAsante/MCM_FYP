@@ -15,6 +15,8 @@ export const PASSWORD_RESET = "/password-reset";
 export const PASSWORD_UPDATE = "/password-update";
 export const SIGN_IN = "/login";
 export const SIGN_UP = "/register";
+export const SINGLE_BOOKING_SLOT =
+  "/unit-offerings/:offeringID/tasks/:taskID/booking-slots/:slotID"; // New
 export const SINGLE_TASK = "/unit-offerings/:offeringID/tasks/:taskID";
 export const SINGLE_UNIT = "/units/:unitCode";
 export const SINGLE_UNIT_OFFERING = "/unit-offerings/:offeringID";
