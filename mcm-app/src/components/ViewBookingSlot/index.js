@@ -5,12 +5,13 @@ const INITIAL_STATE = {
   allocated: false,
   allocateMessage: "Allocate Yourself",
   authUser: null,
-  bookingslots: null,
-  bookingSlotsFound: false,
   loadTask: false,
   offeringID: null,
   semester: null,
   semesterError: null,
+  slot: null,
+  slotError: null,
+  slotID: null,
   task: null,
   taskError: false,
   taskID: null,
@@ -38,10 +39,11 @@ class BookingSlotPage extends React.Component {
     this.setState({ loadTask: true });
     const offeringID = this.props.match.params.offeringID;
     const taskID = this.props.match.params.taskID;
-    this.setState({ offeringID, taskID });
+    const slotID = this.props.match.params.slotID;
+    this.setState({ offeringID, taskID, slotID });
     // console.log(taskID);
 
-    console.log("Task ID:", taskID);
+    console.log("Task ID:", taskID, "Slot ID:", slotID);
     if (taskID !== "add") {
       // Recognize current user
       this.props.firebase.onAuthUserListener((authUser) => {
@@ -101,12 +103,27 @@ class BookingSlotPage extends React.Component {
               .then(async (task) => {
                 if (!task) {
                   this.setState({ taskError: true });
-                  console.log("Task was not found");
+                  //   console.log("Task was not found");
                 } else {
                   this.setState({ task });
-                  console.log("Task found:", task);
+                  //   console.log("Task found:", task);
 
                   // Load data for the booking slot
+                  await this.props.firebase
+                    .findBookingSlot(
+                      this.state.offeringID,
+                      this.state.taskID,
+                      this.state.slotID
+                    )
+                    .then((slot) => {
+                      if (slot !== undefined) {
+                        console.log(slot);
+                        this.setState({ slotError: false, slot });
+                      } else {
+                        console.log("Wrong booking slot.");
+                        this.setState({ slotError: true, slot: null });
+                      }
+                    });
                 }
               });
             console.log(this.state);
@@ -136,11 +153,12 @@ class BookingSlotPage extends React.Component {
       allocated,
       allocateMessage,
       authUser,
-      bookingslots,
-      bookingSlotsFound,
       loadTask,
       semester,
       semesterError,
+      slot,
+      slotError,
+      slotID,
       task,
       taskError,
       unit,
@@ -207,12 +225,14 @@ class BookingSlotPage extends React.Component {
               <div className="row mt">
                 <div className="col-sm-12">
                   {semester && task && unit ? (
-                    bookingslots && bookingSlotsFound ? (
+                    slot ? (
                       <p>Booking slot available.</p>
                     ) : (
-                      <div className="alert alert-warning">
-                        <p>Booking slots.</p>
-                      </div>
+                      slotError && (
+                        <div className="alert alert-danger">
+                          <p>Something went wrong with that booking slot.</p>
+                        </div>
+                      )
                     )
                   ) : taskError ? (
                     <div className="alert alert-danger">

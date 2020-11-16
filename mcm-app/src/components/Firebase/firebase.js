@@ -77,6 +77,19 @@ class Firebase {
     return tutors[0];
   };
 
+  findBookingSlot = async (offeringID, taskID, slotID) => {
+    const slotRef = this.db
+      .collection("unitofferings")
+      .doc(offeringID)
+      .collection("tasks")
+      .doc(taskID)
+      .collection("bookingslots");
+    const snapshot = await slotRef.where("id", "==", slotID).get();
+    const slots = [];
+    snapshot.forEach((doc) => slots.push(doc.data()));
+    return slots[0]; // Return a single slot (found by ID)
+  };
+
   findEnrolment = async (studentID) => {
     const enrolmentRef = await this.db.collection("enrolments");
     const snapshot = await enrolmentRef
