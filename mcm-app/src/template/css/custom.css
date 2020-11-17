@@ -56,6 +56,12 @@
   margin-right: 25px;
 }
 
+/* Sidebar font-awesome icons */
+
+ul.sidebar-menu li a i {
+  width: 1.8em;
+}
+
 /* Dashboard - Cards */
 
 .grey-panel,

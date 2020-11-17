@@ -104,7 +104,7 @@ const StudentNavbar = () => {
       </li>
       <li>
         <Link to={ROUTES.ACCOUNT}>
-          <i className="fa fa-envelope"></i>
+          <i className="fa fa-user"></i>
           <span>Your Account</span>
           {/* <span className="label label-theme pull-right mail-info">2</span> */}
         </Link>
@@ -125,14 +125,14 @@ const TutorNavbar = () => {
       </li>
       <li>
         <Link to={ROUTES.ADD_UNIT}>
-          <i className="fa fa-envelope"></i>
+          <i className="fa fa-book"></i>
           <span>Units</span>
           {/* <span className="label label-theme pull-right mail-info">2</span> */}
         </Link>
       </li>
       <li>
         <Link to={ROUTES.ADD_UNIT_OFFERING}>
-          <i className="fa fa-envelope"></i>
+          <i className="fa fa-graduation-cap"></i>
           <span>Add Unit Offerings</span>
           {/* <span className="label label-theme pull-right mail-info">2</span> */}
         </Link>
@@ -146,22 +146,22 @@ const TutorNavbar = () => {
       </li>
       <li>
         <Link to={ROUTES.ADD_SEMESTER}>
-          <i className="fa fa-envelope"></i>
+          <i className="fa fa-calendar"></i>
           <span>Semester</span>
           {/* <span className="label label-theme pull-right mail-info">2</span> */}
         </Link>
       </li>
       <li>
-        <Link to={ROUTES.SIGN_IN}>
-          <i className="fa fa-envelope"></i>
-          <span>Bookings </span>
+        <Link to={ROUTES.ACCOUNT}>
+          <i className="fa fa-user"></i>
+          <span>Your Account</span>
           {/* <span className="label label-theme pull-right mail-info">2</span> */}
         </Link>
       </li>
       <li>
-        <Link to={ROUTES.ACCOUNT}>
-          <i className="fa fa-envelope"></i>
-          <span>Your Account</span>
+        <Link to={ROUTES.SIGN_UP}>
+          <i className="fa fa-user-plus"></i>
+          <span>Register User</span>
           {/* <span className="label label-theme pull-right mail-info">2</span> */}
         </Link>
       </li>
@@ -175,15 +175,8 @@ const GenericNavbar = () => {
       <h5 className="centered">Welcome!</h5>
       <li className="mt">
         <Link to={ROUTES.SIGN_IN}>
-          <i className="fa fa-envelope"></i>
+          <i className="fa fa-key"></i>
           <span>Login </span>
-          {/* <span className="label label-theme pull-right mail-info">2</span> */}
-        </Link>
-      </li>
-      <li>
-        <Link to={ROUTES.SIGN_UP}>
-          <i className="fa fa-envelope"></i>
-          <span>Sign Up </span>
           {/* <span className="label label-theme pull-right mail-info">2</span> */}
         </Link>
       </li>
