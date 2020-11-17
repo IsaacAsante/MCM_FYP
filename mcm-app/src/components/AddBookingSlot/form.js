@@ -123,7 +123,7 @@ class BookingSlotFormBase extends React.Component {
         datetime
       )
       .then((bookingSlots) => {
-        // console.log("Booking Slots in DB:", bookingSlots);
+        console.log("Booking Slots in DB:", bookingSlots);
         if (bookingSlots.length > 0) {
           for (let i = 0; i < bookingSlots.length; i++) {
             for (let j = 0; j < this.state.times.length; j++) {

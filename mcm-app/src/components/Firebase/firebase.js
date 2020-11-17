@@ -186,7 +186,8 @@ class Firebase {
       .doc(taskID)
       .collection("bookingslots");
     let snapshot = bookingSlotRef.where("tutorID", "==", tutorID);
-    snapshot = snapshot.where("date", "==", datetime).get();
+    snapshot = await snapshot.where("date", "==", datetime).get();
+    console.log(snapshot);
     const bookingSlots = [];
     snapshot.forEach((doc) => bookingSlots.push(doc.data()));
     return bookingSlots; // Return all matching docs

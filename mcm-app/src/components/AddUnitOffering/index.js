@@ -101,7 +101,7 @@ class AddUnitOfferingFormBase extends Component {
                 selectedSemester: "None",
                 selectedUnit: "None",
                 error: null,
-                success: "United Offering created successfully",
+                success: "Unit Offering created successfully",
               });
             })
             .catch((error) => {
