@@ -126,7 +126,7 @@ class BookingSlotPage extends React.Component {
                     });
                 }
               });
-            console.log(this.state);
+            // console.log(this.state);
           } else {
             this.setState({
               semesterError: "Invalid semester.",
@@ -140,6 +140,11 @@ class BookingSlotPage extends React.Component {
       this.setState({ loadTask: false });
     }
   }
+
+  backToOffering = (event) => {
+    event.preventDefault();
+    this.props.history.push(`/unit-offerings/${this.state.offeringID}`);
+  };
 
   convertDate = (dateValue) => {
     let date = new Date(dateValue * 1000); // Firestore will return the seconds instead of milliseconds
@@ -195,9 +200,18 @@ class BookingSlotPage extends React.Component {
                     {semester &&
                       ` Semester ${semester.number} - ${semester.year} (${semester.type})`}
                   </h3>
-                  <span className="label label-danger">
-                    {allocated && allocateMessage}
-                  </span>
+                  {invalid ? (
+                    ""
+                  ) : (
+                    <span className="label label-danger">
+                      {allocated && allocateMessage}
+                    </span>
+                  )}
+                  <hr />
+                  <h4 className="taskname">
+                    {invalid ? " " : <i className="fa fa-angle-right"></i>}
+                    {task && ` Task: ${task.name}`}
+                  </h4>
                   {/* If invalid - Show the error messages*/}
                   {invalid ? (
                     <h2>{invalid && "Invalid Unit Offering"}</h2>
@@ -220,7 +234,6 @@ class BookingSlotPage extends React.Component {
                   )}
                 </div>
               </div>
-              <hr />
 
               <div className="row">
                 <div className="col-sm-12">
@@ -239,7 +252,7 @@ class BookingSlotPage extends React.Component {
                     slot ? (
                       <div className="row">
                         <div className="col-sm-12">
-                          <div className="alert alert-info">
+                          <div className="alert alert-warning">
                             <p>
                               This consultation booking slot was created for{" "}
                               <strong>

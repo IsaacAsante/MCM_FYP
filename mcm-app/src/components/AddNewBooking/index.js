@@ -128,6 +128,20 @@ class AddNewBookingPage extends React.Component {
       .catch((err) => console.error(err));
   }
 
+  backToTask = (event) => {
+    event.preventDefault();
+    this.props.history.push(
+      `/unit-offerings/${this.state.offeringID}/tasks/${this.state.taskID}/`
+    );
+  };
+
+  convertDate = (dateValue) => {
+    let date = new Date(dateValue * 1000); // Firestore will return the seconds instead of milliseconds
+    return `${DAYS[date.getDay()]}, ${date.getDate()}/${
+      date.getMonth() + 1
+    }/${date.getFullYear()}`;
+  };
+
   render() {
     const {
       allocated,
@@ -135,6 +149,11 @@ class AddNewBookingPage extends React.Component {
       authUser,
       semester,
       semesterError,
+      slot,
+      slotError,
+      slotID,
+      task,
+      taskError,
       unit,
       unitError,
     } = this.state;
@@ -161,6 +180,18 @@ class AddNewBookingPage extends React.Component {
                   {semester &&
                     ` Semester ${semester.number} - ${semester.year} (${semester.type})`}
                 </h3>
+                {invalid ? (
+                  ""
+                ) : (
+                  <span className="label label-danger">
+                    {allocated && allocateMessage}
+                  </span>
+                )}
+                <hr />
+                <h4 className="taskname">
+                  {invalid ? " " : <i className="fa fa-angle-right"></i>}
+                  {task && ` Task: ${task.name}`}
+                </h4>
 
                 {/* If invalid - Show the error messages*/}
                 {invalid ? <h2>{invalid && "Invalid Unit Offering"}</h2> : " "}
@@ -180,7 +211,46 @@ class AddNewBookingPage extends React.Component {
                 )}
               </div>
             </div>
-            <p>Add new booking.</p>
+
+            <div className="row">
+              <div className="col-sm-12">
+                {semester && task && unit ? (
+                  slot ? (
+                    <div className="alert alert-warning">
+                      <p>
+                        You are about to submit a booking for{" "}
+                        <strong>
+                          {this.convertDate(slot.date.seconds)},{" "}
+                          {slot.startTime} - {slot.endTime}.
+                        </strong>
+                      </p>
+                    </div>
+                  ) : (
+                    slotError && (
+                      <div className="alert alert-danger">
+                        <p>Something went wrong with that booking slot.</p>
+                      </div>
+                    )
+                  )
+                ) : taskError ? (
+                  <div className="alert alert-danger">
+                    <strong>Invalid task.</strong> The task ID from this page's
+                    URL does not exist in the system.
+                  </div>
+                ) : (
+                  ""
+                )}
+              </div>
+            </div>
+
+            <div className="row mt">
+              <div className="col-sm-12">
+                <button className="btn btn-danger" onClick={this.backToTask}>
+                  Go Back
+                </button>
+              </div>
+            </div>
+
             {/* <AddNewTaskForm unitoffering={this.state.offeringID} /> */}
           </section>
         </section>
