@@ -126,14 +126,21 @@ const TutorNavbar = () => {
       <li>
         <Link to={ROUTES.ADD_UNIT}>
           <i className="fa fa-book"></i>
-          <span>Units</span>
+          <span>Add Unit</span>
+          {/* <span className="label label-theme pull-right mail-info">2</span> */}
+        </Link>
+      </li>
+      <li>
+        <Link to={ROUTES.ADD_SEMESTER}>
+          <i className="fa fa-calendar"></i>
+          <span>Add Semester</span>
           {/* <span className="label label-theme pull-right mail-info">2</span> */}
         </Link>
       </li>
       <li>
         <Link to={ROUTES.ADD_UNIT_OFFERING}>
           <i className="fa fa-graduation-cap"></i>
-          <span>Add Unit Offerings</span>
+          <span>Add Unit Offering</span>
           {/* <span className="label label-theme pull-right mail-info">2</span> */}
         </Link>
       </li>
@@ -141,13 +148,6 @@ const TutorNavbar = () => {
         <Link to={ROUTES.FIND_UNIT_OFFERING}>
           <i className="fa fa-envelope"></i>
           <span>Find Unit Offerings</span>
-          {/* <span className="label label-theme pull-right mail-info">2</span> */}
-        </Link>
-      </li>
-      <li>
-        <Link to={ROUTES.ADD_SEMESTER}>
-          <i className="fa fa-calendar"></i>
-          <span>Semester</span>
           {/* <span className="label label-theme pull-right mail-info">2</span> */}
         </Link>
       </li>

@@ -10,10 +10,10 @@ const AccountPage = () => (
       <div>
         <section id="main-content">
           <section className="wrapper">
-            <h1>
+            <h3>
               <i className="fa fa-angle-right"></i> Your Account
               {/* {authUser.email} */}
-            </h1>
+            </h3>
             <div className="row mt">
               <div className="col-lg-12">
                 <div className="form-panel">
