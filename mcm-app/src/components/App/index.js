@@ -8,6 +8,7 @@ import "bootstrap/dist/js/bootstrap.bundle";
 import AccountPage from "../Account";
 import AddBookingSlotPage from "../AddBookingSlot";
 import AddLabGroupPage from "../AddLabGroup";
+import AddNewBookingPage from "../AddNewBooking";
 import AddNewTaskPage from "../AddNewTask";
 import AddUnitOfferingPage from "../AddUnitOffering";
 import AdminPage from "../Admin";
@@ -53,6 +54,7 @@ const App = () => (
         path={ROUTES.ADD_BOOKING_SLOT}
         component={AddBookingSlotPage}
       />
+      <Route path={ROUTES.ADD_NEW_BOOKING} component={AddNewBookingPage} />
       <Route exact path={ROUTES.ADD_NEW_TASK} component={AddNewTaskPage} />
       <Route path={ROUTES.ADD_LAB_GROUP} component={AddLabGroupPage} />
       <Route path={ROUTES.ADD_SEMESTER} component={AddSemesterPage} />
@@ -67,7 +69,11 @@ const App = () => (
       <Route exact path={ROUTES.HOME} component={DashboardPage} />
       <Route path={ROUTES.PASSWORD_UPDATE} component={PasswordUpdatePage} />
       <Route path={ROUTES.PASSWORD_RESET} component={PasswordResetPage} />
-      <Route path={ROUTES.SINGLE_BOOKING_SLOT} component={BookingSlotPage} />
+      <Route
+        exact
+        path={ROUTES.SINGLE_BOOKING_SLOT}
+        component={BookingSlotPage}
+      />
       <Route exact path={ROUTES.SINGLE_TASK} component={TaskPage} />
       <Route
         exact

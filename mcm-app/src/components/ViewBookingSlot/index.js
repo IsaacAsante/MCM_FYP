@@ -148,6 +148,13 @@ class BookingSlotPage extends React.Component {
     }/${date.getFullYear()}`;
   };
 
+  createBooking = (event) => {
+    event.preventDefault();
+    this.props.history.push(
+      `/unit-offerings/${this.state.offeringID}/tasks/${this.state.taskID}/booking-slots/${this.state.slotID}/add-booking`
+    );
+  };
+
   render() {
     const {
       allocated,
@@ -217,7 +224,10 @@ class BookingSlotPage extends React.Component {
 
               <div className="row">
                 <div className="col-sm-12">
-                  <button className="btn btn-theme" onClick={this.addSlot}>
+                  <button
+                    className="btn btn-theme"
+                    onClick={this.createBooking}
+                  >
                     Create Booking
                   </button>
                 </div>
