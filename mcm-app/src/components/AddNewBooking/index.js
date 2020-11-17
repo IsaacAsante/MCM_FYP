@@ -1,6 +1,8 @@
 import React from "react";
 import { withAuthorization } from "../Session";
 
+import AddNewBookingForm from "../AddNewBooking/form";
+
 const INITIAL_STATE = {
   allocated: false,
   allocateMessage: "Allocate Yourself",
@@ -243,15 +245,18 @@ class AddNewBookingPage extends React.Component {
               </div>
             </div>
 
-            <div className="row mt">
+            {/* <div className="row mt">
               <div className="col-sm-12">
                 <button className="btn btn-danger" onClick={this.backToTask}>
                   Go Back
                 </button>
               </div>
-            </div>
+            </div> */}
 
-            {/* <AddNewTaskForm unitoffering={this.state.offeringID} /> */}
+            <AddNewBookingForm
+              unitoffering={this.state.offeringID}
+              task={this.state.taskID}
+            />
           </section>
         </section>
       </div>
