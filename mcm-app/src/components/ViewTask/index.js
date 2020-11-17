@@ -216,9 +216,18 @@ class TaskPage extends React.Component {
                     {semester &&
                       ` Semester ${semester.number} - ${semester.year} (${semester.type})`}
                   </h3>
-                  <span className="label label-danger">
-                    {allocated && allocateMessage}
-                  </span>
+                  {invalid ? (
+                    ""
+                  ) : (
+                    <span className="label label-danger">
+                      {allocated && allocateMessage}
+                    </span>
+                  )}
+                  <hr />
+                  <h4 className="taskname">
+                    {invalid ? " " : <i className="fa fa-angle-right"></i>}
+                    {task && ` Task: ${task.name}`}
+                  </h4>
                   {/* If invalid - Show the error messages*/}
                   {invalid ? (
                     <h2>{invalid && "Invalid Unit Offering"}</h2>

@@ -115,6 +115,10 @@
 
 /* View Task - Booking Slot Rows (Table) */
 
+.taskname {
+  font-weight: bold;
+}
+
 .table.slots-table th {
   background-color: #212121;
   color: #fff;
