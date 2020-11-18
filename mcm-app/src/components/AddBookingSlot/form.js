@@ -85,14 +85,22 @@ class BookingSlotFormBase extends React.Component {
     this.props.firebase
       .getCurrentUser()
       .then((user) => {
-        // console.log("User:", user);
-        this.setState({ user });
         return user;
       })
       .then(async (user) => {
+        await this.props.firebase.getTutor(user.uid).then((tutor) => {
+          tutor["uid"] = user.uid;
+          this.setState({ user: tutor });
+        });
+      })
+      .then(async () => {
+        console.log("TUTOR:", this.state.user);
         // Retrieve lab groups under the current unit offering
         await this.props.firebase
-          .findLabsByTutor(this.props.match.params.offeringID, user.email)
+          .findLabsByTutor(
+            this.props.match.params.offeringID,
+            this.state.user.email
+          )
           .then((labGroups) => {
             if (labGroups.length > 0) {
               this.setState({ noAllocation: false });
@@ -107,19 +115,19 @@ class BookingSlotFormBase extends React.Component {
           });
 
         // Disable all the time periods that are unavailable.
-        await this.filterOutTimes(user, this.state.bookingDate);
+        await this.filterOutTimes(this.state.user.uid, this.state.bookingDate);
       })
       .catch((err) => {
         console.error(err);
       });
   }
 
-  filterOutTimes = async (user, datetime) => {
+  filterOutTimes = async (tutorUID, datetime) => {
     await this.props.firebase
       .getBookingSlotsByTutor(
         this.props.match.params.offeringID,
         this.props.match.params.taskID,
-        user.uid,
+        tutorUID,
         datetime
       )
       .then((bookingSlots) => {
@@ -179,7 +187,7 @@ class BookingSlotFormBase extends React.Component {
     this.resetTimesForNewDay();
     // After resetting, proceed to disable invalid times.
     await this.filterOutTimes(
-      this.state.user,
+      this.state.user.uid,
       new Date(dateValue.setHours(0, 0, 0, 0))
     );
     // Clear the times
@@ -245,8 +253,12 @@ class BookingSlotFormBase extends React.Component {
           labGroupID: this.state.selectedLabGroup,
           slotStatus: "Available",
           taskID: this.state.taskID,
-          tutorEmail: this.state.user.email,
           tutorID: this.state.user.uid,
+          tutor: {
+            email: this.state.user.email,
+            firstname: this.state.user.firstname,
+            lastname: this.state.user.lastname,
+          },
         };
         await this.props.firebase
           .addBookingSlot(
@@ -258,7 +270,7 @@ class BookingSlotFormBase extends React.Component {
             // console.log(res);
             // Revert date to current date, and make sure times get disabled if they are not free
             await this.filterOutTimes(
-              this.state.user,
+              this.state.user.uid,
               new Date(new Date().setHours(0, 0, 0, 0))
             );
             return true;
