@@ -247,20 +247,27 @@ class BookingSlotPage extends React.Component {
               </div>
 
               <div className="row mt">
-                <div className="col-sm-12">
+                <div className="col-sm-12 col-md-8">
                   {semester && task && unit ? (
                     slot ? (
                       <div className="row">
                         <div className="col-sm-12">
-                          <div className="alert alert-warning">
-                            <p>
-                              This consultation booking slot was created for{" "}
-                              <strong>
-                                {this.convertDate(slot.date.seconds)},{" "}
-                                {slot.startTime} - {slot.endTime}.
-                              </strong>
-                            </p>
-                          </div>
+                          <table class="table table-bordered table-condensed booking-slot-table">
+                            <tbody>
+                              <tr>
+                                <th>Date/Time:</th>
+                                <td>{this.convertDate(slot.date.seconds)}</td>
+                              </tr>
+                              <tr>
+                                <th>Start:</th>
+                                <td>{slot.startTime}</td>
+                              </tr>
+                              <tr>
+                                <th>End:</th>
+                                <td>{slot.endTime}</td>
+                              </tr>
+                            </tbody>
+                          </table>
                         </div>
                       </div>
                     ) : (

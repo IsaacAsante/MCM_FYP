@@ -270,6 +270,7 @@ class TaskPage extends React.Component {
                             <th>Start</th>
                             <th>End</th>
                             <th>Status</th>
+                            <th>Tutor</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -287,6 +288,9 @@ class TaskPage extends React.Component {
                               <td>{slot.startTime}</td>
                               <td>{slot.endTime}</td>
                               <td>{slot.slotStatus}</td>
+                              <td>
+                                {slot.tutor.firstname} {slot.tutor.lastname}
+                              </td>
                             </tr>
                           ))}
                         </tbody>

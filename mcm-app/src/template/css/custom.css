@@ -150,6 +150,13 @@ ul.sidebar-menu li a i {
   background-color: #eceff1;
 }
 
+/* View Booking Slot - Booking Slot (Table) */
+
+.booking-slot-table > tbody > tr > th,
+.booking-slot-table > tbody > tr > td {
+  color: #212121;
+}
+
 /* Add Booking Slot - Option Select */
 
 .option-bold {
