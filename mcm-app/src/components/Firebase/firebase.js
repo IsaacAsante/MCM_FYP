@@ -164,6 +164,22 @@ class Firebase {
     return units[0]; // Return a single unit (by ID, so there's only one valid entry).
   };
 
+  getBooking = async (offeringID, taskID, bookingSlotID) => {
+    const bookingRef = this.db
+      .collection("unitofferings")
+      .doc(offeringID)
+      .collection("tasks")
+      .doc(taskID)
+      .collection("bookingslots")
+      .doc(bookingSlotID)
+      .collection("bookings");
+
+    const snapshot = await bookingRef.get();
+    let bookings = [];
+    snapshot.forEach((doc) => bookings.push(doc.data()));
+    return bookings[0]; // There will only ever be a single booking
+  };
+
   getBookingSlots = async (offeringID, taskID) => {
     const bookingSlotRef = this.db
       .collection("unitofferings")

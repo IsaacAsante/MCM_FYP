@@ -157,6 +157,14 @@ ul.sidebar-menu li a i {
   color: #212121;
 }
 
+.booking-slot-table > caption {
+  background-color: #212121;
+  color: #fff;
+  font-weight: bold;
+  padding-left: 0.5em;
+  padding-right: 1em;
+}
+
 /* Add Booking Slot - Option Select */
 
 .option-bold {

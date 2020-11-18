@@ -5,6 +5,8 @@ const INITIAL_STATE = {
   allocated: false,
   allocateMessage: "Allocate Yourself",
   authUser: null,
+  booking: null,
+  bookingError: false,
   loadTask: false,
   offeringID: null,
   semester: null,
@@ -126,6 +128,25 @@ class BookingSlotPage extends React.Component {
                     });
                 }
               });
+
+            await this.props.firebase
+              .getBooking(
+                this.state.offeringID,
+                this.state.taskID,
+                this.state.slotID
+              )
+              .then((booking) => {
+                if (booking !== undefined) {
+                  console.log("Booking found:", booking);
+                  this.setState({ bookingError: null, booking });
+                } else {
+                  this.setState({ bookingError: false, booking: null });
+                }
+              })
+              .catch((err) => {
+                this.setState({ bookingError: true, booking: null });
+                console.error(err);
+              });
             // console.log(this.state);
           } else {
             this.setState({
@@ -164,13 +185,13 @@ class BookingSlotPage extends React.Component {
     const {
       allocated,
       allocateMessage,
-      authUser,
+      booking,
+      bookingError,
       loadTask,
       semester,
       semesterError,
       slot,
       slotError,
-      slotID,
       task,
       taskError,
       unit,
@@ -236,23 +257,13 @@ class BookingSlotPage extends React.Component {
               </div>
 
               <div className="row">
-                <div className="col-sm-12">
-                  <button
-                    className="btn btn-theme"
-                    onClick={this.createBooking}
-                  >
-                    Create Booking
-                  </button>
-                </div>
-              </div>
-
-              <div className="row mt">
                 <div className="col-sm-12 col-md-8">
                   {semester && task && unit ? (
                     slot ? (
                       <div className="row">
                         <div className="col-sm-12">
-                          <table class="table table-bordered table-condensed booking-slot-table">
+                          <table className="table table-bordered table-condensed booking-slot-table">
+                            <caption>Booking slot details</caption>
                             <tbody>
                               <tr>
                                 <th>Date/Time:</th>
@@ -266,6 +277,20 @@ class BookingSlotPage extends React.Component {
                                 <th>End:</th>
                                 <td>{slot.endTime}</td>
                               </tr>
+                              <tr>
+                                <th>Location:</th>
+                                <td>{slot.location}</td>
+                              </tr>
+                              <tr>
+                                <th>Tutor:</th>
+                                <td>
+                                  {slot.tutor.firstname} {slot.tutor.lastname}
+                                </td>
+                              </tr>
+                              <tr>
+                                <th>Status:</th>
+                                <td>{slot.slotStatus}</td>
+                              </tr>
                             </tbody>
                           </table>
                         </div>
@@ -273,12 +298,16 @@ class BookingSlotPage extends React.Component {
                     ) : (
                       slotError && (
                         <div className="alert alert-danger">
-                          <p>Something went wrong with that booking slot.</p>
+                          <p>
+                            <i className="fa fa-exclamation-circle mr-2"></i>
+                            Something went wrong with that booking slot.
+                          </p>
                         </div>
                       )
                     )
                   ) : taskError ? (
                     <div className="alert alert-danger">
+                      <i className="fa fa-exclamation-circle mr-2"></i>
                       <strong>Invalid task.</strong> The task ID from this
                       page's URL does not exist in the system.
                     </div>
@@ -289,9 +318,39 @@ class BookingSlotPage extends React.Component {
               </div>
 
               <div className="row mt">
+                <div className="col-sm-12 col-md-8">
+                  {booking ? (
+                    booking.subject
+                  ) : (
+                    <div className="alert alert-warning">
+                      <p>
+                        <i className="fa fa-exclamation-triangle mr-2"></i>This
+                        slot does not have any booking yet.
+                      </p>
+                    </div>
+                  )}
+                  {/* If the retrieval of bookings was unsuccessful */}
+                  {bookingError && (
+                    <div className="alert alert-error">
+                      <p>
+                        Something went wrong with retrieving the booking for
+                        this slot. Please retry later.
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </div>
+              <div className="row mt">
                 <div className="col-sm-12">
                   <button
-                    className="btn btn-danger"
+                    className="btn btn-theme"
+                    onClick={this.createBooking}
+                  >
+                    Create Booking
+                  </button>
+
+                  <button
+                    className="btn btn-danger ml-1"
                     onClick={this.backToOffering}
                   >
                     Go Back
