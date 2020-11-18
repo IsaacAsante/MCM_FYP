@@ -256,6 +256,8 @@ class AddNewBookingPage extends React.Component {
             <AddNewBookingForm
               unitoffering={this.state.offeringID}
               task={this.state.taskID}
+              slot={this.state.slot}
+              user={this.state.authUser}
             />
           </section>
         </section>

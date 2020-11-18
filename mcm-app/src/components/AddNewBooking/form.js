@@ -1,5 +1,4 @@
 import React from "react";
-import DatePicker from "react-datepicker";
 import { withRouter } from "react-router-dom";
 import { compose } from "recompose";
 import { withFirebase } from "../Firebase";
@@ -12,7 +11,12 @@ const AddNewBookingForm = (props) => (
           <h4>
             <i className="fa fa-angle-right"></i> Add Booking Details
           </h4>
-          <BookingForm unitoffering={props.unitoffering} task={props.task} />
+          <BookingForm
+            unitoffering={props.unitoffering}
+            task={props.task}
+            slot={props.slot}
+            user={props.user}
+          />
         </div>
       </div>
     </div>
@@ -20,6 +24,7 @@ const AddNewBookingForm = (props) => (
 );
 
 const INITIAL_STATE = {
+  comments: "",
   subject: "",
   error: false,
   success: false,
@@ -31,13 +36,37 @@ class BookingFormBase extends React.Component {
     this.state = { ...INITIAL_STATE };
   }
 
+  componentDidUpdate(prevProps) {
+    // Capture the role of the user viewing the page.
+    // Tutors cannot add bookings. Only students can.
+    if (this.props.user !== prevProps.user) {
+      console.log(this.props.user.role);
+      this.setState({ userRole: this.props.user.role });
+    }
+  }
+
   onChange = (event) => {
     this.setState({ [event.target.name]: event.target.value });
   };
 
   onSubmit = (event) => {
+    console.log(this.props);
     event.preventDefault();
-    // Remember: Update the count for maxSubmissions in the Task document.
+    const bookingObj = {
+      location: this.props.slot.location,
+      subject: this.state.subject,
+      taskID: this.props.slot.taskID,
+      bookingSlotID: this.props.slot.id,
+      comments: this.state.comments,
+      bookingStatus: "Pending",
+      student: this.props.user,
+      tutor: {
+        id: this.props.slot.tutorID,
+        email: this.props.slot.tutorEmail,
+      },
+    };
+    console.log(bookingObj);
+    // TODO: Update the count for maxSubmissions in the Task document.
   };
 
   backToTask = (event) => {
@@ -48,8 +77,8 @@ class BookingFormBase extends React.Component {
   };
 
   render() {
-    const { subject, error, success } = this.state;
-    const isInvalid = subject == "";
+    const { comments, subject, error, success, userRole } = this.state;
+    const isInvalid = subject == "" || comments == "";
     return (
       <div className="row mt">
         <div className="col-sm-12 col-md-8">
@@ -61,6 +90,7 @@ class BookingFormBase extends React.Component {
                   name="subject"
                   value={subject}
                   onChange={this.onChange}
+                  maxLength="50"
                   type="text"
                   placeholder="e.g. Meeting for draft review"
                   className="form-control"
@@ -69,12 +99,15 @@ class BookingFormBase extends React.Component {
             </div>
 
             <div className="form-group">
-              <label className="col-sm-4 control-label">Extra Comments:</label>
+              <label className="col-sm-4 control-label">
+                Extra Comments (Optional):
+              </label>
               <div className="col-sm-8">
                 <textarea
-                  name="subject"
-                  value={subject}
+                  name="comments"
+                  value={comments}
                   onChange={this.onChange}
+                  maxLength="300"
                   className="form-control"
                 ></textarea>
               </div>
