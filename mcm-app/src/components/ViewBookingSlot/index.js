@@ -145,12 +145,12 @@ class BookingSlotPage extends React.Component {
                 this.state.taskID,
                 this.state.slotID
               )
-              .then((booking) => {
-                if (booking !== undefined) {
-                  console.log("Booking found:", booking);
-                  this.setState({ bookingError: null, booking });
+              .then((doc) => {
+                if (doc !== undefined) {
+                  this.setState({ bookingError: null, booking: doc });
+                  console.log("Booking found:", doc);
                 } else {
-                  this.setState({ bookingError: false, booking: null });
+                  this.setState({ bookingError: false, booking: undefined });
                 }
               })
               .catch((err) => {
@@ -330,15 +330,43 @@ class BookingSlotPage extends React.Component {
 
               <div className="row mt">
                 <div className="col-sm-12 col-md-8">
-                  {booking ? (
-                    booking.subject
-                  ) : (
+                  {booking === undefined && (
                     <div className="alert alert-warning">
                       <p>
                         <i className="fa fa-exclamation-triangle mr-2"></i>This
                         slot does not have any booking yet.
                       </p>
                     </div>
+                  )}
+                  {booking && (
+                    <table className="table table-bordered table-condensed booking-slot-table">
+                      <caption>Submitted Booking</caption>
+                      <tbody>
+                        <tr>
+                          <th>Subject:</th>
+                          <td>{booking.subject}</td>
+                        </tr>
+                        <tr>
+                          <th>Comment:</th>
+                          <td>{booking.comments}</td>
+                        </tr>
+                        <tr>
+                          <th>Student name:</th>
+                          <td>
+                            {booking.student.firstname}{" "}
+                            {booking.student.lastname}
+                          </td>
+                        </tr>
+                        <tr>
+                          <th>Student ID</th>
+                          <td>{booking.student.studentID}</td>
+                        </tr>
+                        <tr>
+                          <th>Status:</th>
+                          <td>{booking.bookingStatus}</td>
+                        </tr>
+                      </tbody>
+                    </table>
                   )}
                   {/* If the retrieval of bookings was unsuccessful */}
                   {bookingError && (
@@ -353,7 +381,8 @@ class BookingSlotPage extends React.Component {
               </div>
               <div className="row mt">
                 <div className="col-sm-12">
-                  {userRole == ROLES.STUDENT ? (
+                  {/* Give students the option to create bookings if there isn't any for the task in question */}
+                  {userRole == ROLES.STUDENT && booking === undefined ? (
                     <button
                       className="btn btn-theme"
                       onClick={this.createBooking}

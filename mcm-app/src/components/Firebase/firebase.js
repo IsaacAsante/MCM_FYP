@@ -320,19 +320,7 @@ class Firebase {
             .doc(taskID)
             .collection("bookingslots")
             .doc(bookingSlotID)
-            .update({ slotStatus: "In Review" })
-            .then(async () => {
-              // Increment the count of submission by the student in question
-              let studentID = bookingObj.student.studentID;
-              const final = await this.db
-                .collection("unitofferings")
-                .doc(offeringID)
-                .collection("tasks")
-                .doc(taskID)
-                .update({
-                  submissions: app.firestore.FieldValue.arrayUnion(studentID),
-                });
-            });
+            .update({ slotStatus: "In Review" });
         });
     }
   };
@@ -393,6 +381,19 @@ class Firebase {
     }
     console.log("Document added!");
     return res;
+  };
+
+  approveBooking = async (offeringID, taskID, bookingObj) => {
+    // TODO: hange status
+    let studentID = bookingObj.student.studentID;
+    const final = await this.db
+      .collection("unitofferings")
+      .doc(offeringID)
+      .collection("tasks")
+      .doc(taskID)
+      .update({
+        submissions: app.firestore.FieldValue.arrayUnion(studentID),
+      });
   };
 
   // Function to avoid overwriting documents (merge data instead)
