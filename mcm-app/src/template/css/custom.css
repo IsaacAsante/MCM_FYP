@@ -103,6 +103,32 @@ ul.sidebar-menu li a i {
   text-decoration: underline;
 }
 
+/* View Unit Offering - Tasks Table */
+
+.tasks-table > tbody > tr,
+.tasks-table > tbody > tr:active {
+  cursor: pointer;
+}
+
+.tasks-table > thead > tr > th,
+.tasks-table > tbody > tr > td {
+  font-size: 1.4rem;
+}
+
+.tasks-table > tbody > tr > td {
+  padding-bottom: 0.6em;
+  padding-top: 0.6em;
+}
+
+.tasks-table > tbody > tr > td,
+.tasks-table > tbody > tr > td a {
+  color: #212121;
+}
+
+.tasks-table > tbody > tr > td.task-name {
+  font-weight: bold;
+}
+
 /* Add New Task - Date Picker */
 
 .react-datepicker {

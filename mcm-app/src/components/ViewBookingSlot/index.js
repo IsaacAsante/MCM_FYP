@@ -274,7 +274,7 @@ class BookingSlotPage extends React.Component {
                       <div className="row">
                         <div className="col-sm-12">
                           <table className="table table-bordered table-condensed booking-slot-table">
-                            <caption>Booking slot details</caption>
+                            <caption>Booking Slot Details</caption>
                             <tbody>
                               <tr>
                                 <th>Date/Time:</th>
@@ -339,34 +339,38 @@ class BookingSlotPage extends React.Component {
                     </div>
                   )}
                   {booking && (
-                    <table className="table table-bordered table-condensed booking-slot-table">
-                      <caption>Submitted Booking</caption>
-                      <tbody>
-                        <tr>
-                          <th>Subject:</th>
-                          <td>{booking.subject}</td>
-                        </tr>
-                        <tr>
-                          <th>Comment:</th>
-                          <td>{booking.comments}</td>
-                        </tr>
-                        <tr>
-                          <th>Student name:</th>
-                          <td>
-                            {booking.student.firstname}{" "}
-                            {booking.student.lastname}
-                          </td>
-                        </tr>
-                        <tr>
-                          <th>Student ID</th>
-                          <td>{booking.student.studentID}</td>
-                        </tr>
-                        <tr>
-                          <th>Status:</th>
-                          <td>{booking.bookingStatus}</td>
-                        </tr>
-                      </tbody>
-                    </table>
+                    <div className="row">
+                      <div className="col-sm-12">
+                        <table className="table table-bordered table-condensed booking-slot-table">
+                          <caption>Submitted Booking Details</caption>
+                          <tbody>
+                            <tr>
+                              <th>Subject:</th>
+                              <td>{booking.subject}</td>
+                            </tr>
+                            <tr>
+                              <th>Comment:</th>
+                              <td>{booking.comments}</td>
+                            </tr>
+                            <tr>
+                              <th>Student name:</th>
+                              <td>
+                                {booking.student.firstname}{" "}
+                                {booking.student.lastname}
+                              </td>
+                            </tr>
+                            <tr>
+                              <th>Student ID</th>
+                              <td>{booking.student.studentID}</td>
+                            </tr>
+                            <tr>
+                              <th>Status:</th>
+                              <td>{booking.bookingStatus}</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
                   )}
                   {/* If the retrieval of bookings was unsuccessful */}
                   {bookingError && (

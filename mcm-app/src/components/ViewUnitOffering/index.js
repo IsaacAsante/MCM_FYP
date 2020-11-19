@@ -143,6 +143,12 @@ class UnitOfferingPage extends React.Component {
     );
   };
 
+  goToTask = (taskID) => {
+    this.props.history.push(
+      `/unit-offerings/${this.state.offeringID}/tasks/${taskID}`
+    );
+  };
+
   render() {
     const {
       allocated,
@@ -210,32 +216,27 @@ class UnitOfferingPage extends React.Component {
             {/* Show the tasks from the DB */}
             <div className="row">
               <div className="col-md-12">
-                <div className="content-panel">
-                  <table className="table">
-                    <thead>
-                      <tr>
-                        <th>Task Name</th>
-                        <th>Deadline</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {this.state.tasks
-                        ? this.state.tasks.map((doc) => (
-                            <tr key={doc.id}>
-                              <td>
-                                <Link
-                                  to={`/unit-offerings/${this.state.offeringID}/tasks/${doc.id}`}
-                                >
-                                  {doc.name}
-                                </Link>
-                              </td>
-                              <td>{doc.deadline.seconds}</td>
-                            </tr>
-                          ))
-                        : " "}
-                    </tbody>
-                  </table>
-                </div>
+                <table className="table table-bordered table-striped table-condensed slots-table tasks-table">
+                  <thead>
+                    <tr>
+                      <th>Task Name</th>
+                      <th>Deadline</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {this.state.tasks
+                      ? this.state.tasks.map((doc) => (
+                          <tr
+                            key={doc.id}
+                            onClick={() => this.goToTask(doc.id)}
+                          >
+                            <td className="task-name">{doc.name}</td>
+                            <td>{doc.deadline.seconds}</td>
+                          </tr>
+                        ))
+                      : " "}
+                  </tbody>
+                </table>
               </div>
             </div>
 
