@@ -62,21 +62,22 @@ class BookingFormBase extends React.Component {
       offeringID: this.props.unitoffering,
     };
     console.log(bookingObj);
+    this.setState({ success: true, error: false });
     // Add the booking to the DB
-    await this.props.firebase
-      .addBookingToDB(
-        this.props.unitoffering,
-        this.props.slot.taskID,
-        this.props.slot.id,
-        bookingObj
-      )
-      .then(() => {
-        this.setState({ success: true, error: false });
-      })
-      .catch((err) => {
-        console.error(err);
-        this.setState({ error: true, success: false });
-      });
+    // await this.props.firebase
+    //   .addBookingToDB(
+    //     this.props.unitoffering,
+    //     this.props.slot.taskID,
+    //     this.props.slot.id,
+    //     bookingObj
+    //   )
+    //   .then(() => {
+    //     this.setState({ success: true, error: false });
+    //   })
+    //   .catch((err) => {
+    //     console.error(err);
+    //     this.setState({ error: true, success: false });
+    //   });
     // // TODO: Update the count for maxSubmissions in the Task document.
   };
 
@@ -93,52 +94,56 @@ class BookingFormBase extends React.Component {
     return (
       <div className="row mt">
         <div className="col-sm-12 col-md-8">
-          <form
-            onSubmit={this.onSubmit}
-            className="form-horizontal style-form"
-            autoComplete="off"
-          >
-            <div className="form-group">
-              <label className="col-sm-4 control-label">Subject</label>
-              <div className="col-sm-8">
-                <input
-                  name="subject"
-                  value={subject}
-                  onChange={this.onChange}
-                  maxLength="50"
-                  type="text"
-                  placeholder="e.g. Meeting for draft review"
-                  className="form-control"
-                />
-              </div>
-            </div>
-
-            <div className="form-group">
-              <label className="col-sm-4 control-label">
-                Extra Comments (Optional):
-              </label>
-              <div className="col-sm-8">
-                <textarea
-                  name="comments"
-                  value={comments}
-                  onChange={this.onChange}
-                  maxLength="300"
-                  className="form-control"
-                ></textarea>
-              </div>
-            </div>
-
-            <button
-              disabled={isInvalid}
-              type="submit"
-              className="btn btn-theme"
+          {success ? (
+            ""
+          ) : (
+            <form
+              onSubmit={this.onSubmit}
+              className="form-horizontal style-form"
+              autoComplete="off"
             >
-              Submit Booking
-            </button>
-            <button className="btn btn-danger ml-1" onClick={this.backToTask}>
-              Cancel
-            </button>
-          </form>
+              <div className="form-group">
+                <label className="col-sm-4 control-label">Subject</label>
+                <div className="col-sm-8">
+                  <input
+                    name="subject"
+                    value={subject}
+                    onChange={this.onChange}
+                    maxLength="50"
+                    type="text"
+                    placeholder="e.g. Meeting for draft review"
+                    className="form-control"
+                  />
+                </div>
+              </div>
+
+              <div className="form-group">
+                <label className="col-sm-4 control-label">
+                  Extra Comments (Optional):
+                </label>
+                <div className="col-sm-8">
+                  <textarea
+                    name="comments"
+                    value={comments}
+                    onChange={this.onChange}
+                    maxLength="300"
+                    className="form-control"
+                  ></textarea>
+                </div>
+              </div>
+
+              <button
+                disabled={isInvalid}
+                type="submit"
+                className="btn btn-theme"
+              >
+                Submit Booking
+              </button>
+              <button className="btn btn-danger ml-1" onClick={this.backToTask}>
+                Cancel
+              </button>
+            </form>
+          )}
           {!success ? (
             error ? (
               <div className="alert alert-danger mt">
@@ -152,6 +157,18 @@ class BookingFormBase extends React.Component {
           ) : (
             <div className="alert alert-success mt">
               <span>Booking created successfully.</span>
+            </div>
+          )}
+          {success && (
+            <div className="row mt">
+              <div className="col-sm-12">
+                <button
+                  className="btn btn-danger ml-1"
+                  onClick={this.backToTask}
+                >
+                  Go Back
+                </button>
+              </div>
             </div>
           )}
         </div>
