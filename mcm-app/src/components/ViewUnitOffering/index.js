@@ -2,6 +2,8 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { withAuthorization } from "../Session";
 
+import * as ROLES from "../../constants/roles";
+
 const INITIAL_STATE = {
   allocated: false,
   allocateMessage: "Allocate Yourself",
@@ -12,6 +14,7 @@ const INITIAL_STATE = {
   tasks: [],
   unit: null,
   unitError: null,
+  userRole: null,
 };
 
 class UnitOfferingPage extends React.Component {
@@ -38,6 +41,14 @@ class UnitOfferingPage extends React.Component {
           }
         }
       });
+
+      // Verify the privileges of the currently logged-in user to hide the 'Create Booking Slot' button
+      // Easy trick is to verify if the email address contains 'students'.
+      if (authUser.email.search("students") == -1) {
+        this.setState({ userRole: ROLES.TUTOR });
+      } else {
+        this.setState({ userRole: ROLES.STUDENT });
+      }
     });
 
     // Get the offering's unit
@@ -159,6 +170,7 @@ class UnitOfferingPage extends React.Component {
       tasks,
       unit,
       unitError,
+      userRole,
     } = this.state;
     const invalid =
       semesterError ==
@@ -189,7 +201,7 @@ class UnitOfferingPage extends React.Component {
             {/* If invalid - Show the buttons */}
             {invalid ? (
               " "
-            ) : (
+            ) : userRole === ROLES.TUTOR ? (
               <div className="row mt">
                 <div className="col-sm-12">
                   <button className="btn btn-theme" onClick={this.goToAddTask}>
@@ -205,6 +217,8 @@ class UnitOfferingPage extends React.Component {
                   </button>
                 </div>
               </div>
+            ) : (
+              ""
             )}
             <div className="row mt">
               <div className="col-sm-12">
@@ -242,7 +256,7 @@ class UnitOfferingPage extends React.Component {
 
             {invalid ? (
               ""
-            ) : (
+            ) : userRole === ROLES.TUTOR ? (
               <div className="row">
                 <div className="col-sm-12">
                   <hr />
@@ -254,6 +268,8 @@ class UnitOfferingPage extends React.Component {
                   </button>
                 </div>
               </div>
+            ) : (
+              ""
             )}
             {/* If invalid - Show the error messages*/}
             {invalid ? <h2>{invalid && "Invalid Unit Offering"}</h2> : " "}
