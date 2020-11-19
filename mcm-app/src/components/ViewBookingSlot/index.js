@@ -1,6 +1,8 @@
 import React from "react";
 import { withAuthorization } from "../Session";
 
+import * as ROLES from "../../constants/roles";
+
 const INITIAL_STATE = {
   allocated: false,
   allocateMessage: "Allocate Yourself",
@@ -19,6 +21,7 @@ const INITIAL_STATE = {
   taskID: null,
   unit: null,
   unitError: null,
+  userRole: null,
 };
 
 const DAYS = {
@@ -59,6 +62,13 @@ class BookingSlotPage extends React.Component {
             }
           }
         });
+        // Verify the privileges of the currently logged-in user to hide the 'Create Booking Slot' button
+        // Easy trick is to verify if the email address contains 'students'.
+        if (authUser.email.search("students") == -1) {
+          this.setState({ userRole: ROLES.TUTOR });
+        } else {
+          this.setState({ userRole: ROLES.STUDENT });
+        }
       });
 
       // Get the offering's unit
@@ -196,6 +206,7 @@ class BookingSlotPage extends React.Component {
       taskError,
       unit,
       unitError,
+      userRole,
     } = this.state;
     const invalid =
       semesterError ==
@@ -342,12 +353,16 @@ class BookingSlotPage extends React.Component {
               </div>
               <div className="row mt">
                 <div className="col-sm-12">
-                  <button
-                    className="btn btn-theme"
-                    onClick={this.createBooking}
-                  >
-                    Create Booking
-                  </button>
+                  {userRole == ROLES.STUDENT ? (
+                    <button
+                      className="btn btn-theme"
+                      onClick={this.createBooking}
+                    >
+                      Create Booking
+                    </button>
+                  ) : (
+                    ""
+                  )}
 
                   <button
                     className="btn btn-danger ml-1"
