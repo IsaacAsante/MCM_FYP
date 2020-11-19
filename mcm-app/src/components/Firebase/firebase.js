@@ -288,6 +288,43 @@ class Firebase {
     return docData;
   };
 
+  addBookingToDB = async (offeringID, taskID, bookingSlotID, bookingObj) => {
+    const bookingsRef = this.db
+      .collection("unitofferings")
+      .doc(offeringID)
+      .collection("tasks")
+      .doc(taskID)
+      .collection("bookingslots")
+      .doc(bookingSlotID)
+      .collection("bookings");
+
+    const res = await bookingsRef.add(bookingObj);
+    if (res) {
+      // Add the booking's UID to the doc
+      const doc = await bookingsRef
+        .doc(res.id)
+        .set({ id: res.id }, { merge: true });
+      // Update the booking object's ID for the next operations
+      bookingObj["id"] = res.id;
+      // Sync doc in the bookinglogs collection
+      const confirmed = await this.db
+        .collection("bookinglogs")
+        .doc(res.id)
+        .set(bookingObj)
+        .then(async () => {
+          // Finalize the step by updating the status of the relevant booking slot
+          const final = await this.db
+            .collection("unitofferings")
+            .doc(offeringID)
+            .collection("tasks")
+            .doc(taskID)
+            .collection("bookingslots")
+            .doc(bookingSlotID)
+            .update({ slotStatus: "In Review" });
+        });
+    }
+  };
+
   addBookingSlot = async (offeringID, taskID, bookingSlotObj) => {
     const res = await this.db
       .collection("unitofferings")

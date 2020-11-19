@@ -49,24 +49,35 @@ class BookingFormBase extends React.Component {
     this.setState({ [event.target.name]: event.target.value });
   };
 
-  onSubmit = (event) => {
-    console.log(this.props);
+  onSubmit = async (event) => {
     event.preventDefault();
     const bookingObj = {
       location: this.props.slot.location,
       subject: this.state.subject,
       taskID: this.props.slot.taskID,
-      bookingSlotID: this.props.slot.id,
       comments: this.state.comments,
-      bookingStatus: "Pending",
+      bookingStatus: "In Review", // Any new booking should be reviewed.
+      bookingSlot: this.props.slot,
       student: this.props.user,
-      tutor: {
-        id: this.props.slot.tutorID,
-        email: this.props.slot.tutorEmail,
-      },
+      offeringID: this.props.unitoffering,
     };
     console.log(bookingObj);
-    // TODO: Update the count for maxSubmissions in the Task document.
+    // Add the booking to the DB
+    await this.props.firebase
+      .addBookingToDB(
+        this.props.unitoffering,
+        this.props.slot.taskID,
+        this.props.slot.id,
+        bookingObj
+      )
+      .then(() => {
+        this.setState({ success: true, error: false });
+      })
+      .catch((err) => {
+        console.error(err);
+        this.setState({ error: true, success: false });
+      });
+    // // TODO: Update the count for maxSubmissions in the Task document.
   };
 
   backToTask = (event) => {
@@ -82,7 +93,11 @@ class BookingFormBase extends React.Component {
     return (
       <div className="row mt">
         <div className="col-sm-12 col-md-8">
-          <form onSubmit={this.onSubmit} className="form-horizontal style-form">
+          <form
+            onSubmit={this.onSubmit}
+            className="form-horizontal style-form"
+            autoComplete="off"
+          >
             <div className="form-group">
               <label className="col-sm-4 control-label">Subject</label>
               <div className="col-sm-8">
