@@ -312,15 +312,27 @@ class Firebase {
         .doc(res.id)
         .set(bookingObj)
         .then(async () => {
-          // Finalize the step by updating the status of the relevant booking slot
-          const final = await this.db
+          // Update the status of the relevant booking slot
+          const next = await this.db
             .collection("unitofferings")
             .doc(offeringID)
             .collection("tasks")
             .doc(taskID)
             .collection("bookingslots")
             .doc(bookingSlotID)
-            .update({ slotStatus: "In Review" });
+            .update({ slotStatus: "In Review" })
+            .then(async () => {
+              // Increment the count of submission by the student in question
+              let studentID = bookingObj.student.studentID;
+              const final = await this.db
+                .collection("unitofferings")
+                .doc(offeringID)
+                .collection("tasks")
+                .doc(taskID)
+                .update({
+                  submissions: app.firestore.FieldValue.arrayUnion(studentID),
+                });
+            });
         });
     }
   };

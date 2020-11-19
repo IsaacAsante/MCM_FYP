@@ -64,20 +64,20 @@ class BookingFormBase extends React.Component {
     console.log(bookingObj);
     this.setState({ success: true, error: false });
     // Add the booking to the DB
-    // await this.props.firebase
-    //   .addBookingToDB(
-    //     this.props.unitoffering,
-    //     this.props.slot.taskID,
-    //     this.props.slot.id,
-    //     bookingObj
-    //   )
-    //   .then(() => {
-    //     this.setState({ success: true, error: false });
-    //   })
-    //   .catch((err) => {
-    //     console.error(err);
-    //     this.setState({ error: true, success: false });
-    //   });
+    await this.props.firebase
+      .addBookingToDB(
+        this.props.unitoffering,
+        this.props.slot.taskID,
+        this.props.slot.id,
+        bookingObj
+      )
+      .then(() => {
+        this.setState({ success: true, error: false });
+      })
+      .catch((err) => {
+        console.error(err);
+        this.setState({ error: true, success: false });
+      });
     // // TODO: Update the count for maxSubmissions in the Task document.
   };
 
