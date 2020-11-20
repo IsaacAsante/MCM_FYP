@@ -1,7 +1,7 @@
 import React from "react";
 import { withAuthorization } from "../Session";
 
-import * as ROUTES from "../../constants/routes";
+import * as ROLES from "../../constants/roles";
 
 const INITIAL_STATE = {
   allocated: false,
@@ -18,6 +18,7 @@ const INITIAL_STATE = {
   taskID: null,
   unit: null,
   unitError: null,
+  userRole: null,
 };
 
 const DAYS = {
@@ -57,6 +58,12 @@ class TaskPage extends React.Component {
             }
           }
         });
+        // Verify the privileges of the currently logged-in user
+        if (authUser.email.search("students") == -1) {
+          this.setState({ userRole: ROLES.TUTOR });
+        } else {
+          this.setState({ userRole: ROLES.STUDENT });
+        }
       });
 
       // Get the offering's unit
@@ -191,6 +198,7 @@ class TaskPage extends React.Component {
       taskError,
       unit,
       unitError,
+      userRole,
     } = this.state;
     const invalid =
       semesterError ==
@@ -251,13 +259,15 @@ class TaskPage extends React.Component {
                 </div>
               </div>
 
-              <div className="row">
-                <div className="col-sm-12">
-                  <button className="btn btn-theme" onClick={this.addSlot}>
-                    Add Booking Slot
-                  </button>
+              {userRole === ROLES.TUTOR && (
+                <div className="row">
+                  <div className="col-sm-12">
+                    <button className="btn btn-theme" onClick={this.addSlot}>
+                      Add Booking Slot
+                    </button>
+                  </div>
                 </div>
-              </div>
+              )}
 
               <div className="row mt">
                 <div className="col-sm-12">

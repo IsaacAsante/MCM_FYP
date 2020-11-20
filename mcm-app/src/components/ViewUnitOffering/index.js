@@ -42,8 +42,7 @@ class UnitOfferingPage extends React.Component {
         }
       });
 
-      // Verify the privileges of the currently logged-in user to hide the 'Create Booking Slot' button
-      // Easy trick is to verify if the email address contains 'students'.
+      // Verify the privileges of the currently logged-in user
       if (authUser.email.search("students") == -1) {
         this.setState({ userRole: ROLES.TUTOR });
       } else {
