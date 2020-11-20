@@ -79,7 +79,7 @@ class AddSemesterFormBase extends Component {
                 year: "",
                 type: "",
                 error: null,
-                success: "Semester successfully created.",
+                success: true,
               });
               // this.props.history.push(ROUTES.DASHBOARD);
             })
@@ -109,7 +109,11 @@ class AddSemesterFormBase extends Component {
     const isInvalid = number === "" || year === "" || type === "";
 
     return (
-      <form onSubmit={this.onSubmit} className="form-horizontal style-form">
+      <form
+        onSubmit={this.onSubmit}
+        className="form-horizontal style-form"
+        autoComplete="off"
+      >
         <div className="form-group">
           <label className="col-sm-2 col-sm-2 control-label">
             Semester Number
@@ -166,8 +170,12 @@ class AddSemesterFormBase extends Component {
         </button>
         <div className="form-group has-error">
           <div className="col-lg-10">
-            <p className="help-block">{error}</p>
-            <p className="text-success">{success}</p>
+            {error && <div className="alert alert-danger mt">{error}</div>}
+            {success && (
+              <div className="alert alert-success mt">
+                <span>Semester created successfully.</span>
+              </div>
+            )}
           </div>
         </div>
       </form>

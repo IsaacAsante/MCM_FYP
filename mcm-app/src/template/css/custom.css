@@ -159,8 +159,7 @@ ul.sidebar-menu li a i {
   padding: 0.8em 0.75em;
 }
 
-.table.slots-table .row-bold td,
-.table.slots-table .row-fade td {
+.table.slots-table td {
   padding: 1em 0.75em;
   cursor: pointer;
 }

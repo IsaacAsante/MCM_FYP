@@ -290,7 +290,9 @@ class TaskPage extends React.Component {
                               className={
                                 slot.slotStatus == "Available"
                                   ? "row-bold"
-                                  : "row-fade"
+                                  : slot.slotStatus == "Taken"
+                                  ? "row-fade"
+                                  : ""
                               }
                               onClick={() => this.goToBookingSlot(slot.id)}
                             >

@@ -28,6 +28,7 @@ const AddUnitPage = () => (
 const INITIAL_STATE = {
   unitCode: "",
   unitName: "",
+  success: null,
   error: null,
 };
 
@@ -54,13 +55,12 @@ class AddUnitFormBase extends Component {
         } else {
           this.props.firebase.addData("units", unitData).then((res) => {
             this.setState({ ...INITIAL_STATE });
-            // console.log("Unit: ", `${ROUTES.UNITS}/${unitData.unitCode}`);
-            // this.props.history.push(`${ROUTES.UNITS}/${unitData.unitCode}`);
+            this.setState({ error: false, success: true });
           });
         }
       })
       .catch((error) => {
-        this.setState({ error });
+        this.setState({ error, success: false });
       });
   };
 
@@ -75,7 +75,11 @@ class AddUnitFormBase extends Component {
     const isInvalid = unitCode === "" || unitName === "";
 
     return (
-      <form onSubmit={this.onSubmit} className="form-horizontal style-form">
+      <form
+        onSubmit={this.onSubmit}
+        className="form-horizontal style-form"
+        autoComplete="off"
+      >
         <div className="form-group">
           <label className="col-sm-2 col-sm-2 control-label">Unit Code</label>
           <div className="col-sm-10">
@@ -105,11 +109,17 @@ class AddUnitFormBase extends Component {
         <button disabled={isInvalid} type="submit" className="btn btn-theme">
           Add Unit
         </button>
-        <div className="form-group has-error">
-          <div className="col-lg-10">
-            <p className="help-block">{error}</p>
+        {success ? (
+          <div className="alert alert-success mt">
+            <span>Unit created successfully.</span>
           </div>
-        </div>
+        ) : error ? (
+          <div className="alert alert-danger mt">
+            <span>Something went wrong. Please retry later.</span>
+          </div>
+        ) : (
+          ""
+        )}
       </form>
     );
   }
