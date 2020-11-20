@@ -6,6 +6,8 @@ import * as ROLES from "../../constants/roles";
 const INITIAL_STATE = {
   allocated: false,
   allocateMessage: "Allocate Yourself",
+  actionSuccessful: false,
+  actionError: false,
   authUser: null,
   booking: null,
   bookingError: false,
@@ -172,6 +174,21 @@ class BookingSlotPage extends React.Component {
     }
   }
 
+  approveBooking = async () => {
+    await this.props.firebase
+      .approveBooking(
+        this.state.offeringID,
+        this.state.taskID,
+        this.state.booking
+      )
+      .then(() => {
+        this.setState({ actionSuccessful: true, actionError: false });
+      })
+      .catch((err) => {
+        this.setState({ actionSuccessful: false, actionError: true });
+      });
+  };
+
   backToOffering = (event) => {
     event.preventDefault();
     this.props.history.push(`/unit-offerings/${this.state.offeringID}`);
@@ -195,6 +212,8 @@ class BookingSlotPage extends React.Component {
     const {
       allocated,
       allocateMessage,
+      actionSuccessful,
+      actionError,
       booking,
       bookingError,
       loadTask,
@@ -373,20 +392,22 @@ class BookingSlotPage extends React.Component {
                     </div>
                   )}
 
-                  {booking && (
+                  {booking && !actionSuccessful && !actionError ? (
                     <div className="row booking-actions mt">
                       <div className="col-sm-6 col-md-4">
-                        <p className="action">
-                          <i class="fa fa-check mr-2"></i>
+                        <p className="action" onClick={this.approveBooking}>
+                          <i className="fa fa-check mr-2"></i>
                           Approve Booking
                         </p>
                       </div>
                       <div className="col-sm-6 col-md-4">
                         <p className="action">
-                          <i class="fa fa-times mr-2"></i> Reject Booking
+                          <i className="fa fa-times mr-2"></i> Reject Booking
                         </p>
                       </div>
                     </div>
+                  ) : (
+                    ""
                   )}
                   {/* If the retrieval of bookings was unsuccessful */}
                   {bookingError && (

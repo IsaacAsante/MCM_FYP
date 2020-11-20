@@ -385,14 +385,47 @@ class Firebase {
 
   approveBooking = async (offeringID, taskID, bookingObj) => {
     // TODO: hange status
-    let studentID = bookingObj.student.studentID;
-    const final = await this.db
+    bookingObj.bookingSlot.slotStatus = "Taken";
+    bookingObj.bookingStatus = "Approved";
+    const taskRef = this.db
       .collection("unitofferings")
       .doc(offeringID)
       .collection("tasks")
-      .doc(taskID)
-      .update({
-        submissions: app.firestore.FieldValue.arrayUnion(studentID),
+      .doc(taskID);
+    const step_two = await taskRef
+      .collection("bookingslots")
+      .doc(bookingObj.bookingSlot.id)
+      .update({ slotStatus: "Taken" })
+      .then(async () => {
+        const step_three = await taskRef
+          .collection("bookingslots")
+          .doc(bookingObj.bookingSlot.id)
+          .collection("bookings")
+          .doc(bookingObj.id)
+          .update({
+            bookingStatus: "Approved",
+            "bookingSlot.slotStatus": "Taken",
+          })
+          .then(async () => {
+            const step_two = await this.db
+              .collection("bookinglogs")
+              .doc(bookingObj.id)
+              .update({
+                bookingStatus: "Approved",
+                "bookingSlot.slotStatus": "Taken",
+              })
+              .then(async () => {
+                let studentID = bookingObj.student.studentID;
+                const final = await this.db
+                  .collection("unitofferings")
+                  .doc(offeringID)
+                  .collection("tasks")
+                  .doc(taskID)
+                  .update({
+                    submissions: app.firestore.FieldValue.arrayUnion(studentID), // Note the approved submission on the task document
+                  });
+              });
+          });
       });
   };
 
