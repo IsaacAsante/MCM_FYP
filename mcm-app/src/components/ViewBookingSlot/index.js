@@ -372,6 +372,22 @@ class BookingSlotPage extends React.Component {
                       </div>
                     </div>
                   )}
+
+                  {booking && (
+                    <div className="row booking-actions mt">
+                      <div className="col-sm-6 col-md-4">
+                        <p className="action">
+                          <i class="fa fa-check mr-2"></i>
+                          Approve Booking
+                        </p>
+                      </div>
+                      <div className="col-sm-6 col-md-4">
+                        <p className="action">
+                          <i class="fa fa-times mr-2"></i> Reject Booking
+                        </p>
+                      </div>
+                    </div>
+                  )}
                   {/* If the retrieval of bookings was unsuccessful */}
                   {bookingError && (
                     <div className="alert alert-error">

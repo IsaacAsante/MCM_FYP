@@ -116,8 +116,10 @@ ul.sidebar-menu li a i {
 }
 
 .tasks-table > tbody > tr > td {
-  padding-bottom: 0.6em;
-  padding-top: 0.6em;
+  padding-bottom: 0.7em;
+  padding-top: 0.7em;
+  padding-left: 0.7em;
+  padding-right: 1em;
 }
 
 .tasks-table > tbody > tr > td,
@@ -189,6 +191,16 @@ ul.sidebar-menu li a i {
   font-weight: bold;
   padding-left: 0.5em;
   padding-right: 1em;
+}
+
+/* View Booking Slot - Actions */
+
+.booking-actions .action {
+  color: #212121;
+  font-size: 1.5em;
+  font-weight: bold;
+  padding-bottom: 0.25em;
+  padding-top: 0.25em;
 }
 
 /* Add Booking Slot - Option Select */
