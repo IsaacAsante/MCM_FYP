@@ -392,20 +392,26 @@ class BookingSlotPage extends React.Component {
                     </div>
                   )}
 
-                  {booking && !actionSuccessful && !actionError ? (
-                    <div className="row booking-actions mt">
-                      <div className="col-sm-6 col-md-4">
-                        <p className="action" onClick={this.approveBooking}>
-                          <i className="fa fa-check mr-2"></i>
-                          Approve Booking
-                        </p>
+                  {userRole === ROLES.TUTOR ? (
+                    booking && !actionSuccessful && !actionError ? (
+                      <div className="row booking-actions mt">
+                        {booking.bookingStatus !== "Approved" && (
+                          <div className="col-sm-6 col-md-4">
+                            <p className="action" onClick={this.approveBooking}>
+                              <i className="fa fa-check mr-2"></i>
+                              Approve Booking
+                            </p>
+                          </div>
+                        )}
+                        <div className="col-sm-6 col-md-4">
+                          <p className="action">
+                            <i className="fa fa-times mr-2"></i> Reject Booking
+                          </p>
+                        </div>
                       </div>
-                      <div className="col-sm-6 col-md-4">
-                        <p className="action">
-                          <i className="fa fa-times mr-2"></i> Reject Booking
-                        </p>
-                      </div>
-                    </div>
+                    ) : (
+                      ""
+                    )
                   ) : (
                     ""
                   )}

@@ -197,10 +197,19 @@ ul.sidebar-menu li a i {
 
 .booking-actions .action {
   color: #212121;
+  cursor: pointer;
   font-size: 1.5em;
   font-weight: bold;
   padding-bottom: 0.25em;
   padding-top: 0.25em;
+}
+
+.booking-actions .action:hover {
+  color: #4ecdc4;
+}
+
+.booking-actions .action:active {
+  color: #d9534f;
 }
 
 /* Add Booking Slot - Option Select */
