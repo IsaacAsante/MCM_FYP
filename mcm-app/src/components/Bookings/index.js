@@ -122,13 +122,18 @@ class BookingsPage extends React.Component {
                             <th>Start</th>
                             <th>End</th>
                             <th>Status</th>
-                            <th>Student</th>
+                            {userRole == ROLES.TUTOR ? (
+                              <th>Student</th>
+                            ) : (
+                              <th>Tutor</th>
+                            )}
                           </tr>
                         </thead>
                         <tbody>
                           {bookings.map(
                             (booking) =>
-                              booking.bookingSlot.tutorID == authUser.uid && (
+                              (booking.bookingSlot.tutorID == authUser.uid ||
+                                booking.student.uid == authUser.uid) && (
                                 <tr
                                   key={booking.bookingSlot.id}
                                   onClick={() =>
@@ -147,7 +152,17 @@ class BookingsPage extends React.Component {
                                   <td>{booking.bookingSlot.startTime}</td>
                                   <td>{booking.bookingSlot.endTime}</td>
                                   <td>{booking.bookingStatus}</td>
-                                  <td>{booking.student.firstname}</td>
+                                  {userRole == ROLES.TUTOR ? (
+                                    <td>
+                                      {booking.student.firstname}{" "}
+                                      {booking.student.lastname}
+                                    </td>
+                                  ) : (
+                                    <td>
+                                      {booking.bookingSlot.tutor.firstname}{" "}
+                                      {booking.bookingSlot.tutor.lastname}
+                                    </td>
+                                  )}
                                 </tr>
                               )
                           )}
