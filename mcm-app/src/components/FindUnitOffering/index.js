@@ -153,7 +153,7 @@ class FindOfferingPage extends React.Component {
 
                       {message != "" ? (
                         <div>
-                          <div class="alert alert-info">
+                          <div class="alert alert-warning">
                             <b>No unit offering was found.</b> Try creating one
                             now by clicking on the button below.
                           </div>

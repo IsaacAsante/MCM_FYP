@@ -744,104 +744,109 @@ class AddLabGroupPage extends React.Component {
                 </div>
               </div>
 
-              <div className="row mt">
-                <div className="col-sm-12">
-                  <div className="alert alert-warning">
-                    <h4>How to import Lab data</h4>
-                    <hr />
-                    <p className="mt">
-                      <strong>
-                        <strong>Step 1:</strong>{" "}
-                      </strong>
-                    </p>
-                    <p>
-                      <strong>
-                        <a
-                          target="_blank"
-                          href="https://drive.google.com/file/d/1cgY1ZdYQJvvn6RQuFIW1ZYZKb8zvJNVN/view?usp=sharing"
-                        >
-                          Click to Download
-                        </a>
-                      </strong>{" "}
-                      the Excel guide to follow along the steps below
-                    </p>
-                    <hr />
-                    <p className="mt">
-                      <strong>Step 2:</strong>
-                    </p>
-                    <p className="mt">
-                      Edit the lab guide you have downloaded and create as many
-                      sheets as you need. Every lab group in your unit offering
-                      must have one sheet in the Excel file. The format for your
-                      lab sheets should be as follow: LAX-XX, where the first X
-                      indicates the semester number, and the following two X’s
-                      denote the lab group number. To create a lab group for
-                      Group 1 of a Lab in Semester 1, the sheet’s name would
-                      have to be: LA1-01. You may also create a sheet for
-                      Lecture groups with a similar naming format (e.g. LE1-01);
-                      however, lecture sheets are purely optional and are not
-                      used by the system’s parser.
-                    </p>
-                    <hr />
-                    <p className="mt">
-                      <strong>Step 3:</strong>
-                    </p>
-                    <p className="mt">For every lab sheet you create:</p>
-                    <p className="mt">
-                      a) Insert the unit code of the lab group, followed by an S
-                      (for Semester), and the semester number. E.g. COS20007_S1.
-                    </p>
-                    <p className="mt">
-                      b) Enter the unit’s name in full, in uppercase letters.
-                      E.g., OBJECT ORIENTED PROGRAMMING.
-                    </p>
-                    <p className="mt">
-                      c) Enter the time at which the lab takes place. The day
-                      must be written in 3-letter abbreviations, the time must
-                      be in 24h format, and the duration must be in minutes.
-                    </p>
-                    <p className="mt">
-                      d) Enter the location of your office in Swinburne as a
-                      tutor.
-                    </p>
-                    <p className="mt">
-                      e) Enter the name of the staff serving as a tutor for the
-                      lab group in question. It could be your name or any other
-                      tutor’s name. However, the staff must have an account in
-                      the MCM system first for the import process to go through
-                      later on.
-                    </p>
-                    <p className="mt">
-                      f) In the column for STUDENT_CODE, enter the student IDs
-                      of all the students registered in the lab group in
-                      question.
-                    </p>
-                    <p className="mt">
-                      g) Enter the students’ full names, in upper case letters
-                      in the next column called STUDENT_FULLNAME.
-                    </p>
-                    <p className="mt">
-                      h) Repeat the steps above for any other lab sheets you
-                      created.
-                    </p>
-                    <hr />
-                    <p className="mt">
-                      <strong>Step 4:</strong>
-                    </p>
-                    <p className="mt">
-                      Upload your file on this page and follow the steps. You
-                      should not quit any part of the process before it is
-                      complete, and you log out.
-                    </p>
-                    <p className="mt">
-                      During the import process, any student who does not have
-                      an account in the system will have one automatically
-                      created for them. Their account’s default password will be
-                      their student ID reversed.
-                    </p>
+              {!success ? (
+                <div className="row mt">
+                  <div className="col-sm-12">
+                    <div className="alert alert-warning">
+                      <h4>How to import Lab data</h4>
+                      <hr />
+                      <p className="mt">
+                        <strong>
+                          <strong>Step 1:</strong>{" "}
+                        </strong>
+                      </p>
+                      <p>
+                        <strong>
+                          <a
+                            target="_blank"
+                            href="https://drive.google.com/file/d/1cgY1ZdYQJvvn6RQuFIW1ZYZKb8zvJNVN/view?usp=sharing"
+                          >
+                            Click to Download
+                          </a>
+                        </strong>{" "}
+                        the Excel guide to follow along the steps below
+                      </p>
+                      <hr />
+                      <p className="mt">
+                        <strong>Step 2:</strong>
+                      </p>
+                      <p className="mt">
+                        Edit the lab guide you have downloaded and create as
+                        many sheets as you need. Every lab group in your unit
+                        offering must have one sheet in the Excel file. The
+                        format for your lab sheets should be as follow: LAX-XX,
+                        where the first X indicates the semester number, and the
+                        following two X’s denote the lab group number. To create
+                        a lab group for Group 1 of a Lab in Semester 1, the
+                        sheet’s name would have to be: LA1-01. You may also
+                        create a sheet for Lecture groups with a similar naming
+                        format (e.g. LE1-01); however, lecture sheets are purely
+                        optional and are not used by the system’s parser.
+                      </p>
+                      <hr />
+                      <p className="mt">
+                        <strong>Step 3:</strong>
+                      </p>
+                      <p className="mt">For every lab sheet you create:</p>
+                      <p className="mt">
+                        a) Insert the unit code of the lab group, followed by an
+                        S (for Semester), and the semester number. E.g.
+                        COS20007_S1.
+                      </p>
+                      <p className="mt">
+                        b) Enter the unit’s name in full, in uppercase letters.
+                        E.g., OBJECT ORIENTED PROGRAMMING.
+                      </p>
+                      <p className="mt">
+                        c) Enter the time at which the lab takes place. The day
+                        must be written in 3-letter abbreviations, the time must
+                        be in 24h format, and the duration must be in minutes.
+                      </p>
+                      <p className="mt">
+                        d) Enter the location of your office in Swinburne as a
+                        tutor.
+                      </p>
+                      <p className="mt">
+                        e) Enter the name of the staff serving as a tutor for
+                        the lab group in question. It could be your name or any
+                        other tutor’s name. However, the staff must have an
+                        account in the MCM system first for the import process
+                        to go through later on.
+                      </p>
+                      <p className="mt">
+                        f) In the column for STUDENT_CODE, enter the student IDs
+                        of all the students registered in the lab group in
+                        question.
+                      </p>
+                      <p className="mt">
+                        g) Enter the students’ full names, in upper case letters
+                        in the next column called STUDENT_FULLNAME.
+                      </p>
+                      <p className="mt">
+                        h) Repeat the steps above for any other lab sheets you
+                        created.
+                      </p>
+                      <hr />
+                      <p className="mt">
+                        <strong>Step 4:</strong>
+                      </p>
+                      <p className="mt">
+                        Upload your file on this page and follow the steps. You
+                        should not quit any part of the process before it is
+                        complete, and you log out.
+                      </p>
+                      <p className="mt">
+                        During the import process, any student who does not have
+                        an account in the system will have one automatically
+                        created for them. Their account’s default password will
+                        be their student ID reversed.
+                      </p>
+                    </div>
                   </div>
                 </div>
-              </div>
+              ) : (
+                ""
+              )}
             </div>
           </section>
         </section>
