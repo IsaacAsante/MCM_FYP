@@ -103,6 +103,13 @@ const StudentNavbar = () => {
         </Link>
       </li>
       <li>
+        <Link to={ROUTES.BOOKINGS}>
+          <i className="fa fa-folder"></i>
+          <span>Bookings</span>
+          {/* <span className="label label-theme pull-right mail-info">2</span> */}
+        </Link>
+      </li>
+      <li>
         <Link to={ROUTES.ACCOUNT}>
           <i className="fa fa-user"></i>
           <span>Your Account</span>
@@ -121,6 +128,13 @@ const TutorNavbar = () => {
         <Link to={ROUTES.DASHBOARD}>
           <i className="fa fa-dashboard"></i>
           <span>Dashboard</span>
+        </Link>
+      </li>
+      <li>
+        <Link to={ROUTES.BOOKINGS}>
+          <i className="fa fa-folder"></i>
+          <span>Bookings</span>
+          {/* <span className="label label-theme pull-right mail-info">2</span> */}
         </Link>
       </li>
       <li>
