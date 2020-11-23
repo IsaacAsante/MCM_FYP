@@ -436,20 +436,36 @@ class BookingSlotPage extends React.Component {
                   {userRole === ROLES.TUTOR ? (
                     booking && !actionSuccessful && !actionError ? (
                       <div className="row booking-actions mt">
-                        {booking.bookingStatus !== "Approved" && (
+                        {/* Show the Approve Booking link if a booking is still in review */}
+                        {booking.bookingStatus !== "Approved" ? (
+                          <div>
+                            <div className="col-sm-6 col-md-4">
+                              <p
+                                className="action"
+                                onClick={this.approveBooking}
+                              >
+                                <i className="fa fa-check mr-2"></i>Approve
+                                Booking
+                              </p>
+                            </div>
+                            <div className="col-sm-6 col-md-4">
+                              <p
+                                className="action"
+                                onClick={this.rejectBooking}
+                              >
+                                <i className="fa fa-times mr-2"></i>
+                                Reject Booking
+                              </p>
+                            </div>
+                          </div>
+                        ) : (
                           <div className="col-sm-6 col-md-4">
-                            <p className="action" onClick={this.approveBooking}>
-                              <i className="fa fa-check mr-2"></i>Approve
-                              Booking
+                            <p className="action" onClick={this.rejectBooking}>
+                              <i className="fa fa-times mr-2"></i>
+                              Cancel Booking
                             </p>
                           </div>
                         )}
-                        <div className="col-sm-6 col-md-4">
-                          <p className="action" onClick={this.rejectBooking}>
-                            <i className="fa fa-times mr-2"></i>
-                            Reject Booking
-                          </p>
-                        </div>
                       </div>
                     ) : (
                       ""
