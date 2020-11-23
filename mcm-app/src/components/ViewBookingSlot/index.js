@@ -10,7 +10,9 @@ const INITIAL_STATE = {
   actionError: false,
   authUser: null,
   booking: null,
+  bookingApproved: false,
   bookingError: false,
+  bookingRejected: false,
   loadTask: false,
   offeringID: null,
   semester: null,
@@ -183,10 +185,20 @@ class BookingSlotPage extends React.Component {
         this.state.booking
       )
       .then(() => {
-        this.setState({ actionSuccessful: true, actionError: false });
+        this.setState({
+          actionSuccessful: true,
+          bookingApproved: true,
+          bookingRejected: false,
+          actionError: false,
+        });
       })
       .catch((err) => {
-        this.setState({ actionSuccessful: false, actionError: true });
+        this.setState({
+          actionSuccessful: false,
+          bookingApproved: false,
+          bookingRejected: false,
+          actionError: true,
+        });
       });
   };
 
@@ -218,10 +230,20 @@ class BookingSlotPage extends React.Component {
         this.state.booking
       )
       .then(() => {
-        this.setState({ actionSuccessful: true, actionError: false });
+        this.setState({
+          actionSuccessful: true,
+          bookingApproved: false,
+          bookingRejected: true,
+          actionError: false,
+        });
       })
       .catch((err) => {
-        this.setState({ actionSuccessful: false, actionError: true });
+        this.setState({
+          actionSuccessful: false,
+          bookingApproved: false,
+          bookingRejected: false,
+          actionError: true,
+        });
       });
   };
 
@@ -232,7 +254,9 @@ class BookingSlotPage extends React.Component {
       actionSuccessful,
       actionError,
       booking,
+      bookingApproved,
       bookingError,
+      bookingRejected,
       loadTask,
       semester,
       semesterError,
@@ -441,6 +465,28 @@ class BookingSlotPage extends React.Component {
                         this slot. Please retry later.
                       </p>
                     </div>
+                  )}
+                  {/* After succesfully approving a booking. */}
+                  {actionSuccessful && bookingApproved && !bookingRejected ? (
+                    <div className="alert alert-info">
+                      <p>
+                        <i className="fa fa-check mr-2"></i>
+                        Booking approved successfully.
+                      </p>
+                    </div>
+                  ) : (
+                    ""
+                  )}
+                  {/* After succesfully approving a booking. */}
+                  {actionSuccessful && bookingRejected && !bookingApproved ? (
+                    <div className="alert alert-warning">
+                      <p>
+                        <i className="fa fa-exclamation-triangle mr-2"></i>
+                        Booking rejected and deleted from the system.
+                      </p>
+                    </div>
+                  ) : (
+                    ""
                   )}
                 </div>
               </div>
