@@ -35,7 +35,17 @@ router.post("/send", (req, res, next) => {
     slotID
   }\n\nRegards,\nMCM Team`;
 
-  const htmlMSG = `<p>Dear Tutor,</p><p>A new booking has been submitted by ${studentFirstname} ${studentLastname} in the MCM system for one of your lab groups.</p><p><strong>URL:</strong> ${
+  const htmlMSG = `<p>Dear Tutor,</p><p>A new booking has been submitted by ${studentFirstname} ${studentLastname} in the MCM system for one of your lab groups.</p><p><strong>URL:</strong> <a href="${
+    req.protocol +
+    "://" +
+    req.get("host") +
+    "/unit-offerings/" +
+    offeringID +
+    "/tasks/" +
+    taskID +
+    "/booking-slots/" +
+    slotID
+  }">View booking submission</a></p><p>Alternatively, you may also copy and paste the URL below into your address bar.</p><p>${
     req.protocol +
     "://" +
     req.get("host") +
