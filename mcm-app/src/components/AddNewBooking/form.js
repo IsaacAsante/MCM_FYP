@@ -2,6 +2,7 @@ import React from "react";
 import { withRouter } from "react-router-dom";
 import { compose } from "recompose";
 import { withFirebase } from "../Firebase";
+import axios from "axios";
 
 const AddNewBookingForm = (props) => (
   <div className="mt">
@@ -72,7 +73,38 @@ class BookingFormBase extends React.Component {
         bookingObj
       )
       .then(() => {
-        this.setState({ success: true, error: false });
+        const tutorEmail = bookingObj.bookingSlot.tutor.email;
+        const studentFirstname = bookingObj.student.firstname;
+        const studentLastname = bookingObj.student.lastname;
+        const offeringID = bookingObj.offeringID;
+        const taskID = bookingObj.taskID;
+        const slotID = bookingObj.bookingSlot.id;
+        // Send an email notification
+        axios
+          .post(
+            "/notifications/send",
+            {
+              tutorEmail,
+              studentFirstname,
+              studentLastname,
+              offeringID,
+              taskID,
+              slotID,
+            },
+            {
+              method: "POST",
+              headers: {
+                "Content-type": "application/json",
+              },
+            }
+          )
+          .then((res) => {
+            console.log("Backend res: ", res);
+            this.setState({ success: true, error: false });
+          })
+          .catch((err) => {
+            console.error("Error from backend: ", err);
+          });
       })
       .catch((err) => {
         console.error(err);
