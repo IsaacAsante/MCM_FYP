@@ -12,6 +12,7 @@ import AddNewBookingPage from "../AddNewBooking";
 import AddNewTaskPage from "../AddNewTask";
 import AddUnitOfferingPage from "../AddUnitOffering";
 import AdminPage from "../Admin";
+import BookingsPage from "../Bookings";
 import BookingSlotPage from "../ViewBookingSlot";
 import DashboardPage from "../Dashboard";
 import FindUnitOffering from "../FindUnitOffering";
@@ -60,6 +61,7 @@ const App = () => (
       <Route path={ROUTES.ADD_SEMESTER} component={AddSemesterPage} />
       <Route path={ROUTES.ADD_UNIT} component={AddUnitPage} />
       <Route path={ROUTES.ADD_UNIT_OFFERING} component={AddUnitOfferingPage} />
+      <Route path={ROUTES.BOOKINGS} component={BookingsPage} />
       <Route path={ROUTES.DASHBOARD} component={DashboardPage} />
       <Route
         exact

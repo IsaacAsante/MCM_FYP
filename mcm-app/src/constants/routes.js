@@ -10,6 +10,7 @@ export const ADD_SEMESTER = "/add-semester";
 export const ADD_UNIT = "/add-unit";
 export const ADD_UNIT_OFFERING = "/add-unit-offerings";
 export const ADMIN = "/admin";
+export const BOOKINGS = "/bookings";
 export const DASHBOARD = "/dashboard";
 export const FIND_UNIT_OFFERING = "/find-unit-offerings";
 export const LANDING = "/";
