@@ -21,6 +21,10 @@ app.use("/email", mailRouter);
 app.use("/reader", readerRouter);
 app.use("/notifications", notificationsRouter);
 
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static("mcm-app/build"));
+}
+
 app.listen(port, () => {
   console.log(`Server is running on port: ${port}`);
 });

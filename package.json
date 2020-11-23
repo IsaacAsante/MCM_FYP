@@ -4,7 +4,12 @@
   "description": "A modular consultation management (MCM) system for portf ICT portfolio units in Swinburne Sarawak.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "cd mcm-app && npm run build",
+    "install-client": "cd mcm-app && npm install",
+    "heroku-postbuild": "npm run install-client && npm run build",
+    "start": "node server.js",
+    "client": "cd mcm-app && npm start"
   },
   "author": "Isaac Asante",
   "license": "ISC",
