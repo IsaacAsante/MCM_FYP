@@ -59,8 +59,11 @@
 /* Sidebar emails & font-awesome icons */
 
 ul.sidebar-menu .user-email {
+  border-bottom: 1px solid #212121;
   color: #fff;
   font-style: italic;
+  margin-bottom: 1em;
+  padding: 0 0.5em 1em;
   text-align: center;
 }
 
