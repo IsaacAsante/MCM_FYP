@@ -759,7 +759,7 @@ class AddLabGroupPage extends React.Component {
                         <strong>
                           <a
                             target="_blank"
-                            href="https://drive.google.com/file/d/1cgY1ZdYQJvvn6RQuFIW1ZYZKb8zvJNVN/view?usp=sharing"
+                            href="https://drive.google.com/file/d/1VMI7BtHuh0KVzjgLgzQQBBO3ajoxLIss/view?usp=sharing"
                           >
                             Click to Download
                           </a>
