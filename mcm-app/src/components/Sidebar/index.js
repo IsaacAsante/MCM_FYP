@@ -77,9 +77,23 @@ class Sidebar extends Component {
                   if (!authUser) return <GenericNavbar />;
                   else {
                     if (authUser.role == ROLES.STUDENT)
-                      return <StudentNavbar />;
+                      return (
+                        <div>
+                          <div class="user-email">
+                            {authUser.firstname} {authUser.lastname}
+                          </div>
+                          <StudentNavbar />
+                        </div>
+                      );
                     else if (authUser.role == ROLES.TUTOR)
-                      return <TutorNavbar />;
+                      return (
+                        <div>
+                          <div class="user-email">
+                            {authUser.firstname} {authUser.lastname}
+                          </div>
+                          <TutorNavbar />
+                        </div>
+                      );
                   }
                 }}
               </AuthUserContext.Consumer>

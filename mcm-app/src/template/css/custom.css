@@ -56,7 +56,13 @@
   margin-right: 25px;
 }
 
-/* Sidebar font-awesome icons */
+/* Sidebar emails & font-awesome icons */
+
+ul.sidebar-menu .user-email {
+  color: #fff;
+  font-style: italic;
+  text-align: center;
+}
 
 ul.sidebar-menu li a i {
   width: 1.8em;
