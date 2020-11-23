@@ -62,7 +62,6 @@ class PasswordUpdateFormBase extends Component {
   render() {
     const { passwordOne, passwordTwo, error } = this.state;
 
-    // Invalid is the passwords don't match (or empty)
     const isInvalid = passwordOne !== passwordTwo || passwordOne === "";
 
     return (

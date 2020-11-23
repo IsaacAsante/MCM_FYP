@@ -130,7 +130,6 @@ class AddUnitOfferingFormBase extends Component {
       success,
     } = this.state;
 
-    // Both unit code and unit name fields must be filled
     const isInvalid = selectedUnit === "None" || selectedSemester === "None";
 
     return (

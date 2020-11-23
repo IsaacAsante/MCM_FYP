@@ -105,7 +105,6 @@ class AddSemesterFormBase extends Component {
   render() {
     const { number, year, type, error, success } = this.state;
 
-    // All the form's fields must be valid
     const isInvalid = number === "" || year === "" || type === "";
 
     return (

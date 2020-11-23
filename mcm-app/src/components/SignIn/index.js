@@ -63,9 +63,7 @@ class SignInFormBase extends Component {
   };
 
   render() {
-    // Grab the state
     const { email, password, error } = this.state;
-    // Both email and password fields must be filled
     const isInvalid = password === "" || email === "";
 
     return (

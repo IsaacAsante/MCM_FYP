@@ -71,7 +71,6 @@ class AddUnitFormBase extends Component {
   render() {
     const { unitCode, unitName, error, success } = this.state;
 
-    // Both unit code and unit name fields must be filled
     const isInvalid = unitCode === "" || unitName === "";
 
     return (
