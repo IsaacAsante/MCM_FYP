@@ -208,6 +208,22 @@ class BookingSlotPage extends React.Component {
     );
   };
 
+  rejectBooking = async (event) => {
+    event.preventDefault();
+    await this.props.firebase
+      .rejectBooking(
+        this.state.offeringID,
+        this.state.taskID,
+        this.state.booking
+      )
+      .then(() => {
+        this.setState({ actionSuccessful: true, actionError: false });
+      })
+      .catch((err) => {
+        this.setState({ actionSuccessful: false, actionError: true });
+      });
+  };
+
   render() {
     const {
       allocated,
@@ -398,14 +414,15 @@ class BookingSlotPage extends React.Component {
                         {booking.bookingStatus !== "Approved" && (
                           <div className="col-sm-6 col-md-4">
                             <p className="action" onClick={this.approveBooking}>
-                              <i className="fa fa-check mr-2"></i>
-                              Approve Booking
+                              <i className="fa fa-check mr-2"></i>Approve
+                              Booking
                             </p>
                           </div>
                         )}
                         <div className="col-sm-6 col-md-4">
-                          <p className="action">
-                            <i className="fa fa-times mr-2"></i> Reject Booking
+                          <p className="action" onClick={this.rejectBooking}>
+                            <i className="fa fa-times mr-2"></i>
+                            Reject Booking
                           </p>
                         </div>
                       </div>

@@ -384,7 +384,6 @@ class Firebase {
   };
 
   approveBooking = async (offeringID, taskID, bookingObj) => {
-    // TODO: hange status
     bookingObj.bookingSlot.slotStatus = "Taken";
     bookingObj.bookingStatus = "Approved";
     const taskRef = this.db
@@ -407,7 +406,7 @@ class Firebase {
             "bookingSlot.slotStatus": "Taken",
           })
           .then(async () => {
-            const step_two = await this.db
+            const step_four = await this.db
               .collection("bookinglogs")
               .doc(bookingObj.id)
               .update({
@@ -426,6 +425,69 @@ class Firebase {
                   });
               });
           });
+      })
+      .catch((err) => {
+        // Do nothing
+      });
+  };
+
+  rejectBooking = async (offeringID, taskID, bookingObj) => {
+    const taskRef = this.db
+      .collection("unitofferings")
+      .doc(offeringID)
+      .collection("tasks")
+      .doc(taskID);
+    // Delete the booking
+    const step_two = await taskRef
+      .collection("bookingslots")
+      .doc(bookingObj.bookingSlot.id)
+      .collection("bookings")
+      .doc(bookingObj.id)
+      .delete()
+      .then(async () => {
+        // Sync update the logs
+        // Delete booking from the logs
+        const step_three = await this.db
+          .collection("bookinglogs")
+          .doc(bookingObj.id)
+          .delete()
+          .then(async () => {
+            // Revert the slot's avaiability to initial value
+            const step_four = await taskRef
+              .collection("bookingslots")
+              .doc(bookingObj.bookingSlot.id)
+              .update({ slotStatus: "Available" })
+              .then(async () => {
+                // Remove the student's ID from the list of students who have submitted bookings
+                let studentID = bookingObj.student.studentID;
+                const taskRef = await this.db
+                  .collection("unitofferings")
+                  .doc(offeringID)
+                  .collection("tasks")
+                  .doc(taskID);
+
+                const taskDoc = taskRef.get();
+
+                const task = taskDoc.data();
+                const studentList = task.submissions;
+
+                for (let i = 0; i < studentList.length; i++) {
+                  if (studentList[i] == studentID) {
+                    studentList.splice(i, 1);
+                    break;
+                  }
+                }
+
+                taskRef.update({ submissions: studentList });
+
+                // .update({
+                //   submissions: app.firestore.FieldValue.arrayUnion(studentID), // Note the approved submission on the task document
+                // });
+              });
+          });
+      })
+      .catch((err) => {
+        // Do nothing
       });
   };
 
