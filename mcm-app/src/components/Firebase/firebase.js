@@ -419,10 +419,15 @@ class Firebase {
                   .collection("unitofferings")
                   .doc(offeringID)
                   .collection("tasks")
-                  .doc(taskID)
-                  .update({
-                    submissions: app.firestore.FieldValue.arrayUnion(studentID), // Note the approved submission on the task document
-                  });
+                  .doc(taskID);
+
+                const taskDoc = await taskRef.get();
+
+                const task = taskDoc.data();
+                const studentList = task.submissions;
+                // Increase the count of submissions per student
+                studentList.push(studentID);
+                taskRef.update({ submissions: studentList });
               });
           });
       })
@@ -466,7 +471,7 @@ class Firebase {
                   .collection("tasks")
                   .doc(taskID);
 
-                const taskDoc = taskRef.get();
+                const taskDoc = await taskRef.get();
 
                 const task = taskDoc.data();
                 const studentList = task.submissions;
@@ -479,10 +484,6 @@ class Firebase {
                 }
 
                 taskRef.update({ submissions: studentList });
-
-                // .update({
-                //   submissions: app.firestore.FieldValue.arrayUnion(studentID), // Note the approved submission on the task document
-                // });
               });
           });
       })

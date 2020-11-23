@@ -174,7 +174,8 @@ class BookingSlotPage extends React.Component {
     }
   }
 
-  approveBooking = async () => {
+  approveBooking = async (event) => {
+    event.preventDefault();
     await this.props.firebase
       .approveBooking(
         this.state.offeringID,
