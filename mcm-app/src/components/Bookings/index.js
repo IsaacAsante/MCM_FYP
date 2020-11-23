@@ -5,15 +5,10 @@ import * as ROLES from "../../constants/roles";
 
 const INITIAL_STATE = {
   authUser: null,
-  booking: null,
-  bookingType: "None",
+  bookings: null,
+  empty: false,
   error: null,
-  offeringID: null,
-  slot: null,
-  slotError: null,
-  slotID: null,
-  unit: null,
-  unitError: null,
+  success: null,
   userRole: null,
 };
 
@@ -35,7 +30,7 @@ class BookingsPage extends React.Component {
 
   componentDidMount() {
     // Recognize current user
-    this.props.firebase.onAuthUserListener((authUser) => {
+    this.props.firebase.onAuthUserListener(async (authUser) => {
       this.setState({ authUser });
 
       // Verify the privileges of the currently logged-in user to hide the 'Create Booking Slot' button
@@ -45,27 +40,62 @@ class BookingsPage extends React.Component {
       } else {
         this.setState({ userRole: ROLES.STUDENT });
       }
+
+      await this.props.firebase
+        .loadTutorBookings(this.state.authUser.uid, this.state.bookingType)
+        .then((bookings) => {
+          this.setState({ success: true, error: false });
+          if (bookings.length > 0) {
+            this.setState({
+              bookings,
+              empty: false,
+              success: true,
+              error: false,
+            });
+          } else {
+            this.setState({
+              bookings: null,
+              empty: true,
+              success: true,
+              error: false,
+            });
+          }
+          console.log(bookings);
+        })
+        .catch((error) => {
+          this.setState({
+            bookings: null,
+            error,
+            success: false,
+            empty: false,
+          });
+        });
     });
   }
 
-  updateType = (event) => {
-    this.setState({ bookingType: event.target.value });
-  };
-
-  onSubmit = (event) => {
-    event.preventDefault();
-    console.log(this.state);
-  };
-
   convertDate = (dateValue) => {
-    let date = new Date(dateValue * 1000); // Firestore will return the seconds instead of milliseconds
+    let date = new Date(dateValue); // Firestore will return the seconds instead of milliseconds
     return `${DAYS[date.getDay()]}, ${date.getDate()}/${
       date.getMonth() + 1
     }/${date.getFullYear()}`;
   };
 
+  goToBooking = (offeringID, taskID, slotID) => {
+    this.props.history.push(
+      `unit-offerings/${offeringID}/tasks/${taskID}/booking-slots/${slotID}`
+    );
+  };
+
   render() {
-    const { booking, bookingType, error, userRole } = this.state;
+    const {
+      authUser,
+      bookings,
+      bookingType,
+      empty,
+      error,
+      success,
+      userRole,
+    } = this.state;
     const invalid = bookingType == "None";
     return (
       <div>
@@ -76,46 +106,62 @@ class BookingsPage extends React.Component {
                 {/* Heading */}
                 <div className="row">
                   <div className="col-sm-12">
-                    <h3>View Your Bookings</h3>
+                    <h3>Upcoming Bookings</h3>
                     <hr />
                   </div>
                 </div>
-                <div className="row">
-                  <div className="col-sm-12">
-                    <div className="form-panel">
-                      <form
-                        onSubmit={this.onSubmit}
-                        className="form-horizontal style-form"
-                        autoComplete="false"
-                      >
-                        <div className="form-group">
-                          <label className="col-sm-2 col-sm-2 control-label">
-                            Booking Type:
-                          </label>
-                          <div className="col-sm-10">
-                            <select
-                              className="form-control"
-                              name="bookingType"
-                              onChange={this.updateType}
-                              value={this.state.bookingType}
-                            >
-                              <option value="None">--</option>
-                              <option value="Approved">Approved</option>
-                              <option value="To Review">To Review</option>
-                            </select>
-                          </div>
-                        </div>
 
-                        <button
-                          type="submit"
-                          className="btn btn-theme"
-                          disabled={invalid}
-                          onClick={this.onSubmit}
-                        >
-                          View Bookings
-                        </button>
-                      </form>
-                    </div>
+                <div className="row mt">
+                  <div className="col-sm-12">
+                    {/* Once the user submits  a selection */}
+                    {bookings ? (
+                      <table className="table table-bordered table-striped table-condensed slots-table">
+                        <thead>
+                          <tr>
+                            <th>Date</th>
+                            <th>Start</th>
+                            <th>End</th>
+                            <th>Status</th>
+                            <th>Student</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {bookings.map(
+                            (booking) =>
+                              booking.bookingSlot.tutorID == authUser.uid && (
+                                <tr
+                                  key={booking.bookingSlot.id}
+                                  onClick={() =>
+                                    this.goToBooking(
+                                      booking.offeringID,
+                                      booking.taskID,
+                                      booking.bookingSlot.id
+                                    )
+                                  }
+                                >
+                                  <td>
+                                    {this.convertDate(
+                                      booking.bookingSlot.date.toDate()
+                                    )}
+                                  </td>
+                                  <td>{booking.bookingSlot.startTime}</td>
+                                  <td>{booking.bookingSlot.endTime}</td>
+                                  <td>{booking.bookingStatus}</td>
+                                  <td>{booking.student.firstname}</td>
+                                </tr>
+                              )
+                          )}
+                        </tbody>
+                      </table>
+                    ) : empty ? (
+                      <div className="alert alert-warning">
+                        <strong>No bookings found.</strong> Once you start
+                        creating booking slots and students start to create
+                        booking entries, they will appear here.
+                      </div>
+                    ) : (
+                      ""
+                    )}
                   </div>
                 </div>
               </div>

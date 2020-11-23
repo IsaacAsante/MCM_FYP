@@ -525,6 +525,23 @@ class Firebase {
     return semesters.get();
   };
 
+  /***** BOOKING LOGS *****
+   ***** ============= ******/
+
+  loadTutorBookings = async (tutorID, bookingType) => {
+    let today = new Date(Date.now());
+    today.setHours(0, 0, 0, 0);
+
+    let bookings = await this.db
+      .collection("bookinglogs")
+      .where("bookingSlot.date", ">", today)
+      .limit(100)
+      .get();
+    let bookingDocs = [];
+    bookings.forEach((doc) => bookingDocs.push(doc.data()));
+    return bookingDocs;
+  };
+
   /***** FIRESTORE BATCH OPERATIONS *****
    ***** ========================== ******/
 
