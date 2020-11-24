@@ -1,6 +1,7 @@
 var express = require("express");
 var cors = require("cors");
 var app = express();
+var path = require("path");
 
 const port = process.env.PORT || 5000;
 
@@ -23,6 +24,9 @@ app.use("/notifications", notificationsRouter);
 
 if (process.env.NODE_ENV === "production") {
   app.use(express.static("mcm-app/build"));
+  app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "mcm-app", "build", "index.html"));
+  });
 }
 
 app.listen(port, () => {
