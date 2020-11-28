@@ -65,7 +65,11 @@ class PasswordUpdateFormBase extends Component {
     const isInvalid = passwordOne !== passwordTwo || passwordOne === "";
 
     return (
-      <form onSubmit={this.onSubmit} className="form-horizontal style-form">
+      <form
+        onSubmit={this.onSubmit}
+        className="form-horizontal style-form"
+        autoComplete="off"
+      >
         <div className="form-group">
           <label className="col-sm-2 col-sm-2 control-label">
             Enter New Password

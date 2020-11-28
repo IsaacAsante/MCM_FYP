@@ -94,7 +94,11 @@ class TaskFormBase extends React.Component {
     return (
       <div className="row">
         <div className="col-sm-12 col-md-8">
-          <form onSubmit={this.onSubmit} className="form-horizontal style-form">
+          <form
+            onSubmit={this.onSubmit}
+            className="form-horizontal style-form"
+            autoComplete="off"
+          >
             <div className="form-group">
               <label className="col-sm-2 col-sm-2 control-label">
                 Task Name

@@ -134,7 +134,11 @@ class AddUnitOfferingFormBase extends Component {
 
     return (
       <div>
-        <form onSubmit={this.onSubmit} className="form-horizontal style-form">
+        <form
+          onSubmit={this.onSubmit}
+          className="form-horizontal style-form"
+          autoComplete="off"
+        >
           <div className="form-group">
             <label className="col-sm-2 control-label">Select Unit</label>
             <div className="col-sm-10 col-md-4">
