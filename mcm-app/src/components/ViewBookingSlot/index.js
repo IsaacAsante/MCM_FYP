@@ -15,6 +15,7 @@ const INITIAL_STATE = {
   bookingRejected: false,
   loadTask: false,
   offeringID: null,
+  pastBooking: null,
   semester: null,
   semesterError: null,
   slot: null,
@@ -133,8 +134,26 @@ class BookingSlotPage extends React.Component {
                     )
                     .then((slot) => {
                       if (slot !== undefined) {
-                        console.log(slot);
+                        console.log("The slot:", slot.endTime);
                         this.setState({ slotError: false, slot });
+
+                        // Capture the booking slot's ending period
+                        let slotDate = new Date(
+                          slot.date.seconds * 1000
+                        ).getTime();
+                        let endTimeSplit = slot.endTime.split(":");
+                        let hour = endTimeSplit[0];
+                        let minutes = endTimeSplit[1];
+                        let hourInMilliseconds = hour * 3600 * 1000;
+                        let minutesInMilliseconds = minutes * 60 * 1000;
+                        let slotDateTime =
+                          slotDate + hourInMilliseconds + minutesInMilliseconds;
+                        // Confirm if the booking slot must still be open to reversation by students.
+                        if (Date.now() >= slotDateTime) {
+                          this.setState({ pastBooking: true });
+                        } else {
+                          this.setState({ pastBooking: false });
+                        }
                       } else {
                         console.log("Wrong booking slot.");
                         this.setState({ slotError: true, slot: null });
@@ -143,6 +162,7 @@ class BookingSlotPage extends React.Component {
                 }
               });
 
+            // Get the booking's info
             await this.props.firebase
               .getBooking(
                 this.state.offeringID,
@@ -258,6 +278,7 @@ class BookingSlotPage extends React.Component {
       bookingError,
       bookingRejected,
       loadTask,
+      pastBooking,
       semester,
       semesterError,
       slot,
@@ -390,14 +411,23 @@ class BookingSlotPage extends React.Component {
 
               <div className="row mt">
                 <div className="col-sm-12 col-md-8">
-                  {booking === undefined && (
-                    <div className="alert alert-warning">
-                      <p>
-                        <i className="fa fa-exclamation-triangle mr-2"></i>This
-                        slot does not have any booking yet.
-                      </p>
-                    </div>
-                  )}
+                  {booking === undefined &&
+                    (pastBooking ? (
+                      <div className="alert alert-danger">
+                        <p>
+                          <i className="fa fa-exclamation-triangle mr-2"></i>
+                          This booking slot's time has passed. You can no longer
+                          submit to it.
+                        </p>
+                      </div>
+                    ) : (
+                      <div className="alert alert-warning">
+                        <p>
+                          <i className="fa fa-exclamation-triangle mr-2"></i>
+                          This slot does not have any booking yet.
+                        </p>
+                      </div>
+                    ))}
                   {booking && (
                     <div className="row">
                       <div className="col-sm-12">
@@ -509,16 +539,16 @@ class BookingSlotPage extends React.Component {
               <div className="row mt">
                 <div className="col-sm-12">
                   {/* Give students the option to create bookings if there isn't any for the task in question */}
-                  {userRole == ROLES.STUDENT && booking === undefined ? (
-                    <button
-                      className="btn btn-theme"
-                      onClick={this.createBooking}
-                    >
-                      Create Booking
-                    </button>
-                  ) : (
-                    ""
-                  )}
+                  {userRole == ROLES.STUDENT && booking === undefined
+                    ? !pastBooking && (
+                        <button
+                          className="btn btn-theme"
+                          onClick={this.createBooking}
+                        >
+                          Create Booking
+                        </button>
+                      )
+                    : ""}
 
                   <button
                     className="btn btn-danger ml-1"
