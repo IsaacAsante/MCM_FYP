@@ -42,7 +42,7 @@ class BookingFormBase extends React.Component {
     // Capture the role of the user viewing the page.
     // Tutors cannot add bookings. Only students can.
     if (this.props.user !== prevProps.user) {
-      console.log(this.props.user.role);
+      // console.log(this.props.user.role);
       this.setState({ userRole: this.props.user.role });
     }
   }
@@ -63,7 +63,7 @@ class BookingFormBase extends React.Component {
       student: this.props.user,
       offeringID: this.props.unitoffering,
     };
-    console.log(bookingObj);
+    // console.log(bookingObj);
     this.setState({ success: true, error: false });
     // Add the booking to the DB
     await this.props.firebase
@@ -101,7 +101,7 @@ class BookingFormBase extends React.Component {
               }
             )
             .then((res) => {
-              console.log("Backend res: ", res);
+              // console.log("Backend res: ", res);
               this.setState({ success: true, error: false, conflict: false });
             })
             .catch((err) => {

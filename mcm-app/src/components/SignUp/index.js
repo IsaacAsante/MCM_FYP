@@ -67,8 +67,8 @@ class SignUpFormBase extends Component {
     this.props.firebase
       .createUser(email, passwordOne)
       .then((authUser) => {
-        console.log(authUser);
-        console.log("User: ", JSON.stringify(userData));
+        // console.log(authUser);
+        // console.log("User: ", JSON.stringify(userData));
         // Add data to tutors collection in Firestore
         if (role == ROLES.TUTOR) {
           this.props.firebase
@@ -135,9 +135,9 @@ class SignUpFormBase extends Component {
     // Retrieve single student
     let student = null;
     this.props.firebase.getStudent("ExcnZxwdWIYxSaInrH5G").then((res) => {
-      console.log("Retrieved from Firestore: ", res);
+      // console.log("Retrieved from Firestore: ", res);
       student = res;
-      console.log("Student: ", student);
+      // console.log("Student: ", student);
     });
 
     // Retrieve a collection of students
@@ -145,7 +145,7 @@ class SignUpFormBase extends Component {
 
     // Retrieve a single tutor
     this.props.firebase.getTutor("zE0xsib8ydcgbIcMC9SX").then((res) => {
-      console.log("Tutor from Firebase: ", typeof res);
+      // console.log("Tutor from Firebase: ", typeof res);
     });
 
     // Add data to Students collection

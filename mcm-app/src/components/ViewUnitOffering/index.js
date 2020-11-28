@@ -25,10 +25,10 @@ class UnitOfferingPage extends React.Component {
 
   componentDidMount() {
     const offeringID = this.props.match.params.offeringID;
-    console.log(offeringID);
+    // console.log(offeringID);
     this.setState({ offeringID });
 
-    console.log("Get the data.");
+    // console.log("Get the data.");
     // Recognize current user
     this.props.firebase.onAuthUserListener((authUser) => {
       this.setState({ authUser });
@@ -88,7 +88,7 @@ class UnitOfferingPage extends React.Component {
                     let deadline = new Date(doc.deadline.seconds * 1000);
                     doc.deadline.seconds = deadline.toLocaleDateString();
                   });
-                  console.log("Tasks:", tasks);
+                  // console.log("Tasks:", tasks);
                   this.setState({ tasks });
                 })
                 .catch((err) => {
@@ -101,7 +101,7 @@ class UnitOfferingPage extends React.Component {
                   "There was an error fetching the semester data for this unit offering.",
               });
             });
-          console.log(this.state);
+          // console.log(this.state);
         } else {
           this.setState({
             semesterError: "Invalid semester.",
@@ -123,7 +123,7 @@ class UnitOfferingPage extends React.Component {
         this.props.firebase
           .addData("allocations", allocationData)
           .then((res) => {
-            console.log(res);
+            // console.log(res);
             this.setState({ allocateMessage: "Allocated" });
           });
       } else {

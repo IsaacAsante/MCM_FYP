@@ -36,7 +36,7 @@ class FindOfferingPage extends React.Component {
         if (offerings.length > 0) {
           this.setState({ message: "" });
           offerings.forEach((doc) => {
-            console.log("Unit Offering doc:", doc);
+            // console.log("Unit Offering doc:", doc);
             let unitObj = {
               id: doc.id,
               unit: null,
@@ -61,7 +61,7 @@ class FindOfferingPage extends React.Component {
                     // Sort the array
                     offeringsArray.sort(this.compare);
                     this.setState({ unitOfferings: offeringsArray });
-                    console.log("Updated state:", this.state.unitOfferings);
+                    // console.log("Updated state:", this.state.unitOfferings);
                   });
               })
               .catch((err) => console.error(err));

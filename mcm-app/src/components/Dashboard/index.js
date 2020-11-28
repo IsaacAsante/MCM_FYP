@@ -20,7 +20,7 @@ class DashboardPage extends React.Component {
   componentDidMount() {
     // Recognize current user
     this.props.firebase.onAuthUserListener((authUser) => {
-      console.log("Dashboard current user:", authUser);
+      // console.log("Dashboard current user:", authUser);
       this.setState({ authUser });
       if (authUser.role === ROLES.TUTOR) {
         // Determine if a Tutor is already allocated to the unit offering currently being viewed, or not.
@@ -130,7 +130,7 @@ class DashboardPage extends React.Component {
                   empty: true,
                 });
               }
-              console.log("Student enrolment found:", enrolment);
+              // console.log("Student enrolment found:", enrolment);
             }
           });
       }
@@ -138,7 +138,7 @@ class DashboardPage extends React.Component {
   }
 
   onClick = (offeringID) => {
-    console.log(offeringID);
+    // console.log(offeringID);
     this.props.history.push(`/unit-offerings/${offeringID}`);
   };
 

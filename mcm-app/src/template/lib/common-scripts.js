@@ -33,10 +33,10 @@ var Script = (function () {
         "margin-left": "-210px",
       });
       $("#sidebar > ul").hide();
-      console.log("Hiding");
+      // console.log("Hiding");
       $("#container").addClass("sidebar-closed");
     } else {
-      console.log("Showing 1");
+      // console.log("Showing 1");
       $("#main-content").css({
         "margin-left": "210px",
       });
@@ -45,7 +45,7 @@ var Script = (function () {
         "margin-left": "0",
       });
       $("#container").removeClass("sidebar-closed");
-      console.log("Showing 2");
+      // console.log("Showing 2");
     }
   });
 })();

@@ -21,7 +21,7 @@ class Sidebar extends Component {
         sidebar_margin == "0px !important") &&
       $(window).width() < 768
     ) {
-      console.log($(window).width());
+      // console.log($(window).width());
       // Hide nav by default
       $("#sidebar > ul").hide();
     }
@@ -42,7 +42,7 @@ class Sidebar extends Component {
     // if ($("#container").hasClass("sidebar-closed"))
 
     $(".fa-bars").on("click", function () {
-      window.console && console.log("foo");
+      // window.console && console.log("foo");
       if ($("#sidebar > ul").is(":visible") === true) {
         $("#main-content").css({
           "margin-left": "0px",
@@ -79,7 +79,7 @@ class Sidebar extends Component {
                     if (authUser.role == ROLES.STUDENT)
                       return (
                         <div>
-                          <div class="user-email">
+                          <div className="user-email">
                             {authUser.firstname} {authUser.lastname}
                           </div>
                           <StudentNavbar />
@@ -88,7 +88,7 @@ class Sidebar extends Component {
                     else if (authUser.role == ROLES.TUTOR)
                       return (
                         <div>
-                          <div class="user-email">
+                          <div className="user-email">
                             {authUser.firstname} {authUser.lastname}
                           </div>
                           <TutorNavbar />

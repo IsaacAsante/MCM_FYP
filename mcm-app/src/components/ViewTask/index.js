@@ -110,17 +110,17 @@ class TaskPage extends React.Component {
               .then(async (task) => {
                 if (!task) {
                   this.setState({ taskError: true });
-                  console.log("Task was not found");
+                  // console.log("Task was not found");
                 } else {
                   this.setState({ task });
-                  console.log("Task found:", task);
+                  // console.log("Task found:", task);
 
                   // Load all booking slots available
                   await this.props.firebase
                     .getBookingSlots(this.state.offeringID, this.state.taskID)
                     .then((slots) => {
                       if (slots.length > 0) {
-                        console.log("Booking slots on task page:", slots);
+                        // console.log("Booking slots on task page:", slots);
                         // Sort the booking slots by dates, then by time
                         slots.sort((a, b) => {
                           return (
@@ -134,7 +134,7 @@ class TaskPage extends React.Component {
                           bookingslots: slots,
                         });
                       } else {
-                        console.log("The task does not have booking slots.");
+                        // console.log("The task does not have booking slots.");
                         this.setState({ bookingSlotsFound: false });
                       }
                     })
@@ -143,7 +143,7 @@ class TaskPage extends React.Component {
                     });
                 }
               });
-            console.log(this.state);
+            // console.log(this.state);
           } else {
             this.setState({
               semesterError: "Invalid semester.",
@@ -153,7 +153,7 @@ class TaskPage extends React.Component {
         })
         .catch((err) => console.error(err));
     } else {
-      console.log("Will be false.");
+      // console.log("Will be false.");
       this.setState({ loadTask: false });
     }
   }

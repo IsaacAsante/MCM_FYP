@@ -90,14 +90,14 @@ class AddNewBookingSlotPage extends React.Component {
               .then((task) => {
                 if (!task) {
                   this.setState({ taskError: true });
-                  console.log("Task was not found");
+                  // console.log("Task was not found");
                 } else {
                   this.setState({ task });
-                  console.log("Task found:", task);
+                  // console.log("Task found:", task);
                 }
               });
           }
-          console.log(this.state);
+          // console.log(this.state);
         } else {
           this.setState({
             semesterError: "Invalid semester.",

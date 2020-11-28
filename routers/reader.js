@@ -29,7 +29,7 @@ router.post("/", function (req, res) {
       return res.status(500).json(err);
     }
     const workbook = XLSX.readFile(path.join(__dirname, req.file.filename));
-    console.log(req.file.filename);
+    // console.log(req.file.filename);
     // Delete file from the directory
     fs.unlink(path.join(__dirname, req.file.filename), function (err) {
       if (err) {

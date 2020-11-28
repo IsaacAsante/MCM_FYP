@@ -58,24 +58,24 @@ class AddSemesterFormBase extends Component {
       type: this.state.type.toUpperCase(),
     };
 
-    console.log("Semester data:", semesterData);
+    // console.log("Semester data:", semesterData);
 
     // Verify for potential duplicate before adding the entry to the database
     this.props.firebase
       .verifySemester(semesterData.number, semesterData.year, semesterData.type)
       .then((res) => {
         if (!res.empty) {
-          console.log("This semester already exists.", res);
+          // console.log("This semester already exists.", res);
           this.setState({
             error: `Semester ${semesterData.number}, ${semesterData.year} (${semesterData.type}) already exists in the database.`,
             success: null,
           });
         } else {
-          console.log("No duplicate:", res);
+          // console.log("No duplicate:", res);
           this.props.firebase
             .addData("semesters", semesterData)
             .then((res) => {
-              console.log("Response from Semester:", res);
+              // console.log("Response from Semester:", res);
               this.setState({
                 number: "",
                 year: "",

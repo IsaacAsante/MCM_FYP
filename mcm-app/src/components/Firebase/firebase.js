@@ -44,7 +44,7 @@ class Firebase {
   // Logouts
   signOutUser = () => {
     this.auth.signOut();
-    console.log("Signed Out");
+    // console.log("Signed Out");
   };
 
   // Password Resets
@@ -358,7 +358,7 @@ class Firebase {
       .doc(offeringID)
       .collection("tasks")
       .add(taskObj);
-    console.log("Task added!", res.id);
+    // console.log("Task added!", res.id);
     if (res) {
       const doc = await this.db
         .collection("unitofferings")
@@ -372,7 +372,7 @@ class Firebase {
 
   addUserToDB = async (collectionID, uid, dataObj) => {
     const res = await this.db.collection(collectionID).doc(uid).set(dataObj);
-    console.log("Document added!");
+    // console.log("Document added!");
     return res;
   };
 
@@ -385,7 +385,7 @@ class Firebase {
         .doc(res.id)
         .set({ id: res.id }, { merge: true });
     }
-    console.log("Document added!");
+    // console.log("Document added!");
     return res;
   };
 
@@ -504,7 +504,7 @@ class Firebase {
       .collection(collectionID)
       .doc(docID)
       .update(fieldObj);
-    console.log("Document updated!");
+    // console.log("Document updated!");
   };
 
   verifyTask = async (offeringID, taskName) => {
@@ -597,7 +597,7 @@ class Firebase {
                 ...student,
               };
               next(authUser);
-              console.log("Current Student:", authUser);
+              // console.log("Current Student:", authUser);
             } else {
               this.getTutor(authUser.uid)
                 .then((ans) => {
@@ -609,7 +609,7 @@ class Firebase {
                       ...tutor,
                     };
                     next(authUser);
-                    console.log("Current Tutor:", authUser);
+                    // console.log("Current Tutor:", authUser);
                   }
                 })
                 .catch((error) => {

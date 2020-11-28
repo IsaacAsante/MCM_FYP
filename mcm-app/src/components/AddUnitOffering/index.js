@@ -81,13 +81,13 @@ class AddUnitOfferingFormBase extends Component {
       unitID: this.state.selectedUnit,
       semesterID: this.state.selectedSemester,
     };
-    console.log(unitOfferingData);
+    // console.log(unitOfferingData);
 
     this.props.firebase
       .verifyUnitOffering(unitOfferingData.unitID, unitOfferingData.semesterID)
       .then((res) => {
         if (!res.empty) {
-          console.log("This unit already exists.", res);
+          // console.log("This unit already exists.", res);
           this.setState({
             error: "This unit offering already exists in the database.",
             success: null,
@@ -117,7 +117,7 @@ class AddUnitOfferingFormBase extends Component {
 
   onChange = (event) => {
     this.setState({ [event.target.name]: event.target.value });
-    console.log(this.state.selectedUnit);
+    // console.log(this.state.selectedUnit);
   };
 
   render() {

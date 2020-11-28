@@ -14,8 +14,8 @@ router.use(bodyParser.json());
 
 // Route for the Quote form
 router.post("/send", (req, res, next) => {
-  console.log("Sign up email");
-  console.log("req.body.body gives:", req.body);
+  // console.log("Sign up email");
+  // console.log("req.body.body gives:", req.body);
   const firstname = req.body.firstname;
   const lastname = req.body.lastname;
   const emailAddress = req.body.email;

@@ -60,7 +60,7 @@ class BookingsPage extends React.Component {
               error: false,
             });
           }
-          console.log(bookings);
+          // console.log(bookings);
         })
         .catch((error) => {
           this.setState({

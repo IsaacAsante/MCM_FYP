@@ -48,7 +48,7 @@ class SignInFormBase extends Component {
       .signInUser(email, password)
       .then(() => {
         this.setState({ ...INITIAL_STATE });
-        console.log("Successfully logged in");
+        // console.log("Successfully logged in");
         this.props.history.push(ROUTES.DASHBOARD);
       })
       .catch((error) => {

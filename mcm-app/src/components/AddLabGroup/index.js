@@ -104,7 +104,7 @@ class AddLabGroupPage extends React.Component {
                   "There was an error fetching the semester data for this unit offering.",
               });
             });
-          console.log(this.state);
+          // console.log(this.state);
         } else {
           this.setState({
             semesterError: "Invalid semester.",
@@ -361,7 +361,7 @@ class AddLabGroupPage extends React.Component {
             const labID =
               obj.name.split("-").join("") + this.props.match.params.offeringID;
             obj["id"] = labID;
-            console.log("Lab to be added:", obj);
+            // console.log("Lab to be added:", obj);
             this.props.firebase.setLabBatch(
               this.props.match.params.offeringID,
               obj,
@@ -380,7 +380,7 @@ class AddLabGroupPage extends React.Component {
           await this.props.firebase
             .getTutorUID(obj.tutorEmail)
             .then(async (tutorUID) => {
-              console.log("Tutor by email:", tutorUID);
+              // console.log("Tutor by email:", tutorUID);
               await this.props.firebase.findAllocation(tutorUID).then((res) => {
                 if (res === undefined) {
                   const allocationData = {
@@ -391,7 +391,7 @@ class AddLabGroupPage extends React.Component {
                   this.props.firebase
                     .addData("allocations", allocationData)
                     .then((res) => {
-                      console.log(res);
+                      // console.log(res);
                     });
                 } else {
                   if (
@@ -418,7 +418,7 @@ class AddLabGroupPage extends React.Component {
 
   enrolStudents = async () => {
     this.setState({ enrolmentStarted: true });
-    console.log("Enrol students.");
+    // console.log("Enrol students.");
     for (const [labName, labObj] of Object.entries(this.state.labData)) {
       const studentIDArray = labObj.students;
       const labID =

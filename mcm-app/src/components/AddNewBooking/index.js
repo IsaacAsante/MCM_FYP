@@ -48,7 +48,7 @@ class AddNewBookingPage extends React.Component {
       // Determine if a Tutor is already allocated to the unit offering currently being viewed, or not.
       this.props.firebase.findAllocation(authUser.uid).then((res) => {
         if (res) {
-          console.log("Response to debug:", res);
+          // console.log("Response to debug:", res);
           if (res.unitOfferings.includes(offeringID)) {
             this.setState({ allocated: true, allocateMessage: "Allocated" });
           }
@@ -64,7 +64,7 @@ class AddNewBookingPage extends React.Component {
           this.props.firebase
             .findUnit(result.unitID)
             .then((unit) => {
-              console.log("Unit loaded:", unit);
+              // console.log("Unit loaded:", unit);
               this.setState({ unit });
               this.setState({ unitError: "" });
             })
@@ -110,10 +110,10 @@ class AddNewBookingPage extends React.Component {
                   )
                   .then((slot) => {
                     if (slot !== undefined) {
-                      console.log(slot);
+                      // console.log(slot);
                       this.setState({ slotError: false, slot });
                     } else {
-                      console.log("Wrong booking slot.");
+                      // console.log("Wrong booking slot.");
                       this.setState({ slotError: true, slot: null });
                     }
                   });

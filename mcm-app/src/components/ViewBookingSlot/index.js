@@ -53,7 +53,7 @@ class BookingSlotPage extends React.Component {
     this.setState({ offeringID, taskID, slotID });
     // console.log(taskID);
 
-    console.log("Task ID:", taskID, "Slot ID:", slotID);
+    // console.log("Task ID:", taskID, "Slot ID:", slotID);
     if (taskID !== "add") {
       // Recognize current user
       this.props.firebase.onAuthUserListener((authUser) => {
@@ -134,7 +134,7 @@ class BookingSlotPage extends React.Component {
                     )
                     .then((slot) => {
                       if (slot !== undefined) {
-                        console.log("The slot:", slot.endTime);
+                        // console.log("The slot:", slot.endTime);
                         this.setState({ slotError: false, slot });
 
                         // Capture the booking slot's ending period
@@ -155,7 +155,7 @@ class BookingSlotPage extends React.Component {
                           this.setState({ pastBooking: false });
                         }
                       } else {
-                        console.log("Wrong booking slot.");
+                        // console.log("Wrong booking slot.");
                         this.setState({ slotError: true, slot: null });
                       }
                     });
@@ -172,7 +172,7 @@ class BookingSlotPage extends React.Component {
               .then((doc) => {
                 if (doc !== undefined) {
                   this.setState({ bookingError: null, booking: doc });
-                  console.log("Booking found:", doc);
+                  // console.log("Booking found:", doc);
                 } else {
                   this.setState({ bookingError: false, booking: undefined });
                 }
@@ -191,7 +191,7 @@ class BookingSlotPage extends React.Component {
         })
         .catch((err) => console.error(err));
     } else {
-      console.log("Will be false.");
+      // console.log("Will be false.");
       this.setState({ loadTask: false });
     }
   }
@@ -416,8 +416,8 @@ class BookingSlotPage extends React.Component {
                       <div className="alert alert-danger">
                         <p>
                           <i className="fa fa-exclamation-triangle mr-2"></i>
-                          This booking slot's time has passed. You can no longer
-                          submit to it.
+                          This booking slot's time has passed. Students can no
+                          longer submit bookings for it.
                         </p>
                       </div>
                     ) : (
