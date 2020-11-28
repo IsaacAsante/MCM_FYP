@@ -25,8 +25,10 @@ const AddSemesterPage = () => (
 
 const INITIAL_STATE = {
   number: "",
-  year: "",
-  type: "",
+  year: new Date().getFullYear(),
+  minYear: new Date().getFullYear(),
+  maxYear: new Date().getFullYear() + 3,
+  type: "Regular",
   error: null,
   success: null,
 };
@@ -103,9 +105,15 @@ class AddSemesterFormBase extends Component {
   };
 
   render() {
-    const { number, year, type, error, success } = this.state;
+    const { maxYear, minYear, number, year, type, error, success } = this.state;
 
-    const isInvalid = number === "" || year === "" || type === "";
+    const isInvalid =
+      number === "" ||
+      number < 1 ||
+      number > 2 ||
+      year === "" ||
+      year < minYear ||
+      type === "";
 
     return (
       <form
@@ -124,6 +132,7 @@ class AddSemesterFormBase extends Component {
               onChange={this.onChange}
               type="number"
               max="2"
+              min="1"
               placeholder="E.g. 1 or 2"
               className="form-control"
             />
@@ -139,7 +148,8 @@ class AddSemesterFormBase extends Component {
               value={year}
               onChange={this.onChange}
               type="number"
-              min="2019"
+              min={minYear}
+              max={maxYear}
               placeholder="E.g. 2021"
               className="form-control"
             />
