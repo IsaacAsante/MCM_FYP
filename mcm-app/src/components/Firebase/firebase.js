@@ -298,30 +298,36 @@ class Firebase {
       .doc(bookingSlotID)
       .collection("bookings");
 
-    const res = await bookingsRef.add(bookingObj);
-    if (res) {
-      // Add the booking's UID to the doc
-      const doc = await bookingsRef
-        .doc(res.id)
-        .set({ id: res.id }, { merge: true });
-      // Update the booking object's ID for the next operations
-      bookingObj["id"] = res.id;
-      // Sync doc in the bookinglogs collection
-      const confirmed = await this.db
-        .collection("bookinglogs")
-        .doc(res.id)
-        .set(bookingObj)
-        .then(async () => {
-          // Update the status of the relevant booking slot
-          const next = await this.db
-            .collection("unitofferings")
-            .doc(offeringID)
-            .collection("tasks")
-            .doc(taskID)
-            .collection("bookingslots")
-            .doc(bookingSlotID)
-            .update({ slotStatus: "In Review" });
-        });
+    const isEmpty = (await bookingsRef.get()).empty;
+
+    if (isEmpty) {
+      const res = await bookingsRef.add(bookingObj);
+      if (res) {
+        // Add the booking's UID to the doc
+        const doc = await bookingsRef
+          .doc(res.id)
+          .set({ id: res.id }, { merge: true });
+        // Update the booking object's ID for the next operations
+        bookingObj["id"] = res.id;
+        // Sync doc in the bookinglogs collection
+        const confirmed = await this.db
+          .collection("bookinglogs")
+          .doc(res.id)
+          .set(bookingObj)
+          .then(async () => {
+            // Update the status of the relevant booking slot
+            const next = await this.db
+              .collection("unitofferings")
+              .doc(offeringID)
+              .collection("tasks")
+              .doc(taskID)
+              .collection("bookingslots")
+              .doc(bookingSlotID)
+              .update({ slotStatus: "In Review" });
+          });
+      }
+    } else {
+      return false;
     }
   };
 

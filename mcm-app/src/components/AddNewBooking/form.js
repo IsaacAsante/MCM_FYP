@@ -26,6 +26,7 @@ const AddNewBookingForm = (props) => (
 
 const INITIAL_STATE = {
   comments: "",
+  conflict: null,
   subject: "",
   error: false,
   success: false,
@@ -72,43 +73,47 @@ class BookingFormBase extends React.Component {
         this.props.slot.id,
         bookingObj
       )
-      .then(() => {
-        const tutorEmail = bookingObj.bookingSlot.tutor.email;
-        const studentFirstname = bookingObj.student.firstname;
-        const studentLastname = bookingObj.student.lastname;
-        const offeringID = bookingObj.offeringID;
-        const taskID = bookingObj.taskID;
-        const slotID = bookingObj.bookingSlot.id;
-        // Send an email notification
-        axios
-          .post(
-            "/notifications/send",
-            {
-              tutorEmail,
-              studentFirstname,
-              studentLastname,
-              offeringID,
-              taskID,
-              slotID,
-            },
-            {
-              method: "POST",
-              headers: {
-                "Content-type": "application/json",
+      .then((successfullAdding) => {
+        if (successfullAdding !== false) {
+          const tutorEmail = bookingObj.bookingSlot.tutor.email;
+          const studentFirstname = bookingObj.student.firstname;
+          const studentLastname = bookingObj.student.lastname;
+          const offeringID = bookingObj.offeringID;
+          const taskID = bookingObj.taskID;
+          const slotID = bookingObj.bookingSlot.id;
+          // Send an email notification
+          axios
+            .post(
+              "/notifications/send",
+              {
+                tutorEmail,
+                studentFirstname,
+                studentLastname,
+                offeringID,
+                taskID,
+                slotID,
               },
-            }
-          )
-          .then((res) => {
-            console.log("Backend res: ", res);
-            this.setState({ success: true, error: false });
-          })
-          .catch((err) => {
-            console.error("Error from backend: ", err);
-          });
+              {
+                method: "POST",
+                headers: {
+                  "Content-type": "application/json",
+                },
+              }
+            )
+            .then((res) => {
+              console.log("Backend res: ", res);
+              this.setState({ success: true, error: false, conflict: false });
+            })
+            .catch((err) => {
+              console.error("Error from backend: ", err);
+            });
+        } else {
+          this.setState({ conflict: true, success: false, error: false });
+        }
       })
       .catch((err) => {
         console.error(err);
-        this.setState({ error: true, success: false });
+        this.setState({ conflict: false, error: true, success: false });
       });
     // // TODO: Update the count for maxSubmissions in the Task document.
   };
@@ -121,12 +126,19 @@ class BookingFormBase extends React.Component {
   };
 
   render() {
-    const { comments, subject, error, success, userRole } = this.state;
+    const {
+      comments,
+      conflict,
+      subject,
+      error,
+      success,
+      userRole,
+    } = this.state;
     const isInvalid = subject == "" || comments == "";
     return (
       <div className="row mt">
         <div className="col-sm-12 col-md-8">
-          {success ? (
+          {success || conflict ? (
             ""
           ) : (
             <form
@@ -186,12 +198,24 @@ class BookingFormBase extends React.Component {
             ) : (
               ""
             )
+          ) : conflict ? (
+            ""
           ) : (
             <div className="alert alert-success mt">
               <span>Booking created successfully.</span>
             </div>
           )}
-          {success && (
+
+          {/* Show this if the booking slot has already been reserved by a student */}
+          {conflict && (
+            <div className="alert alert-danger mt">
+              <span>
+                Sorry, your booking could not be saved. Please go back and try
+                again.
+              </span>
+            </div>
+          )}
+          {(success || conflict) && (
             <div className="row mt">
               <div className="col-sm-12">
                 <button
