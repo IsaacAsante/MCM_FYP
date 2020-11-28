@@ -4,6 +4,7 @@ var multer = require("multer");
 var cors = require("cors");
 var path = require("path");
 var XLSX = require("xlsx");
+const fs = require("fs");
 
 router.use(cors());
 
@@ -29,6 +30,15 @@ router.post("/", function (req, res) {
     }
     const workbook = XLSX.readFile(path.join(__dirname, req.file.filename));
     console.log(req.file.filename);
+    // Delete file from the directory
+    fs.unlink(path.join(__dirname, req.file.filename), function (err) {
+      if (err) {
+        console.error(err);
+      } else {
+        console.log("File deleted.");
+      }
+    });
+    // Send back the file's sheets
     return res.status(200).send(workbook.Sheets);
   });
 });
