@@ -8,6 +8,7 @@ import * as ROLES from "../../constants/roles";
 const INITIAL_STATE = {
   authUser: null,
   empty: false,
+  isMonitor: false,
   unitOfferings: [],
   warning: false,
 };
@@ -22,6 +23,8 @@ class DashboardPage extends React.Component {
     this.props.firebase.onAuthUserListener((authUser) => {
       // console.log("Dashboard current user:", authUser);
       this.setState({ authUser });
+      if (authUser.role !== ROLES.MONITOR) this.setState({ isMonitor: false });
+      else this.setState({ isMonitor: true });
       // if (authUser.role === ROLES.MONITOR) {
       //   // Determine if a Tutor is already allocated to the unit offering currently being viewed, or not.
       //   this.props.firebase.findAllocation(authUser.uid).then((allocations) => {
@@ -142,12 +145,12 @@ class DashboardPage extends React.Component {
     this.props.history.push(`/unit-offerings/${offeringID}`);
   };
 
-  findUnitOffering = () => {
-    this.props.history.push(ROUTES.FIND_UNIT_OFFERING);
-  };
+  // findUnitOffering = () => {
+  //   this.props.history.push(ROUTES.FIND_UNIT_OFFERING);
+  // };
 
   render() {
-    const { empty, warning } = this.state;
+    const { empty, isMonitor, warning } = this.state;
     return (
       <div>
         <section id="main-content">
@@ -155,6 +158,46 @@ class DashboardPage extends React.Component {
             <h3>
               <i className="fa fa-angle-right"></i> Dashboard
             </h3>
+            {isMonitor && (
+              <div className="row mt">
+                <div class="col-md-4 col-sm-4 mb">
+                  <div class="darkblue-panel pn">
+                    <div class="darkblue-header">
+                      <h5>TOTAL USERS</h5>
+                    </div>
+                    <h1 class="mt">
+                      <i class="fa fa-users fa-3x"></i>
+                    </h1>
+                    <p className="details">Monitored by Trackia</p>
+                    <footer>
+                      <div class="centered">
+                        <h5>
+                          <i class="fa fa-location-arrow"></i> 30,453
+                        </h5>
+                      </div>
+                    </footer>
+                  </div>
+                </div>
+                <div class="col-md-4 col-sm-4 mb">
+                  <div class="darkblue-panel pn">
+                    <div class="darkblue-header">
+                      <h5>TOTAL USERS</h5>
+                    </div>
+                    <h1 class="mt">
+                      <i class="fa fa-thumbs-o-up fa-3x"></i>
+                    </h1>
+                    <p className="details">No longer quarantined</p>
+                    <footer>
+                      <div class="centered">
+                        <h5>
+                          <i class="fa fa-check"></i> 14,360
+                        </h5>
+                      </div>
+                    </footer>
+                  </div>
+                </div>
+              </div>
+            )}
             <div className="row mt">
               {this.state.unitOfferings
                 ? this.state.unitOfferings.map((doc) => (

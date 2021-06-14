@@ -13,6 +13,8 @@ import PasswordUpdatePage from "../PasswordUpdate";
 import SignInPage from "../SignIn";
 import SignUpPage from "../SignUp";
 import Sidebar from "../Sidebar";
+import SingleViolationPage from "../Single_Violation";
+import ViolationPage from "../Violation";
 
 // Routing
 import * as ROUTES from "../../constants/routes";
@@ -40,6 +42,12 @@ const App = () => (
       <Route path={ROUTES.PASSWORD_RESET} component={PasswordResetPage} />
       <Route path={ROUTES.SIGN_IN} component={SignInPage} />
       <Route path={ROUTES.SIGN_UP} component={SignUpPage} />
+      <Route
+        exact
+        path={ROUTES.SINGLE_VIOLATION}
+        component={SingleViolationPage}
+      />
+      <Route path={ROUTES.VIOLATIONS} component={ViolationPage} />
     </div>
   </Router>
 );

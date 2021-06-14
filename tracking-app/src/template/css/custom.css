@@ -83,6 +83,10 @@
 .pt-5 {
   padding-top: 25px;
 }
+
+.float-right {
+  text-align: right;
+}
 /* Sidebar emails & font-awesome icons */
 
 ul.sidebar-menu .user-email {
@@ -112,7 +116,43 @@ ul.sidebar-menu li a i {
   color: #d32f2f;
 }
 
+/* Tables */
+
+table tr td .label {
+  font-size: 1em;
+  padding: 0.3em 0.6em 0.3em;
+}
+
+table tr td .btn-group-xs > .btn,
+.btn-xs {
+  margin-right: 0.1em;
+}
+
+.cap-height {
+  height: auto;
+  max-height: 100vh;
+  overflow-y: scroll;
+}
+
+/* Profile, Violation Logs */
+
+.profile-text h6 {
+  color: #212121;
+}
+
+.profile-text h4 {
+  color: #d32f2f;
+}
+
+.single-violation-buttons button {
+  margin-right: 0.5em;
+}
+
 /* Dashboard - Cards */
+
+.pn .details {
+  color: #ccc;
+}
 
 .grey-panel,
 .weather {

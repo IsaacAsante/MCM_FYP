@@ -132,28 +132,28 @@ const TutorNavbar = () => {
         </Link>
       </li>
       <li>
-        <Link to={ROUTES.BOOKINGS}>
+        <Link to={ROUTES.VIOLATIONS}>
           <i className="fa fa-exclamation-circle"></i>
           <span>View Violations</span>
           {/* <span className="label label-theme pull-right mail-info">2</span> */}
         </Link>
       </li>
       <li>
-        <Link to={ROUTES.ADD_UNIT}>
+        <Link to={ROUTES.DASHBOARD}>
           <i className="fa fa-flag"></i>
           <span>View Alerts</span>
           {/* <span className="label label-theme pull-right mail-info">2</span> */}
         </Link>
       </li>
       <li>
-        <Link to={ROUTES.ADD_SEMESTER}>
+        <Link to={ROUTES.DASHBOARD}>
           <i className="fa fa-bar-chart"></i>
           <span>Stats and Reports</span>
           {/* <span className="label label-theme pull-right mail-info">2</span> */}
         </Link>
       </li>
       <li>
-        <Link to={ROUTES.ADD_UNIT_OFFERING}>
+        <Link to={ROUTES.DASHBOARD}>
           <i className="fa fa-users"></i>
           <span>Users</span>
           {/* <span className="label label-theme pull-right mail-info">2</span> */}
