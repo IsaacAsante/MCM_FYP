@@ -8,4 +8,5 @@ export const PASSWORD_UPDATE = "/password-update";
 export const SIGN_IN = "/login";
 export const SIGN_UP = "/register";
 export const SINGLE_VIOLATION = "/violations/user/:id";
+export const SINGLE_VIOLATION_SPOOFING = "/spoofing/user/:id";
 export const VIOLATIONS = "/violations";

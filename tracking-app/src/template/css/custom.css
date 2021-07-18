@@ -1,3 +1,8 @@
+/* General styles */
+.bold {
+  font-weight: bold;
+}
+
 /* Spacing */
 .mb-0 {
   margin-bottom: 0px;
@@ -87,6 +92,7 @@
 .float-right {
   text-align: right;
 }
+
 /* Sidebar emails & font-awesome icons */
 
 ul.sidebar-menu .user-email {
@@ -132,6 +138,16 @@ table tr td .btn-group-xs > .btn,
   height: auto;
   max-height: 100vh;
   overflow-y: scroll;
+}
+
+.alert-row {
+  background-color: #ffcdd2;
+  color: #212121;
+}
+
+.alert-row.bold {
+  color: #212121;
+  font-weight: bold;
 }
 
 /* Profile, Violation Logs */

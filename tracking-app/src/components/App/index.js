@@ -14,6 +14,7 @@ import SignInPage from "../SignIn";
 import SignUpPage from "../SignUp";
 import Sidebar from "../Sidebar";
 import SingleViolationPage from "../Single_Violation";
+import SingleViolationSpoofingPage from "../Single_Violation_Spoofing";
 import ViolationPage from "../Violation";
 
 // Routing
@@ -42,12 +43,12 @@ const App = () => (
       <Route path={ROUTES.PASSWORD_RESET} component={PasswordResetPage} />
       <Route path={ROUTES.SIGN_IN} component={SignInPage} />
       <Route path={ROUTES.SIGN_UP} component={SignUpPage} />
+      <Route path={ROUTES.SINGLE_VIOLATION} component={SingleViolationPage} />
       <Route
-        exact
-        path={ROUTES.SINGLE_VIOLATION}
-        component={SingleViolationPage}
+        path={ROUTES.SINGLE_VIOLATION_SPOOFING}
+        component={SingleViolationSpoofingPage}
       />
-      <Route path={ROUTES.VIOLATIONS} component={ViolationPage} />
+      <Route exact path={ROUTES.VIOLATIONS} component={ViolationPage} />
     </div>
   </Router>
 );

@@ -7,7 +7,7 @@ import * as ROUTES from "../../constants/routes";
 import * as ROLES from "../../constants/roles";
 
 const INITIAL_STATE = {};
-class SingleViolationPage extends React.Component {
+class SingleViolationSpoofingPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = { ...INITIAL_STATE };
@@ -37,7 +37,7 @@ class SingleViolationPage extends React.Component {
         <section id="main-content">
           <section className="wrapper site-min-height">
             <h3>
-              <i className="fa fa-bullhorn"></i> Single User Violation Log
+              <i className="fa fa-bullhorn"></i> Single Spoofing Violation Log
             </h3>
             <hr />
             <div className="row mt">
@@ -211,4 +211,4 @@ class SingleViolationPage extends React.Component {
 
 const condition = (authUser) => !!authUser;
 
-export default withAuthorization(condition)(SingleViolationPage);
+export default withAuthorization(condition)(SingleViolationSpoofingPage);
